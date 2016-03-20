@@ -44,16 +44,16 @@ captures/
 .signing/
 
 # User-specific configurations
-.idea/libraries/
-.idea/workspace.xml
-.idea/tasks.xml
-.idea/.name
-.idea/compiler.xml
-.idea/copyright/profiles_settings.xml
-.idea/encodings.xml
-.idea/misc.xml
-.idea/modules.xml
-.idea/scopes/scope_settings.xml
-.idea/vcs.xml
+UbiBikeApp/UbiBike/.idea/libraries/
+UbiBikeApp/UbiBike/.idea/workspace.xml
+UbiBikeApp/UbiBike/.idea/tasks.xml
+UbiBikeApp/UbiBike/.idea/.name
+UbiBikeApp/UbiBike/.idea/compiler.xml
+UbiBikeApp/UbiBike/.idea/copyright/profiles_settings.xml
+UbiBikeApp/UbiBike/.idea/encodings.xml
+UbiBikeApp/UbiBike/.idea/misc.xml
+UbiBikeApp/UbiBike/.idea/modules.xml
+UbiBikeApp/UbiBike/.idea/scopes/scope_settings.xml
+UbiBikeApp/UbiBike/.idea/vcs.xml
 *.iml
 
