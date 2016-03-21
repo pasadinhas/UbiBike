@@ -6,18 +6,23 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.EditText;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Bike;
-import pt.ulisboa.tecnico.cmu.ubibike.rest.BikeRestCalls;
+import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
+import pt.ulisboa.tecnico.cmu.ubibike.rest.BikeServiceREST;
+import pt.ulisboa.tecnico.cmu.ubibike.rest.UserServiceREST;
+import pt.ulisboa.tecnico.cmu.ubibike.rest.UtilREST;
 import retrofit2.Call;
-import retrofit2.Converter;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -171,7 +176,6 @@ public class LoginActivity extends AppCompatActivity {
 
     public void submitLogin(View view) throws IOException{
         //TODO I only used this to test REST
-
     }
 
 }

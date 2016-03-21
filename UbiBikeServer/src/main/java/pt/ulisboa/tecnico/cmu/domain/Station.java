@@ -21,7 +21,7 @@ public class Station {
 		setName(name);
 	}
 	
-	public Station() { }
+	public Station() { }	//Needed for JPA/Hibernate
 	
 	public List<Bike> getBikes(){
 		return bikes;

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import pt.ulisboa.tecnico.cmu.domain.User;
-import pt.ulisboa.tecnico.cmu.domain.exceptions.UbiBikeServerException;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.UserAlreadyExistException;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.UserDoesntExistException;
 import pt.ulisboa.tecnico.cmu.domain.repositories.UserRepository;
@@ -24,36 +23,48 @@ public class UserController {
 	@Autowired
 	private UserRepository userRepository;
 	
-	/* ============== Error Handling ================ */
+	/* ============== Controller Exception Handling ================ */
 	
 	@ExceptionHandler(UserAlreadyExistException.class)
-	public Error handleUserAlreadyExistException(UserAlreadyExistException ex,
+	public ResponseEntity<Error> handleUserAlreadyExistException(UserAlreadyExistException ex,
 			HttpServletRequest request) {
-		return new Error(409,"User already exists");
+		return ResponseEntity.status(HttpStatus.valueOf(409)).body(new Error(409,"User already exists"));
 	}
 	
 	@ExceptionHandler(UserDoesntExistException.class)
-	public Error handleUserAlreadyExistException(UserDoesntExistException ex,
+	public ResponseEntity<Error> handleUserAlreadyExistException(UserDoesntExistException ex,
 			HttpServletRequest request) {
-		return new Error(404,"User doesnt exists");
+		return ResponseEntity.status(HttpStatus.valueOf(404)).body(new Error(404,"User doesnt exists"));
 	}
 	
-	/* ============================================== */
+	/* ============= RESTful services =============== */
+	
+	@RequestMapping(value="/ubibike/user/login/{username}",method=RequestMethod.GET)
+	public ResponseEntity<Error> login(
+			@PathVariable String username,
+			@RequestParam(value="password")String password) throws UserDoesntExistException{
+		User user = userRepository.findOne(username); 
+		if(user == null)
+			throw new UserDoesntExistException();
+		if(user.getPassword().equals(password))
+			return ResponseEntity.ok(null);
+		else
+			return ResponseEntity.status(HttpStatus.valueOf(401)).body(new Error(401,"Wrong password"));
+	}
 	
 	@RequestMapping(value = "/ubibike/user/{username}",method=RequestMethod.POST)
-	public ResponseEntity<Error> createUser(
+	public void createUser(
 			@PathVariable String username,
-			@RequestParam(value="password")String password) throws UbiBikeServerException{
+			@RequestParam(value="password")String password) throws UserAlreadyExistException {
 		if(userRepository.findOne(username) != null)
-			return ResponseEntity.status(HttpStatus.valueOf(404)).body(new Error(404,"User already exists"));
+			throw new UserAlreadyExistException();
 		userRepository.save(new User(username,password));
-		return ResponseEntity.ok(null);
 	}
 	
 	@RequestMapping(value = "/ubibike/user/{username}/points/{points}",method=RequestMethod.PUT)
 	public void updateUserPoints(
 			@PathVariable String username,
-			@PathVariable(value="points")long points) throws UserDoesntExistException{
+			@PathVariable(value="points")long points)throws UserDoesntExistException{
 		User user = userRepository.findOne(username); 
 		if(user == null)
 			throw new UserDoesntExistException();

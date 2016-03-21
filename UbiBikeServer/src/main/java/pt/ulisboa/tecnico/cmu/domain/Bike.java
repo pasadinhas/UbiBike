@@ -23,7 +23,6 @@ public class Bike {
 		setBooked(false);
 	}
 	
-	
 	public void setId(int id){
 		this.id = id;
 	}

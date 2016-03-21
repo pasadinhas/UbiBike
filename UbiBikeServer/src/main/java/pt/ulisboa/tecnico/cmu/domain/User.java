@@ -9,6 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class User {
 	
@@ -16,6 +18,7 @@ public class User {
 	private String username;
 	
 	@Column(nullable = false)
+	@JsonIgnore
 	private String password;
 	
 	@Column(nullable = false)
@@ -24,14 +27,13 @@ public class User {
 	@OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
 	private List<Trajectory> trajectories = new ArrayList<>();
 	
-	
 	public User(String username,String password) {
 		setUsername(username);
 		setPassword(password);
 		setPoints(0);
 	}
 	
-	protected User() { }
+	protected User() { }	//Needed for JPA/Hibernate
 	
 	public String getUsername(){
 		return username;
