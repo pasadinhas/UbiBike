@@ -10,6 +10,17 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 
+import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import pt.ulisboa.tecnico.cmu.ubibike.domain.Bike;
+import pt.ulisboa.tecnico.cmu.ubibike.rest.BikeRestCalls;
+import retrofit2.Call;
+import retrofit2.Converter;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
@@ -157,4 +168,10 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(this, CreateAccountActivity.class);
         startActivity(intent);
     }
+
+    public void submitLogin(View view) throws IOException{
+        //TODO I only used this to test REST
+
+    }
+
 }
