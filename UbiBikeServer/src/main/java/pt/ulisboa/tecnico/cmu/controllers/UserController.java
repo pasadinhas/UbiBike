@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import pt.ulisboa.tecnico.cmu.domain.User;
+import pt.ulisboa.tecnico.cmu.domain.exceptions.InvalidLoginException;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.UserAlreadyExistException;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.UserDoesntExistException;
 import pt.ulisboa.tecnico.cmu.domain.repositories.UserRepository;
@@ -26,30 +27,33 @@ public class UserController {
 	/* ============== Controller Exception Handling ================ */
 	
 	@ExceptionHandler(UserAlreadyExistException.class)
-	public ResponseEntity<Error> handleUserAlreadyExistException(UserAlreadyExistException ex,
+	private ResponseEntity<Error> handleUserAlreadyExistException(UserAlreadyExistException ex,
 			HttpServletRequest request) {
-		return ResponseEntity.status(HttpStatus.valueOf(409)).body(new Error(409,"User already exists"));
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(new Error(409,"User already exists"));
 	}
 	
 	@ExceptionHandler(UserDoesntExistException.class)
-	public ResponseEntity<Error> handleUserAlreadyExistException(UserDoesntExistException ex,
+	private ResponseEntity<Error> handleUserAlreadyExistException(UserDoesntExistException ex,
 			HttpServletRequest request) {
-		return ResponseEntity.status(HttpStatus.valueOf(404)).body(new Error(404,"User doesnt exists"));
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Error(404,"User doesnt exists"));
+	}
+	
+	@ExceptionHandler(InvalidLoginException.class)
+	public ResponseEntity<Error> handleInvalidLogin(InvalidLoginException ex,HttpServletRequest request){
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Error(404,"Invalid Login"));
 	}
 	
 	/* ============= RESTful services =============== */
 	
 	@RequestMapping(value="/ubibike/user/login/{username}",method=RequestMethod.GET)
-	public ResponseEntity<Error> login(
+	public void login(
 			@PathVariable String username,
-			@RequestParam(value="password")String password) throws UserDoesntExistException{
+			@RequestParam(value="password")String password) throws UserDoesntExistException, InvalidLoginException{
 		User user = userRepository.findOne(username); 
 		if(user == null)
 			throw new UserDoesntExistException();
-		if(user.getPassword().equals(password))
-			return ResponseEntity.ok(null);
-		else
-			return ResponseEntity.status(HttpStatus.valueOf(401)).body(new Error(401,"Wrong password"));
+		if(!user.getPassword().equals(password))
+			throw new InvalidLoginException();
 	}
 	
 	@RequestMapping(value = "/ubibike/user/{username}",method=RequestMethod.POST)
@@ -74,7 +78,7 @@ public class UserController {
 	
 	@RequestMapping(value= "/ubibike/user/{username}/trajectory",method=RequestMethod.PUT)
 	public void addTrajectory(@PathVariable String username){
-		//TODO
+		//TODO 
 	}
 	
 	@RequestMapping(value = "/ubibike/user/{username}",method=RequestMethod.GET)
