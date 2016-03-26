@@ -1,10 +1,30 @@
 <resources>
+    <!-- General Strings -->
     <string name="app_name">UbiBike</string>
+    <string name="impossible_connect_server">Impossible connect server</string>
+    <string name="field_required">Field required</string>
+    <!-- Drawer Menu Stuff -->
+    <array name="drawer_items">
+        <item>Home</item>
+        <item>Users</item>
+        <item>Stations</item>
+        <item>Logout</item>
+    </array>
+    <!-- Login Activity -->
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="username_placeholder">Username</string>
     <string name="password_placeholder">Password</string>
-
+    <string name="login_failed">Login failed</string>
+    <!-- Create Account Activity -->
     <string name="title_activity_create_account">Create Account</string>
-
+    <string name="create_account_button">Create</string>
+    <string name="accept_terms">Accept our privacy terms</string>
+    <string name="creation_success">Creation success</string>
+    <string name="username_already_exist">Username already exist</string>
+    <string name="password_doesnt_match">Password doesnt match</string>
+    <!-- Home Activity -->
+    <string name="title_home">Home</string>
+    <!-- Stations Activity -->
+    <string name="title_stations">Stations</string>
 </resources>

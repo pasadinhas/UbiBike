@@ -40,13 +40,13 @@ public class UserController {
 	
 	@ExceptionHandler(InvalidLoginException.class)
 	public ResponseEntity<Error> handleInvalidLogin(InvalidLoginException ex,HttpServletRequest request){
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Error(404,"Invalid Login"));
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Error(409,"Invalid Login"));
 	}
 	
 	/* ============= RESTful services =============== */
 	
-	@RequestMapping(value="/ubibike/user/login/{username}",method=RequestMethod.GET)
-	public void login(
+	@RequestMapping(value="/ubibike/user/login/{username}",method=RequestMethod.POST)
+	public User login(
 			@PathVariable String username,
 			@RequestParam(value="password")String password) throws UserDoesntExistException, InvalidLoginException{
 		User user = userRepository.findOne(username); 
@@ -54,15 +54,18 @@ public class UserController {
 			throw new UserDoesntExistException();
 		if(!user.getPassword().equals(password))
 			throw new InvalidLoginException();
+		return user;
 	}
 	
 	@RequestMapping(value = "/ubibike/user/{username}",method=RequestMethod.POST)
-	public void createUser(
+	public User createUser(
 			@PathVariable String username,
 			@RequestParam(value="password")String password) throws UserAlreadyExistException {
 		if(userRepository.findOne(username) != null)
 			throw new UserAlreadyExistException();
-		userRepository.save(new User(username,password));
+		User newUser = new User(username,password);
+		userRepository.save(newUser);
+		return newUser;
 	}
 	
 	@RequestMapping(value = "/ubibike/user/{username}/points/{points}",method=RequestMethod.PUT)

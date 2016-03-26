@@ -9,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * Created by André on 21-03-2016.
  */
-public class UtilREST {
+public final class UtilREST {
 
     private final static String DATE_FORMAT_REST = "dd-MM-yyyy";
 

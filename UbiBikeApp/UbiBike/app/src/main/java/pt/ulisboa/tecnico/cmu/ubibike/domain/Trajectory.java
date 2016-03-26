@@ -1,11 +1,12 @@
 package pt.ulisboa.tecnico.cmu.ubibike.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by André on 21-03-2016.
  */
-public class Trajectory {
+public class Trajectory implements Serializable{
 
     private Date date;
 

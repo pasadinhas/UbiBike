@@ -1,6 +1,7 @@
 package pt.ulisboa.tecnico.cmu.ubibike;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -9,22 +10,20 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 
-import pt.ulisboa.tecnico.cmu.ubibike.domain.Bike;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
-import pt.ulisboa.tecnico.cmu.ubibike.rest.BikeServiceREST;
 import pt.ulisboa.tecnico.cmu.ubibike.rest.UserServiceREST;
 import pt.ulisboa.tecnico.cmu.ubibike.rest.UtilREST;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -36,6 +35,8 @@ public class LoginActivity extends AppCompatActivity {
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
      */
     private static final boolean AUTO_HIDE = true;
+
+    private final Activity currentActivity = this;
 
     /**
      * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
@@ -170,12 +171,48 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void createAccount(View view) {
-        Intent intent = new Intent(this, CreateAccountActivity.class);
+        Intent intent = new Intent(currentActivity, CreateAccountActivity.class);
         startActivity(intent);
     }
 
-    public void submitLogin(View view) throws IOException{
-        //TODO I only used this to test REST
+    public void submitLogin(View view) {
+        boolean valid = true;
+        TextView usernameTextView = (EditText)findViewById(R.id.login_username);
+        TextView passwordTextView = (EditText)findViewById(R.id.login_password);
+        String username = usernameTextView.getText().toString();
+        String password = passwordTextView.getText().toString();
+
+        if(username.isEmpty()){
+            usernameTextView.setError(getString(R.string.field_required));
+            valid = false;
+        }
+        else if(password.isEmpty()){
+            passwordTextView.setError(getString(R.string.field_required));
+            valid = false;
+        }
+        if(!valid)
+            return;
+
+        UserServiceREST userService = UtilREST.getRetrofit().create(UserServiceREST.class);
+        Call<User> call = userService.login(username, password);
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if(response.code() == 200){
+                    Intent intent = new Intent(currentActivity,HomeActivity.class);
+                    intent.putExtra("User",response.body());
+                    startActivity(intent);
+                }
+                else{
+                    Toast.makeText(getBaseContext(),R.string.login_failed,Toast.LENGTH_LONG).show();
+                }
+            }
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Toast.makeText(getBaseContext(),R.string.impossible_connect_server,Toast.LENGTH_LONG).show();
+                t.printStackTrace();
+            }
+        });
     }
 
 }

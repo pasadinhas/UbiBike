@@ -1,12 +1,13 @@
 package pt.ulisboa.tecnico.cmu.ubibike.domain;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by André on 21-03-2016.
  */
-public class User {
+public class User implements Serializable{
     
     private String username;
 

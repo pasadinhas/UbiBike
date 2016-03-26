@@ -15,6 +15,10 @@ import retrofit2.http.Path;
 public interface UserServiceREST {
 
     @FormUrlEncoded
+    @POST("user/login/{username}")
+    Call<User> login(@Path("username")String username,@Field("password")String password);
+
+    @FormUrlEncoded
     @POST("user/{username}")
     Call<User> createUsername(@Path("username")String username,@Field("password")String password);
 
