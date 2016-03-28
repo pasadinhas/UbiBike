@@ -13,6 +13,8 @@ public class Bike implements Serializable{
 
     private boolean booked;
 
+    private Coordinates position;
+
     public Bike(){
         setPicked(false);
         setBooked(false);
@@ -40,6 +42,14 @@ public class Bike implements Serializable{
 
     public void setBooked(boolean booked){
         this.booked = booked;
+    }
+
+    public Coordinates getPosition(){
+        return this.position;
+    }
+
+    public void setPosition(Coordinates position){
+        this.position = position;
     }
 
 }

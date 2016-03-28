@@ -1,9 +1,10 @@
 package pt.ulisboa.tecnico.cmu.ubibike;
 
+import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class GetUserInformationActivity extends AppCompatActivity {
+public class GetUserInformationActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

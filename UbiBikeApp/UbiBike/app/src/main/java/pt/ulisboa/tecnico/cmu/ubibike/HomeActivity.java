@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.cmu.ubibike;
 
+import android.app.Activity;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,7 +14,7 @@ import java.util.List;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
 import pt.ulisboa.tecnico.cmu.ubibike.listners.DrawerItemClickListner;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends Activity {
 
     private User user;
 

@@ -1,5 +1,5 @@
 package pt.ulisboa.tecnico.cmu.ubibike;
-
+ 
 import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,7 +19,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.http.HTTP;
 
-public class CreateAccountActivity extends AppCompatActivity {
+public class CreateAccountActivity extends Activity {
 
     private Activity currentActivity;
 
