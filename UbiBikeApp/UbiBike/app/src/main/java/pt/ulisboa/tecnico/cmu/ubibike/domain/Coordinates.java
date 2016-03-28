@@ -18,8 +18,6 @@ public class Coordinates implements Serializable{
         this.longitude = longitude;
     }
 
-    public Coordinates() { }
-
     public void setLatitude(double latitude){
         this.latitude = latitude;
     }

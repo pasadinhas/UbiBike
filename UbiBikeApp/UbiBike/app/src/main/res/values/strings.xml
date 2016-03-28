@@ -27,4 +27,13 @@
     <string name="title_home">Home</string>
     <!-- Stations Activity -->
     <string name="title_stations">Stations</string>
+    <!-- Bike Booking Activiry -->
+    <string name="title_bike">Bike Booking</string>
+    <string name="button_book">Book Bike</string>
+    <string name="booking_success">Bike booked with success</string>
+    <string name="booking_failed">Bike booking failed</string>
+    <string name="select_bike">Select a bike in map</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

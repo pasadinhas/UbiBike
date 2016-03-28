@@ -31,31 +31,34 @@ public class BikeController {
 	/* ==================== RESTful Services ======================== */
 	
 	@RequestMapping(value="/ubibike/bike/pick/up/{id}",method=RequestMethod.PUT)
-	public void bikePickedUp(@PathVariable int id) throws BikeDoesntExistException{
+	public Bike bikePickedUp(@PathVariable int id) throws BikeDoesntExistException{
 		Bike bike = bikeRepository.findOne(id);
 		if(bike == null)
 			throw new BikeDoesntExistException();
 		bike.setPicked(true);
 		bikeRepository.save(bike);
+		return bike;
 	}
 	
 	@RequestMapping(value="/ubibike/bike/pick/off/{id}",method=RequestMethod.PUT)
-	public void bikePickedOff(@PathVariable int id) throws BikeDoesntExistException{
+	public Bike bikePickedOff(@PathVariable int id) throws BikeDoesntExistException{
 		Bike bike = bikeRepository.findOne(id);
 		if(bike == null)
 			throw new BikeDoesntExistException();
 		bike.setPicked(false);
 		bike.setBooked(false);
 		bikeRepository.save(bike);
+		return bike;
 	}
 	
 	@RequestMapping(value="/ubibike/bike/book/{id}",method=RequestMethod.PUT)
-	public void bookABike(@PathVariable int id) throws BikeDoesntExistException{
+	public Bike bookABike(@PathVariable int id) throws BikeDoesntExistException{
 		Bike bike = bikeRepository.findOne(id);
 		if(bike == null)
 			throw new BikeDoesntExistException();
 		bike.setBooked(true);
 		bikeRepository.save(bike);
+		return bike;
 	}
 	
 }

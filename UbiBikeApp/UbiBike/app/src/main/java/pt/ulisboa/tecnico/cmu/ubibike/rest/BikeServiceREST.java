@@ -11,12 +11,12 @@ import retrofit2.http.Path;
 public interface BikeServiceREST {
 
     @PUT("bike/pick/up/{id}")
-    Call<String> pickUpBike(@Path("id")int id);
+    Call<Bike> pickUpBike(@Path("id")int id);
 
     @PUT("bike/pick/off/{id}")
-    Call<String> pickOffBike(@Path("id")int id);
+    Call<Bike> pickOffBike(@Path("id")int id);
 
     @PUT("bike/book/{id}")
-    Call<String> bookABike(@Path("id")int id);
+    Call<Bike> bookABike(@Path("id")int id);
 
 }

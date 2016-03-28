@@ -11,13 +11,14 @@ public class Station implements Serializable {
 
     private String name;
 
+    private Coordinates position;
+
     private List<Bike> bikes = new ArrayList<>();
 
-    public Station(String name){
+    public Station(String name,Coordinates position){
         setName(name);
+        setPosition(position);
     }
-
-    public Station() { }	//Needed for JPA/Hibernate
 
     public List<Bike> getBikes(){
         return bikes;
@@ -29,8 +30,14 @@ public class Station implements Serializable {
         return name;
     }
 
-    public void setName(String name){
-        this.name = name;
+    public void setName(String name){ this.name = name; }
+
+    public void setPosition(Coordinates position){
+        this.position = position;
+    }
+
+    public Coordinates getPosition(){
+        return this.position;
     }
 
     public String toString(){

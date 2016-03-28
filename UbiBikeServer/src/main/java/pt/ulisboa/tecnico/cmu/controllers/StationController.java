@@ -21,6 +21,7 @@ public class StationController {
 	public List<Station> getStationsWithAvailableBikes(){
 		List<Station> stations = new ArrayList<>();
 		for(Station s : stationRepository.findAll()){
+			s.removeBookedBikes();
 			if(s.oneBikeAvailableAtLeast())
 				stations.add(s);
 		}

@@ -28,10 +28,9 @@ public class HomeActivity extends Activity {
         String[] drawerItems = getResources().getStringArray(R.array.drawer_items);
         //Populate UI components
         listView.setAdapter(new ArrayAdapter<String>(this,R.layout.support_simple_spinner_dropdown_item,drawerItems));
+        listView.setOnItemClickListener(new DrawerItemClickListner(this));
         ((TextView)findViewById(R.id.username_textView)).setText(user.getUsername());
         ((TextView)findViewById(R.id.points_textView)).setText("Points: " + user.getPoints());
-
-        listView.setOnItemClickListener(new DrawerItemClickListner(this));
     }
 
 }

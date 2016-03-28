@@ -14,6 +14,7 @@ import java.util.List;
 
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Station;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
+import pt.ulisboa.tecnico.cmu.ubibike.listners.DrawerItemClickListner;
 import pt.ulisboa.tecnico.cmu.ubibike.listners.StationItemClickListner;
 import pt.ulisboa.tecnico.cmu.ubibike.rest.StationServiceREST;
 import pt.ulisboa.tecnico.cmu.ubibike.rest.UserServiceREST;
@@ -34,6 +35,11 @@ public class StationsActivity extends Activity {
         getStations();
         setContentView(R.layout.activity_stations);
         ((ListView)findViewById(R.id.stations_listView)).setOnItemClickListener(new StationItemClickListner(this));
+        ListView listView = (ListView) findViewById(R.id.left_drawer);
+        String[] drawerItems = getResources().getStringArray(R.array.drawer_items);
+        //Populate UI components
+        listView.setAdapter(new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, drawerItems));
+        listView.setOnItemClickListener(new DrawerItemClickListner(this));
     }
 
     // Get station information from the server.

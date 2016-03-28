@@ -20,8 +20,6 @@ public class User implements Serializable{
         setPoints(0);
     }
 
-    protected User() { }	//Needed for JPA/Hibernate
-
     public String getUsername(){
         return username;
     }

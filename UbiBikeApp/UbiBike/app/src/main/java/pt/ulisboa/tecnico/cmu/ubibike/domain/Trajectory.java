@@ -14,8 +14,6 @@ public class Trajectory implements Serializable{
         this.date = date;
     }
 
-    protected Trajectory() { }	//Needed for JPA/Hibernate
-
     public Date getDate(){
         return date;
     }
