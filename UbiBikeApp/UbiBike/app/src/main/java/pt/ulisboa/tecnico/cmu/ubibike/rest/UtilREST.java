@@ -13,8 +13,10 @@ public final class UtilREST {
 
     private final static String DATE_FORMAT_REST = "dd-MM-yyyy";
 
-    /* Important Note: Use 10.0.2.2 when using emulator otherwise use PC IP */
-    private final static String WEB_SERVER_IP = "192.168.1.8";
+    /* Important Note: Use 10.0.2.2 when using emulator otherwise use PC IP
+    *  Server IP: 51.255.175.95
+    */
+    private final static String WEB_SERVER_IP = "51.255.175.95";
 
     private final static Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("http://" + WEB_SERVER_IP + ":8080/ubibike/")

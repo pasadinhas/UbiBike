@@ -35,9 +35,9 @@ public class StationsActivity extends Activity {
         getStations();
         setContentView(R.layout.activity_stations);
         ((ListView)findViewById(R.id.stations_listView)).setOnItemClickListener(new StationItemClickListner(this));
-        ListView listView = (ListView) findViewById(R.id.left_drawer);
-        String[] drawerItems = getResources().getStringArray(R.array.drawer_items);
         //Populate UI components
+        String[] drawerItems = getResources().getStringArray(R.array.drawer_items);
+        ListView listView = (ListView) findViewById(R.id.left_drawer);
         listView.setAdapter(new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, drawerItems));
         listView.setOnItemClickListener(new DrawerItemClickListner(this));
     }

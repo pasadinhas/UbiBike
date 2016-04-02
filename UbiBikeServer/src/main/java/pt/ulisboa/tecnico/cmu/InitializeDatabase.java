@@ -47,7 +47,6 @@ public class InitializeDatabase {
         b5.setStation(s2);
         Station s3 = new Station("IST",new Coordinates(38.737045, -9.139072));
         s3.addBike(b4);
-        b3.setStation(s3);
         b4.setStation(s3);
         stationRepo.save(s1);
         stationRepo.save(s2);
