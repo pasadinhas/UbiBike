@@ -7,6 +7,9 @@ public class UserAlreadyExistException extends UbiBikeServerException {
 	 */
 	private static final long serialVersionUID = 5168091202758869532L;
 
-	
+	@Override
+	public String getLocalizedMessage(){
+		return "User already exist";
+	}
 	
 }

@@ -29,18 +29,18 @@ public class UserController {
 	@ExceptionHandler(UserAlreadyExistException.class)
 	private ResponseEntity<Error> handleUserAlreadyExistException(UserAlreadyExistException ex,
 			HttpServletRequest request) {
-		return ResponseEntity.status(HttpStatus.CONFLICT).body(new Error(409,"User already exists"));
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(new Error(409,ex.getLocalizedMessage()));
 	}
 	
 	@ExceptionHandler(UserDoesntExistException.class)
 	private ResponseEntity<Error> handleUserAlreadyExistException(UserDoesntExistException ex,
 			HttpServletRequest request) {
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Error(404,"User doesnt exists"));
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Error(404,ex.getLocalizedMessage()));
 	}
 	
 	@ExceptionHandler(InvalidLoginException.class)
 	public ResponseEntity<Error> handleInvalidLogin(InvalidLoginException ex,HttpServletRequest request){
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Error(409,"Invalid Login"));
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Error(409,ex.getLocalizedMessage()));
 	}
 	
 	/* ============= RESTful services =============== */
@@ -80,7 +80,10 @@ public class UserController {
 	}
 	
 	@RequestMapping(value= "/ubibike/user/{username}/trajectory",method=RequestMethod.PUT)
-	public void addTrajectory(@PathVariable String username){
+	public void addTrajectory(@PathVariable String username) throws UserDoesntExistException{
+		User user = userRepository.findOne(username); 
+		if(user == null)
+			throw new UserDoesntExistException();
 		//TODO 
 	}
 	

@@ -1,11 +1,15 @@
 package pt.ulisboa.tecnico.cmu.domain;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -16,14 +20,18 @@ public class Trajectory {
 	@Id
 	@GeneratedValue
 	@JsonIgnore
-	private long id;
+	private long trajId;
 	
 	@Column
 	@JsonFormat(pattern="dd-MM-yyyy")
 	private Date date;
 	
+	@OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
+	private List<Coordinates> trajectory = new ArrayList<>();
+	
+	
 	public Trajectory(Date date){
-		this.date = date;
+		setDate(date);
 	}
 	
 	protected Trajectory() { }	//Needed for JPA/Hibernate
@@ -34,6 +42,14 @@ public class Trajectory {
 	
 	public void setDate(Date date){
 		this.date = date;
+	}
+	
+	public void addCoordinates(Coordinates coordinates){
+		trajectory.add(coordinates);
+	}
+	
+	public List<Coordinates> getTrajectory(){
+		return this.trajectory;
 	}
 	
 }

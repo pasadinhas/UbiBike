@@ -13,7 +13,7 @@ public class Coordinates {
 	@Id
 	@GeneratedValue
 	@JsonIgnore
-	private long id;
+	private long coorId;
 	
 	@Column
 	private double latitude;
@@ -22,8 +22,8 @@ public class Coordinates {
 	private double longitude;
 	
 	public Coordinates(double latitude,double longitude){
-		this.latitude = latitude;
-		this.longitude = longitude;
+		setLatitude(latitude);
+		setLongitude(longitude);
 	}
 	
 	public Coordinates() { }	//Needed for JPA/Hibernate

@@ -7,41 +7,18 @@ import java.io.Serializable;
  */
 public class Bike implements Serializable{
 
-    private int id;
-
-    private boolean picked;
-
-    private boolean booked;
+    private String identifier;
 
     private Coordinates position;
 
-    public Bike(){
-        setPicked(false);
-        setBooked(false);
+    public Bike(){ }
+
+    public void setIdentifier(String id){
+        this.identifier = id;
     }
 
-    public void setId(int id){
-        this.id = id;
-    }
-
-    public int getId(){
-        return id;
-    }
-
-    public boolean getPicked(){
-        return picked;
-    }
-
-    public void setPicked(boolean picked){
-        this.picked = picked;
-    }
-
-    public boolean getBooked(){
-        return this.booked;
-    }
-
-    public void setBooked(boolean booked){
-        this.booked = booked;
+    public String getIdentifier(){
+        return this.identifier;
     }
 
     public Coordinates getPosition(){

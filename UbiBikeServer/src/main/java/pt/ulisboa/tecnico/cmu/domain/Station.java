@@ -18,7 +18,7 @@ public class Station {
 	@OneToOne(cascade = {CascadeType.ALL})
 	private Coordinates position;
 	
-	@OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
+	@OneToMany(cascade = CascadeType.ALL,mappedBy = "station",orphanRemoval = false)
 	private List<Bike> bikes = new ArrayList<>();
 	
 	
@@ -51,6 +51,19 @@ public class Station {
 	
 	public void addBike(Bike bike){
 		bikes.add(bike);
+	}
+	
+	public void removeBike(String bikeId){
+		for(Bike bike : this.bikes){
+			if(bike.getIdentifier().equals(bikeId)){
+				this.bikes.remove(bike);
+				return;
+			}
+		}
+	}
+	
+	public void removeBike(Bike b){
+		bikes.remove(b);
 	}
 	
 	public void removeBookedBikes(){

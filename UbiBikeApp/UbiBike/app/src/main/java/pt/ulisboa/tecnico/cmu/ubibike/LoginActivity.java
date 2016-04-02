@@ -210,7 +210,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<User> call, Throwable t) {
                 Toast.makeText(getBaseContext(),R.string.impossible_connect_server,Toast.LENGTH_LONG).show();
-                t.printStackTrace();
             }
         });
     }

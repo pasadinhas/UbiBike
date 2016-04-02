@@ -14,7 +14,7 @@ public final class UtilREST {
     private final static String DATE_FORMAT_REST = "dd-MM-yyyy";
 
     /* Important Note: Use 10.0.2.2 when using emulator otherwise use PC IP */
-    private final static String WEB_SERVER_IP = "192.168.1.243";
+    private final static String WEB_SERVER_IP = "192.168.1.8";
 
     private final static Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("http://" + WEB_SERVER_IP + ":8080/ubibike/")
@@ -40,11 +40,11 @@ public final class UtilREST {
                 ObjectCallReturn o = response.body();
                 //Here is the code when the call was successful i.e: fill
                 //UI elements with information from ObjetCallReturn.
-                // BUT!!!!: The call was successful but server could answer with an error
-                 //(see response.code())
-
+                // BUT
             }
-            @Override
+            @Overr!!!!: The call was successful but server could answer with an error
+                 //(see response.code())
+ide
             public void onFailure(Call<ObjectCallReturn> call, Throwable t) {
 
                 //NOTE: This code should be processed by UI thread.

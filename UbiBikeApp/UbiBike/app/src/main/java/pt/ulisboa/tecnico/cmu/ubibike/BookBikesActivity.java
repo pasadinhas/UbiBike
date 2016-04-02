@@ -1,12 +1,7 @@
 package pt.ulisboa.tecnico.cmu.ubibike;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.style.ScaleXSpan;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -16,7 +11,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -27,20 +21,18 @@ import java.util.Map;
 
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Bike;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Station;
-import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
 import pt.ulisboa.tecnico.cmu.ubibike.listners.DrawerItemClickListner;
 import pt.ulisboa.tecnico.cmu.ubibike.rest.BikeServiceREST;
-import pt.ulisboa.tecnico.cmu.ubibike.rest.UserServiceREST;
 import pt.ulisboa.tecnico.cmu.ubibike.rest.UtilREST;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class StationBikesActivity extends FragmentActivity implements OnMapReadyCallback {
+public class BookBikesActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private Station station;
 
-    private Map<Marker,Integer> markers = new HashMap<Marker,Integer>();
+    private Map<Marker,String> markers = new HashMap<Marker,String>();
 
     private Marker selectedMarker = null;
 
@@ -52,9 +44,9 @@ public class StationBikesActivity extends FragmentActivity implements OnMapReady
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        ListView listView = (ListView) findViewById(R.id.left_drawer);
-        String[] drawerItems = getResources().getStringArray(R.array.drawer_items);
         //Populate UI components
+        String[] drawerItems = getResources().getStringArray(R.array.drawer_items);
+        ListView listView = (ListView) findViewById(R.id.left_drawer);
         listView.setAdapter(new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, drawerItems));
         listView.setOnItemClickListener(new DrawerItemClickListner(this));
     }
@@ -78,9 +70,9 @@ public class StationBikesActivity extends FragmentActivity implements OnMapReady
         moveToCurrentLocation(map, new LatLng(station.getPosition().getLatitude(), station.getPosition().getLongitude()));
         for(Bike bike : station.getBikes()){
             latlng = new LatLng(bike.getPosition().getLatitude(),bike.getPosition().getLongitude());
-            MarkerOptions opt = new MarkerOptions().position(latlng).title("Bike Nrº: " + bike.getId())
+            MarkerOptions opt = new MarkerOptions().position(latlng).title("Bike Nrº: " + bike.getIdentifier())
                     .icon(BitmapDescriptorFactory.fromResource(R.mipmap.marker));
-            markers.put(map.addMarker(opt), bike.getId());
+            markers.put(map.addMarker(opt), bike.getIdentifier());
         }
     }
 

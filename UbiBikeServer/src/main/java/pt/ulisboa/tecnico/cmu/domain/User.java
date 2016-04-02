@@ -27,6 +27,7 @@ public class User {
 	@OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
 	private List<Trajectory> trajectories = new ArrayList<>();
 	
+	
 	public User(String username,String password) {
 		setUsername(username);
 		setPassword(password);
@@ -62,4 +63,13 @@ public class User {
 	public List<Trajectory> getTrajectories(){
 		return this.trajectories;
 	}
+	
+	public void addPoints(long points){
+		this.points += points;
+	}
+	
+	public void addTrajectory(Trajectory t){
+		trajectories.add(t);
+	}
+	
 }

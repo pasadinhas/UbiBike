@@ -3,27 +3,35 @@ package pt.ulisboa.tecnico.cmu.domain;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Bike {
 
 	@Id
-	@GeneratedValue
-	private int id;
+	private String identifier;
 	
+	@JsonIgnore
 	@Column(nullable = false)
 	private boolean picked;
 	
+	@JsonIgnore
 	@Column(nullable = false)
 	private boolean booked;
 	
 	@OneToOne(cascade = {CascadeType.ALL})
 	private Coordinates position;
 	
-	public Bike(Coordinates position){
+	@JsonIgnore
+	@ManyToOne(cascade = CascadeType.ALL)
+	private Station station;
+	
+	public Bike(Coordinates position,String identifier){
+		setIdentifier(identifier);
 		setPosition(position);
 		setPicked(false);
 		setBooked(false);
@@ -31,12 +39,12 @@ public class Bike {
 	
 	public Bike() { } //Needed for JPA/Hibernate
 	
-	public void setId(int id){
-		this.id = id;
+	public String getIdentifier(){
+		return this.identifier;
 	}
 	
-	public int getId(){
-		return id;
+	public void setIdentifier(String identifier){
+		this.identifier = identifier;
 	}
 	
 	public boolean getPicked(){
@@ -61,6 +69,14 @@ public class Bike {
 	
 	public void setPosition(Coordinates position){
 		this.position = position;
+	}
+	
+	public void setStation(Station station){
+		this.station = station;
+	}
+	
+	public Station getStation(){
+		return this.station;
 	}
 	
 }

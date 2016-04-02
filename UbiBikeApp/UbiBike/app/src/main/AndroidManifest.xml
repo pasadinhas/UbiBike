@@ -51,7 +51,7 @@
         </activity>
         <activity android:name=".StationsActivity" >
         </activity>
-        <activity android:name=".StationBikesActivity" >
+        <activity android:name=".BookBikesActivity" >
         </activity>
     </application>
 
