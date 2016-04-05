@@ -23,7 +23,7 @@ public class Trajectory {
 	private long trajId;
 	
 	@Column
-	@JsonFormat(pattern="dd-MM-yyyy HH:mm:ss")
+	@JsonFormat(pattern="dd-MM-yyyy")
 	private Date date;
 	
 	@OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)

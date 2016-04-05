@@ -22,7 +22,6 @@ import java.util.Map;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Bike;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Station;
 import pt.ulisboa.tecnico.cmu.ubibike.listners.DrawerItemClickListner;
-import pt.ulisboa.tecnico.cmu.ubibike.map.MapUtil;
 import pt.ulisboa.tecnico.cmu.ubibike.rest.BikeServiceREST;
 import pt.ulisboa.tecnico.cmu.ubibike.rest.UtilREST;
 import retrofit2.Call;
@@ -68,7 +67,7 @@ public class BookBikesActivity extends FragmentActivity implements OnMapReadyCal
                 selectedMarker = null;
             }
         });
-        MapUtil.moveToCurrentLocation(map, new LatLng(station.getPosition().getLatitude(), station.getPosition().getLongitude()));
+        moveToCurrentLocation(map, new LatLng(station.getPosition().getLatitude(), station.getPosition().getLongitude()));
         for(Bike bike : station.getBikes()){
             latlng = new LatLng(bike.getPosition().getLatitude(),bike.getPosition().getLongitude());
             MarkerOptions opt = new MarkerOptions().position(latlng).title("Bike Nrº: " + bike.getIdentifier())
@@ -88,18 +87,26 @@ public class BookBikesActivity extends FragmentActivity implements OnMapReadyCal
             @Override
             public void onResponse(Call<Bike> call, Response<Bike> response) {
                 if (response.code() == 200) {
-                    Toast.makeText(getBaseContext(), R.string.booking_success, Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(getBaseContext(), R.string.booking_failed, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(),R.string.booking_success,Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Toast.makeText(getBaseContext(),R.string.booking_failed,Toast.LENGTH_LONG).show();
                 }
             }
-
             @Override
             public void onFailure(Call<Bike> call, Throwable t) {
                 Toast.makeText(getBaseContext(), R.string.impossible_connect_server, Toast.LENGTH_LONG).show();
                 t.printStackTrace();
             }
         });
+    }
+
+    private void moveToCurrentLocation(GoogleMap googleMap,LatLng currentLocation) {
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 16));
+        // Zoom in, animating the camera.
+        googleMap.animateCamera(CameraUpdateFactory.zoomIn());
+        // Zoom out to zoom level 10, animating with a duration of 2 seconds.
+        googleMap.animateCamera(CameraUpdateFactory.zoomTo(17), 3000, null);
     }
 
 }
