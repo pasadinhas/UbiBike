@@ -17,9 +17,7 @@ public class Bike implements Serializable{
         this.identifier = id;
     }
 
-    public String getIdentifier(){
-        return this.identifier;
-    }
+    public String getIdentifier() { return this.identifier; }
 
     public Coordinates getPosition(){
         return this.position;
