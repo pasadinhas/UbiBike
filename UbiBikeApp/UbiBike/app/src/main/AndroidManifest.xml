@@ -12,14 +12,16 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/marker"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
+
         <!-- Google Maps API KEY -->
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyBo6CXPk7SkenfO-66ZHF94LooOm8gDVNU" />
+
         <activity
             android:name=".LoginActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -46,12 +48,19 @@
             android:theme="@style/FullscreenTheme" >
         </activity>
         <activity
-            android:name=".GetUserInformationActivity"
+            android:name=".SearchUserActivity"
             android:theme="@style/FullscreenTheme" >
         </activity>
         <activity android:name=".StationsActivity" >
         </activity>
         <activity android:name=".BookBikesActivity" >
+        </activity>
+        <activity
+            android:name=".NearbyUsersActivity"
+            android:label="@string/title_activity_nearby_users"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity android:name=".UserPresentationActivity" >
         </activity>
     </application>
 

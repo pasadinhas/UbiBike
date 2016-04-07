@@ -4,4 +4,5 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <!-- Custom -->
     <dimen name="title">40sp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 </resources>

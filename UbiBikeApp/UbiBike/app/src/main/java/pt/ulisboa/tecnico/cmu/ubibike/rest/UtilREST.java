@@ -13,6 +13,14 @@ public final class UtilREST {
 
     private final static String DATE_FORMAT_REST = "dd-MM-yyyy HH:mm:ss";
 
+    public final static int HTTP_OK = 200;
+
+    public final static String ACCEPT_HEADER = "Accept";
+
+    public final static String CONTENT_TYPE_HEADER = "Content-Type";
+
+    public final static String CONTENT_HEADER = "application/json";
+
     /* Important Note: Use 10.0.2.2 when using emulator otherwise use PC IP
     *  Server IP: 51.255.175.95
     */

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="pt.ulisboa.tecnico.cmu.ubibike.SearchUserActivity"
+    android:background="@color/background">
+
+    <RelativeLayout
+        android:id="@+id/content_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/title_search"
+            android:id="@+id/textView_title"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:textSize="@dimen/title"
+            android:textColor="@color/title" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/username_editText"
+            android:layout_marginTop="33dp"
+            android:layout_below="@+id/textView_title"
+            android:layout_centerHorizontal="true"
+            android:hint="@string/username_placeholder" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_search"
+            android:id="@+id/search_button"
+            android:layout_marginTop="25dp"
+            android:layout_below="@+id/username_editText"
+            android:layout_alignLeft="@+id/username_editText"
+            android:layout_alignStart="@+id/username_editText"
+            android:layout_alignRight="@+id/username_editText"
+            android:layout_alignEnd="@+id/username_editText"
+            android:onClick="search" />
+
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/usernames_listView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="200dp"
+            android:choiceMode="singleChoice" />
+    </RelativeLayout>
+
+    <ListView android:id="@+id/left_drawer"
+        android:layout_width="220dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:choiceMode="singleChoice"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
+        android:background="@color/drawer"/>
+
+</android.support.v4.widget.DrawerLayout>

@@ -7,7 +7,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -19,10 +18,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.HashMap;
 import java.util.Map;
 
+import okhttp3.internal.Util;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Bike;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Station;
 import pt.ulisboa.tecnico.cmu.ubibike.listners.DrawerItemClickListner;
-import pt.ulisboa.tecnico.cmu.ubibike.map.MapUtil;
+import pt.ulisboa.tecnico.cmu.ubibike.map.UtilMap;
 import pt.ulisboa.tecnico.cmu.ubibike.rest.BikeServiceREST;
 import pt.ulisboa.tecnico.cmu.ubibike.rest.UtilREST;
 import retrofit2.Call;
@@ -68,7 +68,7 @@ public class BookBikesActivity extends FragmentActivity implements OnMapReadyCal
                 selectedMarker = null;
             }
         });
-        MapUtil.moveToCurrentLocation(map, new LatLng(station.getPosition().getLatitude(), station.getPosition().getLongitude()));
+        UtilMap.moveToCurrentLocation(map, new LatLng(station.getPosition().getLatitude(), station.getPosition().getLongitude()));
         for(Bike bike : station.getBikes()){
             latlng = new LatLng(bike.getPosition().getLatitude(),bike.getPosition().getLongitude());
             MarkerOptions opt = new MarkerOptions().position(latlng).title("Bike Nrº: " + bike.getIdentifier())
@@ -87,8 +87,11 @@ public class BookBikesActivity extends FragmentActivity implements OnMapReadyCal
         call.enqueue(new Callback<Bike>() {
             @Override
             public void onResponse(Call<Bike> call, Response<Bike> response) {
-                if (response.code() == 200) {
+                if (response.code() == UtilREST.HTTP_OK) {
                     Toast.makeText(getBaseContext(), R.string.booking_success, Toast.LENGTH_LONG).show();
+                    selectedMarker.remove();
+                    markers.remove(selectedMarker);
+                    selectedMarker = null;
                 } else {
                     Toast.makeText(getBaseContext(), R.string.booking_failed, Toast.LENGTH_LONG).show();
                 }

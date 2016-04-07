@@ -66,7 +66,7 @@ public class CreateAccountActivity extends Activity {
             public void onResponse(Call<User> call, Response<User> response) {
                 if(response.code() == 200){
                     Toast.makeText(getBaseContext(),R.string.creation_success,Toast.LENGTH_LONG).show();
-                    currentActivity.finishActivity(0);
+                    currentActivity.finish();
                 }
                 else{
                     Toast.makeText(getBaseContext(),R.string.username_already_exist,Toast.LENGTH_LONG).show();

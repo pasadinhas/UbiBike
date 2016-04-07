@@ -1,6 +1,8 @@
 package pt.ulisboa.tecnico.cmu.ubibike;
 
 import android.app.Activity;
+import android.graphics.AvoidXfermode;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -15,26 +17,19 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Trajectory;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
-import pt.ulisboa.tecnico.cmu.ubibike.files.UtilFile;
 import pt.ulisboa.tecnico.cmu.ubibike.listners.DrawerItemClickListner;
 import pt.ulisboa.tecnico.cmu.ubibike.map.UtilMap;
 
-public class HomeActivity extends Activity implements OnMapReadyCallback {
-
-    private GoogleMap map;
+public class UserPresentationActivity extends Activity implements OnMapReadyCallback {
 
     private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_user_presentation);
         user = (User)getIntent().getSerializableExtra("User");
-        if(user == null){
-            user = (User) UtilFile.readFromFile(this,UtilFile.USER_FILE);
-        }else{
-            UtilFile.writeToFile(this,user,UtilFile.USER_FILE);
-        }
+
         ((TextView)findViewById(R.id.username_textView)).setText(user.getUsername());
         ((TextView)findViewById(R.id.points_textView)).setText(getString(R.string.points) + user.getPoints());
         MapFragment mapFragment = (MapFragment) getFragmentManager()
@@ -45,16 +40,6 @@ public class HomeActivity extends Activity implements OnMapReadyCallback {
         ListView listView = (ListView) findViewById(R.id.left_drawer);
         listView.setAdapter(new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, drawerItems));
         listView.setOnItemClickListener(new DrawerItemClickListner(this));
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        UtilFile.writeToFile(this,user,UtilFile.USER_FILE);
-    }
-
-    public void refresh(View view){
-        //TODO
     }
 
     @Override

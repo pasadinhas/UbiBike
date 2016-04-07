@@ -1,5 +1,7 @@
 package pt.ulisboa.tecnico.cmu.controllers;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,86 +20,78 @@ import pt.ulisboa.tecnico.cmu.domain.User;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.InvalidLoginException;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.UserAlreadyExistException;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.UserDoesntExistException;
-import pt.ulisboa.tecnico.cmu.domain.repositories.UserRepository;
+import pt.ulisboa.tecnico.cmu.services.UserServices;
 
 @RestController
 public class UserController {
 	
 	@Autowired
-	private UserRepository userRepository;
+	private UserServices userServices;
 	
 	/* ============== Controller Exception Handling ================ */
 	
 	@ExceptionHandler(UserAlreadyExistException.class)
 	private ResponseEntity<Error> handleUserAlreadyExistException(UserAlreadyExistException ex,
 			HttpServletRequest request) {
-		return ResponseEntity.status(HttpStatus.CONFLICT).body(new Error(409,ex.getLocalizedMessage()));
+		return new ResponseEntity<Error>(new Error(409,ex.getLocalizedMessage()),HttpStatus.CONFLICT);
 	}
 	
 	@ExceptionHandler(UserDoesntExistException.class)
 	private ResponseEntity<Error> handleUserAlreadyExistException(UserDoesntExistException ex,
 			HttpServletRequest request) {
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Error(404,ex.getLocalizedMessage()));
+		return new ResponseEntity<Error>(new Error(404,ex.getLocalizedMessage()),HttpStatus.NOT_FOUND);
 	}
 	
 	@ExceptionHandler(InvalidLoginException.class)
 	public ResponseEntity<Error> handleInvalidLogin(InvalidLoginException ex,HttpServletRequest request){
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Error(409,ex.getLocalizedMessage()));
+		return new ResponseEntity<Error>(new Error(409,ex.getLocalizedMessage()),HttpStatus.NOT_FOUND);
 	}
 	
 	/* ============= RESTful services =============== */
 	
 	@RequestMapping(value="/ubibike/user/login/{username}",method=RequestMethod.POST)
-	public User login(
+	public ResponseEntity<User> login(
 			@PathVariable String username,
-			@RequestParam(value="password")String password) throws UserDoesntExistException, InvalidLoginException{
-		User user = userRepository.findOne(username); 
-		if(user == null)
-			throw new UserDoesntExistException();
-		if(!user.getPassword().equals(password))
-			throw new InvalidLoginException();
-		return user;
+			@RequestParam(value="password")String password) 
+			throws UserDoesntExistException, InvalidLoginException{
+		User user = userServices.loginUser(username, password);
+		return new ResponseEntity<User>(user,HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/ubibike/user/{username}",method=RequestMethod.POST)
-	public User createUser(
+	public ResponseEntity<User> createUser(
 			@PathVariable String username,
 			@RequestParam(value="password")String password) throws UserAlreadyExistException {
-		if(userRepository.findOne(username) != null)
-			throw new UserAlreadyExistException();
-		User newUser = new User(username,password);
-		userRepository.save(newUser);
-		return newUser;
+		User user = userServices.createUser(username, password);
+		return new ResponseEntity<User>(user,HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/ubibike/user/{username}/points/{points}",method=RequestMethod.PUT)
-	public void updateUserPoints(
+	public ResponseEntity<User> updateUserPoints(
 			@PathVariable String username,
 			@PathVariable(value="points")long points)throws UserDoesntExistException{
-		User user = userRepository.findOne(username); 
-		if(user == null)
-			throw new UserDoesntExistException();
-		user.setPoints(points);
-		userRepository.save(user);
+		User user = userServices.updateUserPoints(username, points);
+		return new ResponseEntity<User>(user, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value= "/ubibike/user/{username}/trajectory",method=RequestMethod.POST)
-	public void addTrajectory(@PathVariable String username,@RequestBody Trajectory trajectory) 
-			throws UserDoesntExistException{
-		User user = userRepository.findOne(username); 
-		if(user == null)
-			throw new UserDoesntExistException();
-		user.addTrajectory(trajectory);
-		userRepository.save(user);
+	public ResponseEntity<User> addTrajectory(@PathVariable String username,
+			@RequestBody Trajectory trajectory) throws UserDoesntExistException{
+		User user = userServices.addTrajectory(username, trajectory);
+		return new ResponseEntity<User>(user,HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/ubibike/user/{username}",method=RequestMethod.GET)
-	public User getUserInformation(
+	public ResponseEntity<User> getUserInformation(
 			@PathVariable String username) throws UserDoesntExistException{
-		User user = userRepository.findOne(username); 
-		if(user == null)
-			throw new UserDoesntExistException();
-		return user;
+		User user = userServices.getUserInformation(username);
+		return new ResponseEntity<User>(user,HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/ubibike/users/{usernamePrefix}",method=RequestMethod.GET)
+	public ResponseEntity<List<String>> getUsers(@PathVariable String usernamePrefix){
+		List<String> users = userServices.getUsers(usernamePrefix);
+		return new ResponseEntity<List<String>>(users,HttpStatus.OK);
 	}
 	
 }
