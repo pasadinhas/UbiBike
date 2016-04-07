@@ -7,11 +7,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import pt.ulisboa.tecnico.cmu.domain.Trajectory;
 import pt.ulisboa.tecnico.cmu.domain.User;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.InvalidLoginException;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.UserAlreadyExistException;
@@ -79,12 +81,14 @@ public class UserController {
 		userRepository.save(user);
 	}
 	
-	@RequestMapping(value= "/ubibike/user/{username}/trajectory",method=RequestMethod.PUT)
-	public void addTrajectory(@PathVariable String username) throws UserDoesntExistException{
+	@RequestMapping(value= "/ubibike/user/{username}/trajectory",method=RequestMethod.POST)
+	public void addTrajectory(@PathVariable String username,@RequestBody Trajectory trajectory) 
+			throws UserDoesntExistException{
 		User user = userRepository.findOne(username); 
 		if(user == null)
 			throw new UserDoesntExistException();
-		//TODO 
+		user.addTrajectory(trajectory);
+		userRepository.save(user);
 	}
 	
 	@RequestMapping(value = "/ubibike/user/{username}",method=RequestMethod.GET)
