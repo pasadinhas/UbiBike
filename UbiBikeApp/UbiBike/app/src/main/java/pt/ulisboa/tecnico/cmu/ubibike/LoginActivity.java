@@ -19,6 +19,7 @@ import org.w3c.dom.Text;
 import java.io.IOException;
 
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
+import pt.ulisboa.tecnico.cmu.ubibike.map.GpsTracking;
 import pt.ulisboa.tecnico.cmu.ubibike.rest.UserServiceREST;
 import pt.ulisboa.tecnico.cmu.ubibike.rest.UtilREST;
 import retrofit2.Call;
@@ -105,7 +106,6 @@ public class LoginActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         //APP Entry Point
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_login);
 
         mVisible = true;
@@ -202,7 +202,7 @@ public class LoginActivity extends AppCompatActivity
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                if(response.code() == 200){
+                if(response.code() == UtilREST.HTTP_OK){
                     Intent intent = new Intent(currentActivity,HomeActivity.class);
                     intent.putExtra("User",response.body());
                     startActivity(intent);

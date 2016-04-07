@@ -22,8 +22,7 @@ public final class UtilREST {
     public final static String CONTENT_HEADER = "application/json";
 
     /* Important Note: Use 10.0.2.2 when using emulator otherwise use PC IP
-    *  Server IP: 51.255.175.95
-    */
+    *  Server IP: 51.255.175.95 */
     private final static String WEB_SERVER_IP = "51.255.175.95";
 
     private final static Retrofit retrofit = new Retrofit.Builder()

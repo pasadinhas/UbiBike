@@ -3,6 +3,7 @@ package pt.ulisboa.tecnico.cmu.ubibike;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -36,13 +37,12 @@ public class SearchUserActivity extends Activity implements AdapterView.OnItemCl
     public void search(View view){
         TextView usernameTextView = (EditText)findViewById(R.id.username_editText);
         String username = usernameTextView.getText().toString();
-
         UserServiceREST userService = UtilREST.getRetrofit().create(UserServiceREST.class);
         Call<List<String>> call = userService.getUsernames(username);
         call.enqueue(new Callback<List<String>>() {
             @Override
             public void onResponse(Call<List<String>> call, Response<List<String>> response) {
-                if(response.code() == 200){
+                if(response.code() == UtilREST.HTTP_OK){
                     List<String> usernamesList = response.body();
                     if(usernamesList != null && usernamesList.size() > 0){
                         ListView listView = (ListView)findViewById(R.id.usernames_listView);
@@ -60,7 +60,6 @@ public class SearchUserActivity extends Activity implements AdapterView.OnItemCl
             public void onFailure(Call<List<String>> call, Throwable t) {
                 Toast.makeText(getBaseContext(),R.string.impossible_connect_server,
                         Toast.LENGTH_LONG).show();
-                t.printStackTrace();
             }
         });
     }

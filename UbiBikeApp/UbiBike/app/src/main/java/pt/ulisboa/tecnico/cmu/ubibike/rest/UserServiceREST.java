@@ -35,7 +35,7 @@ public interface UserServiceREST {
     @GET("user/{username}")
     Call<User> getUser(@Path("username")String username);
 
-    @GET("user/{usernamePrefix}")
+    @GET("users/{usernamePrefix}")
     Call<List<String>> getUsernames(@Path("usernamePrefix")String usernamePrefix);
 
     @POST("user/{username}/trajectory")
