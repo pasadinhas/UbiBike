@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmu.ubibike;
+package pt.ulisboa.tecnico.cmu.ubibike.activities;
  
 import android.app.Activity;
 import android.os.Bundle;
@@ -7,7 +7,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import okhttp3.internal.Util;
+import pt.ulisboa.tecnico.cmu.ubibike.R;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UserServiceREST;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UtilREST;

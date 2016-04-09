@@ -2,9 +2,6 @@ package pt.ulisboa.tecnico.cmu.ubibike.domain;
 
 import java.io.Serializable;
 
-/**
- * Created by André on 28-03-2016.
- */
 public class Coordinates implements Serializable{
 
     private double latitude;

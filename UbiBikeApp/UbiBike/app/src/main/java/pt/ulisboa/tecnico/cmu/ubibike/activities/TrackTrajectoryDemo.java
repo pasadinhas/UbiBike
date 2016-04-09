@@ -1,13 +1,13 @@
-package pt.ulisboa.tecnico.cmu.ubibike;
+package pt.ulisboa.tecnico.cmu.ubibike.activities;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
+import pt.ulisboa.tecnico.cmu.ubibike.R;
 import pt.ulisboa.tecnico.cmu.ubibike.location.GpsService;
 
-public class TrackTrajectoryDemo extends AppCompatActivity {
+public class TrackTrajectoryDemo extends BaseDrawerActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,6 +16,9 @@ public class TrackTrajectoryDemo extends AppCompatActivity {
     }
 
     public void startTracking(View v){
+        Intent gpsOptionsIntent = new Intent(
+                android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        startActivity(gpsOptionsIntent);
         startService(new Intent(getBaseContext(), GpsService.class));
     }
 

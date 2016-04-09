@@ -1,7 +1,10 @@
-package pt.ulisboa.tecnico.cmu.ubibike;
+package pt.ulisboa.tecnico.cmu.ubibike.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -9,16 +12,15 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import pt.ulisboa.tecnico.cmu.ubibike.R;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Station;
-import pt.ulisboa.tecnico.cmu.ubibike.listners.DrawerItemClickListner;
-import pt.ulisboa.tecnico.cmu.ubibike.listners.StationItemClickListner;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.StationServiceREST;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UtilREST;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class StationsActivity extends Activity {
+public class StationsActivity extends Activity implements ListView.OnItemClickListener{
 
     private Activity currentActivity = this;
 
@@ -27,14 +29,22 @@ public class StationsActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getStations();
         setContentView(R.layout.activity_stations);
-        ((ListView)findViewById(R.id.stations_listView)).setOnItemClickListener(new StationItemClickListner(this));
-        //Populate UI components
-        String[] drawerItems = getResources().getStringArray(R.array.drawer_items);
-        ListView listView = (ListView) findViewById(R.id.left_drawer);
-        listView.setAdapter(new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, drawerItems));
-        listView.setOnItemClickListener(new DrawerItemClickListner(this));
+        ((ListView)findViewById(R.id.stations_listView)).setOnItemClickListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getStations();
+    }
+
+    @Override
+    public void onItemClick(AdapterView parent, View view, int position, long id) {
+        Station station = (Station) parent.getItemAtPosition(position);
+        Intent intent = new Intent(currentActivity, BookBikesActivity.class);
+        intent.putExtra("Station", station);
+        currentActivity.startActivity(intent);
     }
 
     // Get station information from the server.

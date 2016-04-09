@@ -7,14 +7,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Trajectory implements Serializable{
+public class Trajectory implements Serializable, Comparable<Trajectory>{
 
     private Date date;
 
     private List<Coordinates> trajectory = new ArrayList<>();
 
     private boolean atServer = true;
-
 
     public Trajectory(Date date){
         setAtServer(true);
@@ -55,5 +54,14 @@ public class Trajectory implements Serializable{
         return fm.format(date);
     }
 
+    @Override
+    public int compareTo(Trajectory another) {
+        int res = getDate().compareTo(another.getDate());
+        if(res < 0)
+            res =  1;
+        else if(res > 0)
+            res = -1;
+        return res;
+    }
 }
 

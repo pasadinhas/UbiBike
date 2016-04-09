@@ -27,7 +27,10 @@
     <!-- Home Activity -->
     <string name="home_title">Home</string>
     <string name="send_trajectory_button">Send trajectory cloud</string>
+    <string name="trajectories_text_view">Trajectories</string>
     <string name="points">Points: </string>
+    <string name="send_trajectory_success_toast">Trajectory sent with success</string>
+    <string name="send_trajectory_failed_toast">Trajectory already in cloud</string>
     <!-- Stations Activity -->
     <string name="title_stations">Stations</string>
     <!-- Bike Booking Activiry -->

@@ -1,11 +1,7 @@
-package pt.ulisboa.tecnico.cmu.ubibike;
+package pt.ulisboa.tecnico.cmu.ubibike.activities;
 
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -19,9 +15,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.HashMap;
 import java.util.Map;
 
+import pt.ulisboa.tecnico.cmu.ubibike.R;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Bike;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Station;
-import pt.ulisboa.tecnico.cmu.ubibike.listners.DrawerItemClickListner;
 import pt.ulisboa.tecnico.cmu.ubibike.location.UtilMap;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.BikeServiceREST;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UtilREST;
@@ -29,7 +25,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class BookBikesActivity extends FragmentActivity implements OnMapReadyCallback {
+public class BookBikesActivity extends BaseDrawerActivity implements OnMapReadyCallback {
 
     private Station station;
 
@@ -40,16 +36,11 @@ public class BookBikesActivity extends FragmentActivity implements OnMapReadyCal
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_station_bikes);
+        setContentView(R.layout.activity_book_bikes);
         station = (Station) getIntent().getSerializableExtra("Station");
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        //Populate UI components
-        String[] drawerItems = getResources().getStringArray(R.array.drawer_items);
-        ListView listView = (ListView) findViewById(R.id.left_drawer);
-        listView.setAdapter(new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, drawerItems));
-        listView.setOnItemClickListener(new DrawerItemClickListner(this));
     }
 
     @Override
@@ -98,6 +89,7 @@ public class BookBikesActivity extends FragmentActivity implements OnMapReadyCal
                     Toast.makeText(getBaseContext(), R.string.booking_failed, Toast.LENGTH_LONG).show();
                 }
             }
+
             @Override
             public void onFailure(Call<Bike> call, Throwable t) {
                 Toast.makeText(getBaseContext(), R.string.impossible_connect_server, Toast.LENGTH_LONG).show();
@@ -105,9 +97,4 @@ public class BookBikesActivity extends FragmentActivity implements OnMapReadyCal
         });
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d("Book", "Book bikes destroyed!!");
-    }
 }

@@ -1,17 +1,13 @@
-package pt.ulisboa.tecnico.cmu.ubibike.files;
+package pt.ulisboa.tecnico.cmu.ubibike.data.files;
 
 import android.content.Context;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-/**
- * Created by André on 07-04-2016.
- */
 public abstract class UtilFile {
 
     public static final String USER_FILE = "User";
@@ -36,9 +32,13 @@ public abstract class UtilFile {
             fis.close();
             return o;
         }catch(Exception e){
-            e.printStackTrace();;
+            e.printStackTrace();
         }
         return null;
+    }
+
+    public static void deleteFile(Context c,String fileName){
+        c.deleteFile(fileName);
     }
 
 }

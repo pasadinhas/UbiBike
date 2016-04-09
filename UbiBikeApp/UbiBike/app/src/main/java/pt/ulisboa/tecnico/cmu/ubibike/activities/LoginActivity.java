@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmu.ubibike;
+package pt.ulisboa.tecnico.cmu.ubibike.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,6 +8,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import pt.ulisboa.tecnico.cmu.ubibike.R;
+import pt.ulisboa.tecnico.cmu.ubibike.data.LoginData;
+import pt.ulisboa.tecnico.cmu.ubibike.data.files.UtilFile;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UserServiceREST;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UtilREST;
@@ -23,6 +26,13 @@ public class LoginActivity extends Activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //APP Entry Point (Activity)!!!!
+        if(LoginData.getUserLoggedInStatus(this)){
+            Intent intent = new Intent(currentActivity,HomeActivity.class);
+            User user = (User) UtilFile.readFromFile(this,UtilFile.USER_FILE);
+            intent.putExtra("User",user);
+            finish();
+            startActivity(intent);
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
     }
@@ -59,7 +69,10 @@ public class LoginActivity extends Activity
                     Intent intent = new Intent(currentActivity,HomeActivity.class);
                     User user = response.body();
                     user.userFromServer();
-                    intent.putExtra("User",user);
+                    UtilFile.writeToFile(currentActivity, user, UtilFile.USER_FILE);
+                    LoginData.setLoggedIn(currentActivity,user.getUsername());
+                    intent.putExtra("User", user);
+                    finish();
                     startActivity(intent);
                 }
                 else{

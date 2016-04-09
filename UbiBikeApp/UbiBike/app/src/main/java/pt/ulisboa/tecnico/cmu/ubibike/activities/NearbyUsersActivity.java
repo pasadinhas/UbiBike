@@ -1,9 +1,10 @@
-package pt.ulisboa.tecnico.cmu.ubibike;
+package pt.ulisboa.tecnico.cmu.ubibike.activities;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class NearbyUsersActivity extends AppCompatActivity {
+import pt.ulisboa.tecnico.cmu.ubibike.R;
+
+public class NearbyUsersActivity extends BaseDrawerActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

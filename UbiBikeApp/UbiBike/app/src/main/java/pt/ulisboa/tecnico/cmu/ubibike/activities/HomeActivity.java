@@ -1,14 +1,10 @@
-package pt.ulisboa.tecnico.cmu.ubibike;
+package pt.ulisboa.tecnico.cmu.ubibike.activities;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,10 +13,12 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 
+import java.util.Collections;
+
+import pt.ulisboa.tecnico.cmu.ubibike.R;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Trajectory;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
-import pt.ulisboa.tecnico.cmu.ubibike.files.UtilFile;
-import pt.ulisboa.tecnico.cmu.ubibike.listners.DrawerItemClickListner;
+import pt.ulisboa.tecnico.cmu.ubibike.data.files.UtilFile;
 import pt.ulisboa.tecnico.cmu.ubibike.location.UtilMap;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UserServiceREST;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UtilREST;
@@ -28,7 +26,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeActivity extends Activity implements OnMapReadyCallback {
+public class HomeActivity extends BaseDrawerActivity implements OnMapReadyCallback {
 
     private User user;
 
@@ -47,12 +45,13 @@ public class HomeActivity extends Activity implements OnMapReadyCallback {
         ((TextView)findViewById(R.id.points_textView)).setText(points);
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.home_map);
-        mapFragment.getMapAsync(this);
-        //Populate Drawer List
-        String[] drawerItems = getResources().getStringArray(R.array.drawer_items);
-        ListView listView = (ListView) findViewById(R.id.left_drawer);
-        listView.setAdapter(new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, drawerItems));
-        listView.setOnItemClickListener(new DrawerItemClickListner(this));
+        if(!user.getTrajectories().isEmpty()) {
+            mapFragment.getMapAsync(this);
+        }
+        else{
+            findViewById(R.id.spinner_trajectories).setVisibility(View.GONE);
+            mapFragment.getView().setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -65,6 +64,7 @@ public class HomeActivity extends Activity implements OnMapReadyCallback {
     public void onMapReady(final GoogleMap googleMap) {
         //Populate Trajectories Spinner
         Spinner trajectories = (Spinner) findViewById(R.id.spinner_trajectories);
+        Collections.sort(user.getTrajectories());
         trajectories.setAdapter(new ArrayAdapter<>(this,
                 R.layout.support_simple_spinner_dropdown_item, user.getTrajectories()));
         trajectories.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -96,12 +96,12 @@ public class HomeActivity extends Activity implements OnMapReadyCallback {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if(response.code() == UtilREST.HTTP_OK){
-                    Toast.makeText(getBaseContext(),"Trajectory sent with success",
+                    Toast.makeText(getBaseContext(),R.string.send_trajectory_success_toast,
                             Toast.LENGTH_LONG).show();
                     findViewById(R.id.send_traj_button).setVisibility(View.GONE);
                     t.setAtServer(true);
                 }else if(response.code() == UtilREST.HTTP_CONFLICT){
-                    Toast.makeText(getBaseContext(),"Trajectory already in cloud",
+                    Toast.makeText(getBaseContext(),R.string.send_trajectory_failed_toast,
                             Toast.LENGTH_LONG).show();
                     findViewById(R.id.send_traj_button).setVisibility(View.GONE);
                     t.setAtServer(true);

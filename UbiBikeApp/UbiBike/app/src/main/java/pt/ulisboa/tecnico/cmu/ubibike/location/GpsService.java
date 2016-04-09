@@ -4,11 +4,10 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Trajectory;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
-import pt.ulisboa.tecnico.cmu.ubibike.files.UtilFile;
+import pt.ulisboa.tecnico.cmu.ubibike.data.files.UtilFile;
 
 
 public class GpsService extends Service {

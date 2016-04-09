@@ -4,9 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by André on 21-03-2016.
- */
 public class Station implements Serializable {
 
     private String name;
@@ -23,8 +20,6 @@ public class Station implements Serializable {
     public List<Bike> getBikes(){
         return bikes;
     }
-
-    public void setBikes(List<Bike> bikes) { this.bikes = bikes; }
 
     public String getName(){
         return name;

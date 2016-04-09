@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/marker"
@@ -24,52 +25,59 @@
             android:value="AIzaSyBo6CXPk7SkenfO-66ZHF94LooOm8gDVNU" />
 
         <activity
-            android:name=".LoginActivity"
+            android:name=".activities.LoginActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:theme="@style/FullscreenTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".CreateAccountActivity"
+            android:name=".activities.CreateAccountActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_create_account"
             android:theme="@style/FullscreenTheme" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="pt.ulisboa.tecnico.cmu.ubibike.LoginActivity" />
+                android:value=".activities.LoginActivity" />
         </activity>
         <activity
-            android:name=".HomeActivity"
+            android:name=".activities.HomeActivity"
             android:theme="@style/FullscreenTheme" >
         </activity>
         <activity
-            android:name=".SearchUserActivity"
+            android:name=".activities.SearchUserActivity"
             android:theme="@style/FullscreenTheme" >
         </activity>
-        <activity android:name=".StationsActivity" >
+        <activity android:name=".activities.StationsActivity" >
         </activity>
-        <activity android:name=".BookBikesActivity" >
+        <activity android:name=".activities.BookBikesActivity" >
         </activity>
         <activity
-            android:name=".NearbyUsersActivity"
+            android:name=".activities.NearbyUsersActivity"
             android:label="@string/title_activity_nearby_users"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
-        <activity android:name=".UserPresentationActivity" >
+        <activity android:name=".activities.UserPresentationActivity" >
         </activity>
-        <activity android:name=".TrackTrajectoryDemo" >
+        <activity android:name=".activities.TrackTrajectoryDemo" >
         </activity>
-        <service android:name=".location.GpsService"></service>
-        <service android:name=".services.UserService" android:exported="false">
+
+        <service android:name=".location.GpsService" />
+        <service
+            android:name=".services.UserService"
+            android:exported="false" >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
             </intent-filter>
         </service>
+
+        <activity android:name=".activities.BaseDrawerActivity" >
+        </activity>
     </application>
 
 </manifest>
