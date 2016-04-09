@@ -11,7 +11,7 @@ public class Coordinates implements Serializable{
 
     private double longitude;
 
-    public Coordinates(float latitude,float longitude){
+    public Coordinates(double latitude,double longitude){
         setLatitude(latitude);
         setLongitude(longitude);
     }

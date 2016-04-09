@@ -1,6 +1,5 @@
-package pt.ulisboa.tecnico.cmu.ubibike.rest;
+package pt.ulisboa.tecnico.cmu.ubibike.remote.rest;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import retrofit2.Retrofit;
@@ -14,6 +13,8 @@ public final class UtilREST {
     private final static String DATE_FORMAT_REST = "dd-MM-yyyy HH:mm:ss";
 
     public final static int HTTP_OK = 200;
+
+    public final static int HTTP_CONFLICT = 409;
 
     public final static String ACCEPT_HEADER = "Accept";
 

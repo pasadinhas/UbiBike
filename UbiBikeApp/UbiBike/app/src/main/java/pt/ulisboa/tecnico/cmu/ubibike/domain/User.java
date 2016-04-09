@@ -40,5 +40,7 @@ public class User implements Serializable{
         return this.trajectories;
     }
 
-    public void setTrajectories(List<Trajectory> trajectories){this.trajectories = trajectories;}
+    public void addTrajectory(Trajectory trajectory){
+        this.trajectories.add(trajectory);
+    }
 }

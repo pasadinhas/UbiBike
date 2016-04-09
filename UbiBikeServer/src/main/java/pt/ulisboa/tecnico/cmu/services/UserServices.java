@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import pt.ulisboa.tecnico.cmu.domain.Trajectory;
 import pt.ulisboa.tecnico.cmu.domain.User;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.InvalidLoginException;
+import pt.ulisboa.tecnico.cmu.domain.exceptions.TrajectoryAlreadyExistException;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.UserAlreadyExistException;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.UserDoesntExistException;
 import pt.ulisboa.tecnico.cmu.domain.repositories.UserRepository;
@@ -22,9 +23,7 @@ public class UserServices {
 	
 	public User loginUser(String username,String password) 
 			throws UserDoesntExistException, InvalidLoginException{
-		User user = userRepository.findOne(username); 
-		if(user == null)
-			throw new UserDoesntExistException();
+		User user = getUser(username);
 		if(!user.getPassword().equals(password))
 			throw new InvalidLoginException();
 		return user;
@@ -39,28 +38,22 @@ public class UserServices {
 	}
 	
 	public User updateUserPoints(String username,long points) throws UserDoesntExistException{
-		User user = userRepository.findOne(username); 
-		if(user == null)
-			throw new UserDoesntExistException();
+		User user = getUser(username);
 		user.setPoints(points);
 		userRepository.save(user);
 		return user;
 	}
 	
 	public User addTrajectory(String username,Trajectory trajectory) 
-			throws UserDoesntExistException{
-		User user = userRepository.findOne(username); 
-		if(user == null)
-			throw new UserDoesntExistException();
+			throws UserDoesntExistException, TrajectoryAlreadyExistException{
+		User user = getUser(username);
 		user.addTrajectory(trajectory);
 		userRepository.save(user);
 		return user;
 	} 
 	
 	public User getUserInformation(String username) throws UserDoesntExistException{
-		User user = userRepository.findOne(username); 
-		if(user == null)
-			throw new UserDoesntExistException();
+		User user = getUser(username);
 		return user;
 	}
 	
@@ -73,4 +66,12 @@ public class UserServices {
 		}
 		return users;
 	}
+	
+	private User getUser(String username) throws UserDoesntExistException{
+		User user = userRepository.findOne(username);
+		if(user == null)
+			throw new UserDoesntExistException();
+		return user;
+	}
+	
 }

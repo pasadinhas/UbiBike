@@ -1,6 +1,4 @@
-package pt.ulisboa.tecnico.cmu.ubibike.rest;
-
-import android.widget.ListView;
+package pt.ulisboa.tecnico.cmu.ubibike.remote.rest;
 
 import java.util.List;
 

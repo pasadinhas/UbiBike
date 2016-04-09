@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmu.ubibike.rest;
+package pt.ulisboa.tecnico.cmu.ubibike.remote.rest;
 
 import java.util.List;
 

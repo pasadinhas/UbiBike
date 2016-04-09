@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmu.ubibike.map;
+package pt.ulisboa.tecnico.cmu.ubibike.location;
 
 import android.graphics.Color;
 
@@ -41,13 +41,13 @@ public abstract class UtilMap {
             }
             opt.add(latLng);
         }
-        opt.width(7);
+        opt.width(10);
         opt.color(Color.GREEN);
         map.addPolyline(opt);
     }
 
     public static void moveToCurrentLocation(GoogleMap googleMap,LatLng currentLocation) {
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 12));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 17));
         //googleMap.animateCamera(CameraUpdateFactory.zoomIn());
         //googleMap.animateCamera(CameraUpdateFactory.zoomTo(17), 3000, null);
     }

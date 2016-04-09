@@ -16,7 +16,7 @@
         android:id="@+id/titleTextView"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="40dp"
         android:textSize="@dimen/title"
         android:textColor="@color/title" />
 
@@ -29,7 +29,7 @@
         android:layout_below="@+id/titleTextView"
         android:layout_alignLeft="@+id/pwd_verify_editText"
         android:layout_alignStart="@+id/pwd_verify_editText"
-        android:layout_marginTop="58dp"
+        android:layout_marginTop="70dp"
         android:hint="@string/username_placeholder" />
 
     <EditText
@@ -38,7 +38,7 @@
         android:inputType="textPassword"
         android:ems="10"
         android:id="@+id/pwd_editText"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="30dp"
         android:hint="@string/password_placeholder"
         android:layout_below="@+id/pwd_verify_editText"
         android:layout_centerHorizontal="true" />
@@ -60,22 +60,25 @@
         android:text="@string/create_account_button"
         android:id="@+id/create_button"
         android:onClick="submitCreateAccount"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/terms_checkBox"
+        android:layout_alignLeft="@+id/terms_checkBox"
+        android:layout_alignStart="@+id/terms_checkBox"
         android:layout_alignRight="@+id/terms_checkBox"
         android:layout_alignEnd="@+id/terms_checkBox"
-        android:layout_alignLeft="@+id/terms_checkBox"
-        android:layout_alignStart="@+id/terms_checkBox" />
+        android:layout_marginBottom="5dp" />
 
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/accept_terms"
         android:id="@+id/terms_checkBox"
-        android:layout_above="@+id/create_button"
+        android:checked="false"
+        android:layout_below="@+id/pwd_editText"
         android:layout_alignLeft="@+id/pwd_editText"
         android:layout_alignStart="@+id/pwd_editText"
         android:layout_alignRight="@+id/pwd_editText"
         android:layout_alignEnd="@+id/pwd_editText"
-        android:checked="false" />
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp" />
 
 </RelativeLayout>

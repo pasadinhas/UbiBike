@@ -5,6 +5,8 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import pt.ulisboa.tecnico.cmu.domain.exceptions.TrajectoryAlreadyExistException;
+
 @Component
 class InitializerComponent {
 	
@@ -12,7 +14,7 @@ class InitializerComponent {
 	private InitializeDatabase init;
 	
     @EventListener({ContextRefreshedEvent.class})
-    void contextRefreshedEvent() {
+    void contextRefreshedEvent() throws TrajectoryAlreadyExistException {
         init.populateDatabase();
     }
 }

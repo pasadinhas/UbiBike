@@ -1,32 +1,27 @@
 package pt.ulisboa.tecnico.cmu.ubibike;
  
 import android.app.Activity;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import okhttp3.internal.Util;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
-import pt.ulisboa.tecnico.cmu.ubibike.rest.UserServiceREST;
-import pt.ulisboa.tecnico.cmu.ubibike.rest.UtilREST;
+import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UserServiceREST;
+import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UtilREST;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.http.HTTP;
 
 public class CreateAccountActivity extends Activity {
 
-    private Activity currentActivity;
+    private Activity currentActivity = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        currentActivity = this;
         setContentView(R.layout.activity_create_account);
     }
 
@@ -47,7 +42,7 @@ public class CreateAccountActivity extends Activity {
             ((EditText)findViewById(R.id.pwd_verify_editText)).setError(getString(R.string.field_required));
             valid = false;
         }
-        else if(valid && !password.equals(verifyPassword)){
+        else if(!password.equals(verifyPassword)){
             ((EditText)findViewById(R.id.pwd_verify_editText)).setError(getString(R.string.password_doesnt_match));
             valid = false;
         }
@@ -64,7 +59,7 @@ public class CreateAccountActivity extends Activity {
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                if(response.code() == 200){
+                if(response.code() == UtilREST.HTTP_OK){
                     Toast.makeText(getBaseContext(),R.string.creation_success,Toast.LENGTH_LONG).show();
                     currentActivity.finish();
                 }

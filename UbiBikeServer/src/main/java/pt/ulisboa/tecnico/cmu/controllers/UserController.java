@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import pt.ulisboa.tecnico.cmu.domain.Trajectory;
 import pt.ulisboa.tecnico.cmu.domain.User;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.InvalidLoginException;
+import pt.ulisboa.tecnico.cmu.domain.exceptions.TrajectoryAlreadyExistException;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.UserAlreadyExistException;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.UserDoesntExistException;
 import pt.ulisboa.tecnico.cmu.services.UserServices;
@@ -45,6 +46,12 @@ public class UserController {
 	@ExceptionHandler(InvalidLoginException.class)
 	public ResponseEntity<Error> handleInvalidLogin(InvalidLoginException ex,HttpServletRequest request){
 		return new ResponseEntity<Error>(new Error(409,ex.getLocalizedMessage()),HttpStatus.NOT_FOUND);
+	}
+	
+	@ExceptionHandler(TrajectoryAlreadyExistException.class)
+	public ResponseEntity<Error> handleTrajectoryAlreadyExistException(TrajectoryAlreadyExistException ex,
+			HttpServletRequest request){
+		return new ResponseEntity<Error>(new Error(409,ex.getLocalizedMessage()),HttpStatus.CONFLICT);
 	}
 	
 	/* ============= RESTful services =============== */
@@ -76,7 +83,8 @@ public class UserController {
 	
 	@RequestMapping(value= "/ubibike/user/{username}/trajectory",method=RequestMethod.POST)
 	public ResponseEntity<User> addTrajectory(@PathVariable String username,
-			@RequestBody Trajectory trajectory) throws UserDoesntExistException{
+			@RequestBody Trajectory trajectory) throws UserDoesntExistException,
+			TrajectoryAlreadyExistException{
 		User user = userServices.addTrajectory(username, trajectory);
 		return new ResponseEntity<User>(user,HttpStatus.OK);
 	}

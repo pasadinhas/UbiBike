@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmu.ubibike.rest;
+package pt.ulisboa.tecnico.cmu.ubibike.remote.rest;
 
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Bike;
 import retrofit2.Call;

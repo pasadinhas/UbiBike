@@ -2,6 +2,7 @@ package pt.ulisboa.tecnico.cmu.ubibike;
 
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -18,13 +19,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.HashMap;
 import java.util.Map;
 
-import okhttp3.internal.Util;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Bike;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Station;
 import pt.ulisboa.tecnico.cmu.ubibike.listners.DrawerItemClickListner;
-import pt.ulisboa.tecnico.cmu.ubibike.map.UtilMap;
-import pt.ulisboa.tecnico.cmu.ubibike.rest.BikeServiceREST;
-import pt.ulisboa.tecnico.cmu.ubibike.rest.UtilREST;
+import pt.ulisboa.tecnico.cmu.ubibike.location.UtilMap;
+import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.BikeServiceREST;
+import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UtilREST;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -33,7 +33,7 @@ public class BookBikesActivity extends FragmentActivity implements OnMapReadyCal
 
     private Station station;
 
-    private Map<Marker,String> markers = new HashMap<Marker,String>();
+    private Map<Marker,Bike> markers = new HashMap<>();
 
     private Marker selectedMarker = null;
 
@@ -48,13 +48,13 @@ public class BookBikesActivity extends FragmentActivity implements OnMapReadyCal
         //Populate UI components
         String[] drawerItems = getResources().getStringArray(R.array.drawer_items);
         ListView listView = (ListView) findViewById(R.id.left_drawer);
-        listView.setAdapter(new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, drawerItems));
+        listView.setAdapter(new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, drawerItems));
         listView.setOnItemClickListener(new DrawerItemClickListner(this));
     }
 
     @Override
     public void onMapReady(GoogleMap map) {
-        LatLng latlng = null;
+        LatLng latlng;
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
@@ -68,12 +68,13 @@ public class BookBikesActivity extends FragmentActivity implements OnMapReadyCal
                 selectedMarker = null;
             }
         });
-        UtilMap.moveToCurrentLocation(map, new LatLng(station.getPosition().getLatitude(), station.getPosition().getLongitude()));
+        UtilMap.moveToCurrentLocation(map, new LatLng(station.getPosition().getLatitude(),
+                station.getPosition().getLongitude()));
         for(Bike bike : station.getBikes()){
             latlng = new LatLng(bike.getPosition().getLatitude(),bike.getPosition().getLongitude());
-            MarkerOptions opt = new MarkerOptions().position(latlng).title("Bike Nrº: " + bike.getIdentifier())
+            MarkerOptions opt = new MarkerOptions().position(latlng).title("Bike: " + bike.getIdentifier())
                     .icon(BitmapDescriptorFactory.fromResource(R.mipmap.marker));
-            markers.put(map.addMarker(opt), bike.getIdentifier());
+            markers.put(map.addMarker(opt), bike);
         }
     }
 
@@ -83,12 +84,13 @@ public class BookBikesActivity extends FragmentActivity implements OnMapReadyCal
             return;
         }
         BikeServiceREST bikeService = UtilREST.getRetrofit().create(BikeServiceREST.class);
-        Call<Bike> call = bikeService.bookABike(markers.get(selectedMarker));
+        Call<Bike> call = bikeService.bookABike(markers.get(selectedMarker).getIdentifier());
         call.enqueue(new Callback<Bike>() {
             @Override
             public void onResponse(Call<Bike> call, Response<Bike> response) {
                 if (response.code() == UtilREST.HTTP_OK) {
                     Toast.makeText(getBaseContext(), R.string.booking_success, Toast.LENGTH_LONG).show();
+                    station.removeBike(markers.get(selectedMarker));
                     selectedMarker.remove();
                     markers.remove(selectedMarker);
                     selectedMarker = null;
@@ -96,13 +98,16 @@ public class BookBikesActivity extends FragmentActivity implements OnMapReadyCal
                     Toast.makeText(getBaseContext(), R.string.booking_failed, Toast.LENGTH_LONG).show();
                 }
             }
-
             @Override
             public void onFailure(Call<Bike> call, Throwable t) {
                 Toast.makeText(getBaseContext(), R.string.impossible_connect_server, Toast.LENGTH_LONG).show();
-                t.printStackTrace();
             }
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d("Book", "Book bikes destroyed!!");
+    }
 }

@@ -2,22 +2,19 @@ package pt.ulisboa.tecnico.cmu.ubibike.listners;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-
-import com.google.android.gms.nearby.Nearby;
 
 import pt.ulisboa.tecnico.cmu.ubibike.LoginActivity;
 import pt.ulisboa.tecnico.cmu.ubibike.NearbyUsersActivity;
 import pt.ulisboa.tecnico.cmu.ubibike.SearchUserActivity;
 import pt.ulisboa.tecnico.cmu.ubibike.HomeActivity;
 import pt.ulisboa.tecnico.cmu.ubibike.StationsActivity;
+import pt.ulisboa.tecnico.cmu.ubibike.TrackTrajectoryDemo;
+import pt.ulisboa.tecnico.cmu.ubibike.domain.Trajectory;
 
-/**
- * Created by André on 25-03-2016.
- */
+
 public class DrawerItemClickListner implements ListView.OnItemClickListener {
 
     private Activity current;
@@ -40,6 +37,9 @@ public class DrawerItemClickListner implements ListView.OnItemClickListener {
             Intent intent = new Intent(current, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
             current.startActivity(intent);
+        }
+        else if(!current.getClass().equals(TrackTrajectoryDemo.class) && position == 5){
+            current.startActivity(new Intent(current, TrackTrajectoryDemo.class));
         }
     }
 

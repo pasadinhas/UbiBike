@@ -56,8 +56,12 @@ public class InitializeDatabase {
         Bike b5 = new Bike(new Coordinates(38.754206, -9.145207),"5");
         User u = new User("Admin","root");
         u.setPoints(7890);
-        u.addTrajectory(t);
-        u.addTrajectory(t1);
+        try{
+        	u.addTrajectory(t);
+            u.addTrajectory(t1);
+        }catch(Exception e){
+        	//DO Nothing
+        }
         Station s1 = new Station("Carnide",new Coordinates(38.770018, -9.204704));
         s1.addBike(b1);
         s1.addBike(b2);

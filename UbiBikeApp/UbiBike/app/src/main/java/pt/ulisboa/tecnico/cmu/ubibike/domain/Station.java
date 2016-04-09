@@ -40,6 +40,10 @@ public class Station implements Serializable {
         return this.position;
     }
 
+    public void removeBike(Bike bike){
+        bikes.remove(bike);
+    }
+
     public String toString(){
         return name + " station has " + bikes.size() + " bikes available";
     }

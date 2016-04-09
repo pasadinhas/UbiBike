@@ -7,17 +7,25 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by André on 21-03-2016.
- */
 public class Trajectory implements Serializable{
 
     private Date date;
 
     private List<Coordinates> trajectory = new ArrayList<>();
 
+    private boolean atServer = true;
+
+
     public Trajectory(Date date){
         setDate(date);
+    }
+
+    public boolean getAtServer(){
+        return atServer;
+    }
+
+    public void setAtServer(boolean atServer){
+        this.atServer = atServer;
     }
 
     public Date getDate(){
@@ -32,7 +40,9 @@ public class Trajectory implements Serializable{
         return this.trajectory;
     }
 
-   // public void setTrajectory(List<Coordinates> list) { this.trajectory = list;}
+    public void addCoordinate(Coordinates coord){
+        trajectory.add(coord);
+    }
 
     public boolean isEmpty(){
         return trajectory.isEmpty();

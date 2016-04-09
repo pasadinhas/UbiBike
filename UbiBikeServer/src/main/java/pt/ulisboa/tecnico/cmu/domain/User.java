@@ -11,6 +11,8 @@ import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import pt.ulisboa.tecnico.cmu.domain.exceptions.TrajectoryAlreadyExistException;
+
 @Entity
 public class User {
 	
@@ -68,7 +70,12 @@ public class User {
 		this.points += points;
 	}
 	
-	public void addTrajectory(Trajectory t){
+	public void addTrajectory(Trajectory t) throws TrajectoryAlreadyExistException{
+		for(Trajectory traj : trajectories){
+			if(t.equals(traj)){
+				throw new TrajectoryAlreadyExistException();
+			}
+		}
 		trajectories.add(t);
 	}
 	

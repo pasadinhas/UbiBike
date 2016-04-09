@@ -3,7 +3,6 @@ package pt.ulisboa.tecnico.cmu.ubibike;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -12,31 +11,38 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
-import pt.ulisboa.tecnico.cmu.ubibike.rest.UserServiceREST;
-import pt.ulisboa.tecnico.cmu.ubibike.rest.UtilREST;
+import pt.ulisboa.tecnico.cmu.ubibike.listners.DrawerItemClickListner;
+import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UserServiceREST;
+import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UtilREST;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SearchUserActivity extends Activity implements AdapterView.OnItemClickListener {
 
-    private Activity currentActivity;
+    private Activity currentActivity = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_user);
-        currentActivity = this;
         ListView list = (ListView)findViewById(R.id.usernames_listView);
         list.setOnItemClickListener(this);
+        //Populate UI components
+        String[] drawerItems = getResources().getStringArray(R.array.drawer_items);
+        ListView listView = (ListView) findViewById(R.id.left_drawer);
+        listView.setAdapter(new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, drawerItems));
+        listView.setOnItemClickListener(new DrawerItemClickListner(this));
     }
 
     public void search(View view){
         TextView usernameTextView = (EditText)findViewById(R.id.username_editText);
         String username = usernameTextView.getText().toString();
+
         UserServiceREST userService = UtilREST.getRetrofit().create(UserServiceREST.class);
         Call<List<String>> call = userService.getUsernames(username);
         call.enqueue(new Callback<List<String>>() {
@@ -44,16 +50,14 @@ public class SearchUserActivity extends Activity implements AdapterView.OnItemCl
             public void onResponse(Call<List<String>> call, Response<List<String>> response) {
                 if(response.code() == UtilREST.HTTP_OK){
                     List<String> usernamesList = response.body();
-                    if(usernamesList != null && usernamesList.size() > 0){
+                    usernamesList = ((usernamesList == null) ? new ArrayList<String>() : usernamesList);
+                    if(!usernamesList.isEmpty()){
                         ListView listView = (ListView)findViewById(R.id.usernames_listView);
-                        listView.setAdapter(new ArrayAdapter<String>(currentActivity,
+                        listView.setAdapter(new ArrayAdapter<>(currentActivity,
                                 R.layout.support_simple_spinner_dropdown_item,usernamesList));
-                        Toast.makeText(getBaseContext(),usernamesList.size() + " Users found",
-                                Toast.LENGTH_LONG).show();
                     }
-                    else{
-                        Toast.makeText(getBaseContext(),"0 Users found",Toast.LENGTH_LONG).show();
-                    }
+                    Toast.makeText(getBaseContext(),usernamesList.size()+" "+getString(R.string.users_found),
+                            Toast.LENGTH_LONG).show();
                 }
             }
             @Override
@@ -73,7 +77,7 @@ public class SearchUserActivity extends Activity implements AdapterView.OnItemCl
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                if (response.code() == 200) {
+                if (response.code() == UtilREST.HTTP_OK) {
                     Intent intent = new Intent(currentActivity,UserPresentationActivity.class);
                     intent.putExtra("User",response.body());
                     startActivity(intent);
