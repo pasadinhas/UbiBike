@@ -40,6 +40,12 @@ public class User implements Serializable{
         return this.trajectories;
     }
 
+    public void userFromServer(){
+        for(Trajectory t : trajectories){
+            t.setAtServer(true);
+        }
+    }
+
     public void addTrajectory(Trajectory trajectory){
         this.trajectories.add(trajectory);
     }

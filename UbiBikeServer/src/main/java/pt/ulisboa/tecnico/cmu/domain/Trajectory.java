@@ -52,9 +52,10 @@ public class Trajectory {
 		return this.trajectory;
 	}
 	
+	@Override
 	public boolean equals(Object o){
 		Trajectory t = (Trajectory)o;
-		return this.date.equals(t);
+		return (date.compareTo(t.getDate()) == 0);
 	}
 	
 }

@@ -88,7 +88,7 @@ public class HomeActivity extends Activity implements OnMapReadyCallback {
     }
 
     public void sendTrajectoryCloud(View view){
-        final Trajectory t = (Trajectory) ((Spinner) findViewById(R.id.spinner_trajectories)).getSelectedItem();
+        final Trajectory t = (Trajectory)((Spinner) findViewById(R.id.spinner_trajectories)).getSelectedItem();
         UserServiceREST userService = UtilREST.getRetrofit().create(UserServiceREST.class);
         Call<User> call = userService.addTrajectory(UtilREST.CONTENT_HEADER,UtilREST.CONTENT_HEADER,
                 user.getUsername(),t);

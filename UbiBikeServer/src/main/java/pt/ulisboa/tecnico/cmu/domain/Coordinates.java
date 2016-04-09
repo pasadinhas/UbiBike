@@ -44,4 +44,11 @@ public class Coordinates {
 		return this.longitude;
 	}
 	
+	@Override
+	public boolean equals(Object o){
+		Coordinates c = (Coordinates) o;
+		return (Double.compare(c.getLatitude(),getLatitude()) == 0) &&
+			   (Double.compare(c.getLongitude(), getLongitude()) == 0);
+	}
+	
 }

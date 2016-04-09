@@ -57,7 +57,9 @@ public class LoginActivity extends Activity
             public void onResponse(Call<User> call, Response<User> response) {
                 if(response.code() == UtilREST.HTTP_OK){
                     Intent intent = new Intent(currentActivity,HomeActivity.class);
-                    intent.putExtra("User",response.body());
+                    User user = response.body();
+                    user.userFromServer();
+                    intent.putExtra("User",user);
                     startActivity(intent);
                 }
                 else{

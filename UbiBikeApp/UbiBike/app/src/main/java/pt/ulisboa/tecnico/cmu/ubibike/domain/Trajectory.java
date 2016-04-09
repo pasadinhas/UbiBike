@@ -17,6 +17,7 @@ public class Trajectory implements Serializable{
 
 
     public Trajectory(Date date){
+        setAtServer(true);
         setDate(date);
     }
 
