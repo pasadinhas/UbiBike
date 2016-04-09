@@ -54,7 +54,7 @@ public class Trajectory {
 	
 	public boolean equals(Object o){
 		Trajectory t = (Trajectory)o;
-		return this.date.equals(t.equals(o));
+		return this.date.equals(t);
 	}
 	
 }
