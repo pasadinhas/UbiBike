@@ -24,7 +24,7 @@ import pt.ulisboa.tecnico.cmu.ubibike.domain.Trajectory;
 public class GpsTracking  implements GoogleApiClient.ConnectionCallbacks,
                         GoogleApiClient.OnConnectionFailedListener,LocationListener{
 
-    private final static int UPDATES_INTERVAL = 5000;
+    private final static int UPDATES_INTERVAL = 4000;
 
     private Trajectory trajectory;
 
@@ -35,7 +35,6 @@ public class GpsTracking  implements GoogleApiClient.ConnectionCallbacks,
     private LocationRequest locationRequest;
 
     private boolean isConnected;
-
 
     public GpsTracking(Context context){
         isConnected = false;
@@ -57,7 +56,7 @@ public class GpsTracking  implements GoogleApiClient.ConnectionCallbacks,
     @Override
     public void onLocationChanged(Location location) {
         trajectory.addCoordinate(new Coordinates(location.getLatitude(), location.getLongitude()));
-        Log.d("GPS",location.getLatitude()+ " " + location.getLongitude());
+        Log.d("GPS Coordinates",location.getLatitude()+ " " + location.getLongitude());
     }
 
     private void startLocationUpdates() {

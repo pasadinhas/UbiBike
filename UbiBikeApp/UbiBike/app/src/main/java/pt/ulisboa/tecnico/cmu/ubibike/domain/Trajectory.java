@@ -1,5 +1,7 @@
 package pt.ulisboa.tecnico.cmu.ubibike.domain;
 
+import android.location.Location;
+
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -46,6 +48,22 @@ public class Trajectory implements Serializable, Comparable<Trajectory>{
 
     public boolean isEmpty(){
         return trajectory.isEmpty();
+    }
+
+    public float getTotalMeters(){
+        float acc = 0;
+        if(trajectory.size() <= 1)
+            return 0;
+        Coordinates coord = trajectory.get(0);
+        for(int i = 1; i < trajectory.size(); i++){
+            Coordinates coord2 = trajectory.get(i);
+            float[] res = new float[1];
+                    Location.distanceBetween(coord.getLatitude(),coord.getLongitude(),
+                    coord2.getLatitude(),coord2.getLongitude(),res);
+            acc += res[0];
+            coord = coord2;
+        }
+        return acc;
     }
 
     @Override

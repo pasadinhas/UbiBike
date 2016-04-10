@@ -47,7 +47,7 @@ public class StationsActivity extends Activity implements ListView.OnItemClickLi
         currentActivity.startActivity(intent);
     }
 
-    // Get station information from the server.
+    // Get station information from the remote server.
     private void getStations(){
         StationServiceREST stationService = UtilREST.getRetrofit().create(StationServiceREST.class);
         Call<List<Station>> call = stationService.getStations();

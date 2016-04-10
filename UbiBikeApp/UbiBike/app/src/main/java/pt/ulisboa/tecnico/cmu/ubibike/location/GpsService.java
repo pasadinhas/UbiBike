@@ -4,7 +4,10 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.Log;
+import android.widget.Toast;
 
+import pt.ulisboa.tecnico.cmu.ubibike.data.UserData;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Trajectory;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
 import pt.ulisboa.tecnico.cmu.ubibike.data.files.UtilFile;
@@ -41,9 +44,10 @@ public class GpsService extends Service {
     }
 
     private void saveTrajectory(Trajectory t){
-        User user = (User) UtilFile.readFromFile(getBaseContext(),UtilFile.USER_FILE);
-        if(user != null) user.addTrajectory(t);
-        UtilFile.writeToFile(getBaseContext(),user,UtilFile.USER_FILE);
+        User user = UserData.getUserData(this);
+        user.addTrajectory(t);
+        user.updateUserPoints(Math.round(t.getTotalMeters()));
+        UserData.saveUserData(this);
     }
 
 }

@@ -15,8 +15,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-public class Trajectory {
-
+public class Trajectory{
+	
 	@Id
 	@GeneratedValue
 	@JsonIgnore
@@ -57,5 +57,6 @@ public class Trajectory {
 		Trajectory t = (Trajectory)o;
 		return (date.compareTo(t.getDate()) == 0);
 	}
-	
+
+
 }

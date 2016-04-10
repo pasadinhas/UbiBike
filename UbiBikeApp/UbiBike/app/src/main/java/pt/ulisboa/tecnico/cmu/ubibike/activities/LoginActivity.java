@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import pt.ulisboa.tecnico.cmu.ubibike.R;
 import pt.ulisboa.tecnico.cmu.ubibike.data.LoginData;
+import pt.ulisboa.tecnico.cmu.ubibike.data.UserData;
 import pt.ulisboa.tecnico.cmu.ubibike.data.files.UtilFile;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UserServiceREST;
@@ -69,7 +70,8 @@ public class LoginActivity extends Activity
                     Intent intent = new Intent(currentActivity,HomeActivity.class);
                     User user = response.body();
                     user.userFromServer();
-                    UtilFile.writeToFile(currentActivity, user, UtilFile.USER_FILE);
+                    UserData.setUserData(currentActivity, user);
+                    UserData.saveUserData(currentActivity);
                     LoginData.setLoggedIn(currentActivity,user.getUsername());
                     intent.putExtra("User", user);
                     finish();

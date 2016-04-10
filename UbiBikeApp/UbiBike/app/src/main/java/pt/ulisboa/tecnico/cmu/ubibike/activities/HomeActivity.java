@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.cmu.ubibike.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,9 +17,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import java.util.Collections;
 
 import pt.ulisboa.tecnico.cmu.ubibike.R;
+import pt.ulisboa.tecnico.cmu.ubibike.data.UserData;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Trajectory;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
-import pt.ulisboa.tecnico.cmu.ubibike.data.files.UtilFile;
 import pt.ulisboa.tecnico.cmu.ubibike.location.UtilMap;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UserServiceREST;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UtilREST;
@@ -36,9 +37,7 @@ public class HomeActivity extends BaseDrawerActivity implements OnMapReadyCallba
         setContentView(R.layout.activity_home);
         user = (User)getIntent().getSerializableExtra("User");
         if(user == null){
-            user = (User) UtilFile.readFromFile(this,UtilFile.USER_FILE);
-        }else{
-            UtilFile.writeToFile(this,user,UtilFile.USER_FILE);
+            user = UserData.getUserData(this);
         }
         String points = getString(R.string.points ).concat(user.getPoints()+"");
         ((TextView)findViewById(R.id.username_textView)).setText(user.getUsername());
@@ -50,6 +49,7 @@ public class HomeActivity extends BaseDrawerActivity implements OnMapReadyCallba
         }
         else{
             findViewById(R.id.spinner_trajectories).setVisibility(View.GONE);
+            findViewById(R.id.send_traj_button).setVisibility(View.GONE);
             mapFragment.getView().setVisibility(View.GONE);
         }
     }
@@ -57,7 +57,7 @@ public class HomeActivity extends BaseDrawerActivity implements OnMapReadyCallba
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        UtilFile.writeToFile(this,user,UtilFile.USER_FILE);
+        UserData.saveUserData(this);
     }
 
     @Override

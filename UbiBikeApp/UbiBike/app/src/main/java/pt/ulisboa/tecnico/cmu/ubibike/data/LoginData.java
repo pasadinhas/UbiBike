@@ -5,6 +5,9 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 
+/**
+ * Manipulates (persistent) preferences to control user local Login.
+ */
 public abstract class LoginData {
 
     private static final String PREF_LOGGEDIN_USER_USERNAME = "logged_in_username";
@@ -21,11 +24,6 @@ public abstract class LoginData {
         editor.putString(PREF_LOGGEDIN_USER_USERNAME, username);
         editor.putBoolean(PREF_USER_LOGGEDIN_STATUS,true);
         editor.apply();
-    }
-
-    public static String getLoggedInUsername(Context ctx)
-    {
-        return getSharedPreferences(ctx).getString(PREF_LOGGEDIN_USER_USERNAME, "");
     }
 
     public static boolean getUserLoggedInStatus(Context ctx)

@@ -37,6 +37,10 @@ public class User implements Serializable{
         return this.trajectories;
     }
 
+    public void updateUserPoints(long points){
+        this.points += points;
+    }
+
     public void userFromServer(){
         for(Trajectory t : trajectories){
             t.setAtServer(true);
