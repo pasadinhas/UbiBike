@@ -104,7 +104,7 @@ public class HomeActivity extends BaseDrawerActivity implements OnMapReadyCallba
                     findViewById(R.id.send_traj_button).setVisibility(View.GONE);
                     t.setAtServer(true);
                 }else if(response.code() == UtilREST.HTTP_CONFLICT){
-                    Toast.makeText(getBaseContext(),R.string.send_trajectory_failed_toast,
+                    Toast.makeText(getBaseContext(), R.string.send_trajectory_failed_toast,
                             Toast.LENGTH_LONG).show();
                     findViewById(R.id.send_traj_button).setVisibility(View.GONE);
                     t.setAtServer(true);

@@ -25,4 +25,8 @@ public abstract class UserData {
             UtilFile.writeToFile(c,user,UtilFile.USER_FILE);
     }
 
+    public synchronized static void removeUserData(Context c){
+        UtilFile.deleteFile(c,UtilFile.USER_FILE);
+    }
+
 }

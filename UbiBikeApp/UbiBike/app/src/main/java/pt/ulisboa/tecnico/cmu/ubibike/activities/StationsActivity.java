@@ -20,7 +20,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class StationsActivity extends Activity implements ListView.OnItemClickListener{
+public class StationsActivity extends BaseDrawerActivity implements ListView.OnItemClickListener{
 
     private List<Station> stations = new ArrayList<>();
 

@@ -12,6 +12,7 @@ import android.widget.ListView;
 
 import pt.ulisboa.tecnico.cmu.ubibike.R;
 import pt.ulisboa.tecnico.cmu.ubibike.data.LoginData;
+import pt.ulisboa.tecnico.cmu.ubibike.data.UserData;
 import pt.ulisboa.tecnico.cmu.ubibike.data.files.UtilFile;
 
 public abstract class BaseDrawerActivity extends Activity implements ListView.OnItemClickListener {
@@ -61,7 +62,7 @@ public abstract class BaseDrawerActivity extends Activity implements ListView.On
         else if (position == 4){
             intent = new Intent(this, LoginActivity.class);
             LoginData.clearLoggedIn(this);
-            UtilFile.deleteFile(this, UtilFile.USER_FILE);
+            UserData.removeUserData(getBaseContext());
         }
         else if(!this.getClass().equals(TrackTrajectoryDemo.class) && position == 5) {
             intent = new Intent(this, TrackTrajectoryDemo.class);
