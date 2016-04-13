@@ -22,8 +22,6 @@ import retrofit2.Response;
 
 public class StationsActivity extends Activity implements ListView.OnItemClickListener{
 
-    private Activity currentActivity = this;
-
     private List<Station> stations = new ArrayList<>();
 
     @Override
@@ -42,9 +40,9 @@ public class StationsActivity extends Activity implements ListView.OnItemClickLi
     @Override
     public void onItemClick(AdapterView parent, View view, int position, long id) {
         Station station = (Station) parent.getItemAtPosition(position);
-        Intent intent = new Intent(currentActivity, BookBikesActivity.class);
+        Intent intent = new Intent(getBaseContext(), BookBikesActivity.class);
         intent.putExtra("Station", station);
-        currentActivity.startActivity(intent);
+        startActivity(intent);
     }
 
     // Get station information from the remote server.
@@ -57,7 +55,7 @@ public class StationsActivity extends Activity implements ListView.OnItemClickLi
                 if(response.code() == UtilREST.HTTP_OK){
                     stations = response.body();
                     ListView view = (ListView)findViewById(R.id.stations_listView);
-                    view.setAdapter(new ArrayAdapter<>(currentActivity,
+                    view.setAdapter(new ArrayAdapter<>(getBaseContext(),
                             R.layout.support_simple_spinner_dropdown_item,stations));
                 }
             }

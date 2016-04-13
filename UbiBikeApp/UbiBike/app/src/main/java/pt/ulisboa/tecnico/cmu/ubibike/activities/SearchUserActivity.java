@@ -1,6 +1,5 @@
 package pt.ulisboa.tecnico.cmu.ubibike.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -24,8 +23,6 @@ import retrofit2.Response;
 
 public class SearchUserActivity extends BaseDrawerActivity {
 
-    private Activity currentActivity = this;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,14 +32,13 @@ public class SearchUserActivity extends BaseDrawerActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String username = (String) parent.getItemAtPosition(position);
-
                 UserServiceREST userService = UtilREST.getRetrofit().create(UserServiceREST.class);
                 Call<User> call = userService.getUser(username);
                 call.enqueue(new Callback<User>() {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {
                         if (response.code() == UtilREST.HTTP_OK) {
-                            Intent intent = new Intent(currentActivity, UserPresentationActivity.class);
+                            Intent intent = new Intent(getBaseContext(), UserPresentationActivity.class);
                             intent.putExtra("User", response.body());
                             startActivity(intent);
                         }
@@ -72,7 +68,7 @@ public class SearchUserActivity extends BaseDrawerActivity {
                     usernamesList = ((usernamesList == null) ? new ArrayList<String>() : usernamesList);
                     if(!usernamesList.isEmpty()){
                         ListView listView = (ListView)findViewById(R.id.usernames_listView);
-                        listView.setAdapter(new ArrayAdapter<>(currentActivity,
+                        listView.setAdapter(new ArrayAdapter<>(getBaseContext(),
                                 R.layout.support_simple_spinner_dropdown_item,usernamesList));
                     }
                     Toast.makeText(getBaseContext(),usernamesList.size()+" "+getString(R.string.users_found),

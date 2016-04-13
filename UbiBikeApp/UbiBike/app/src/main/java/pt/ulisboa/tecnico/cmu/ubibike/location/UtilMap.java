@@ -20,6 +20,10 @@ import pt.ulisboa.tecnico.cmu.ubibike.domain.Trajectory;
  */
 public abstract class UtilMap {
 
+    private final static int TRAJECTORY_COLOR = Color.GREEN;
+
+    private final static int TRAJECTORY_WIDTH = 10;
+
     public static void drawTrajectory(GoogleMap map,Trajectory t){
         PolylineOptions opt = new PolylineOptions();
         if(!t.isEmpty()){
@@ -41,8 +45,8 @@ public abstract class UtilMap {
             }
             opt.add(latLng);
         }
-        opt.width(10);
-        opt.color(Color.GREEN);
+        opt.width(TRAJECTORY_WIDTH);
+        opt.color(TRAJECTORY_COLOR);
         map.addPolyline(opt);
     }
 

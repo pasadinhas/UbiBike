@@ -5,9 +5,6 @@ import retrofit2.Call;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
-/**
- * Created by André on 21-03-2016.
- */
 public interface BikeServiceREST {
 
     @PUT("bike/pick/up/{id}")

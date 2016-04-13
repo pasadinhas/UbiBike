@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="pt.ulisboa.tecnico.cmu.ubibike" >
+
     <!-- Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -63,8 +64,11 @@
         </activity>
 
         <!-- Services -->
-        <service android:name=".location.GpsService" />
-
+        <service android:name=".services.GpsTrackingService" />
+        <service
+            android:name=".services.UserUpdateService"
+            android:exported="false" >
+        </service>
     </application>
 
 </manifest>

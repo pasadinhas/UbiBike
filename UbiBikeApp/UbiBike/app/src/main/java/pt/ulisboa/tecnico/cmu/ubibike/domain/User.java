@@ -10,11 +10,14 @@ public class User implements Serializable{
 
     private long points;
 
+    private boolean isDirty;
+
     private List<Trajectory> trajectories = new ArrayList<>();
 
     public User(String username) {
         setUsername(username);
         setPoints(0);
+        setIsDirty(false);
     }
 
     public String getUsername(){
@@ -32,6 +35,10 @@ public class User implements Serializable{
     public void setPoints(long points){
         this.points = points;
     }
+
+    public boolean getIsDirty() { return isDirty; }
+
+    public void setIsDirty(boolean isDirty) { this.isDirty = isDirty; }
 
     public List<Trajectory> getTrajectories(){
         return this.trajectories;

@@ -1,7 +1,7 @@
 package pt.ulisboa.tecnico.cmu.ubibike.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -38,6 +38,9 @@ public class HomeActivity extends BaseDrawerActivity implements OnMapReadyCallba
         user = (User)getIntent().getSerializableExtra("User");
         if(user == null){
             user = UserData.getUserData(this);
+        }
+        if(user.getIsDirty()){
+            Log.d("Dirty", "Dirty");
         }
         String points = getString(R.string.points ).concat(user.getPoints()+"");
         ((TextView)findViewById(R.id.username_textView)).setText(user.getUsername());
@@ -82,7 +85,7 @@ public class HomeActivity extends BaseDrawerActivity implements OnMapReadyCallba
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                //C'est la vie
+                //Do Nothing :)
             }
         });
     }
@@ -106,6 +109,7 @@ public class HomeActivity extends BaseDrawerActivity implements OnMapReadyCallba
                     findViewById(R.id.send_traj_button).setVisibility(View.GONE);
                     t.setAtServer(true);
                 }
+                UserData.saveUserData(getBaseContext());
             }
             @Override
             public void onFailure(Call<User> call, Throwable t) {

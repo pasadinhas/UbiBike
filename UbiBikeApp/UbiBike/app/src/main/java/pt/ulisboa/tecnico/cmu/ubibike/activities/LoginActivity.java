@@ -15,6 +15,7 @@ import pt.ulisboa.tecnico.cmu.ubibike.data.files.UtilFile;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UserServiceREST;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UtilREST;
+import pt.ulisboa.tecnico.cmu.ubibike.services.UserUpdateService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -22,13 +23,12 @@ import retrofit2.Response;
 public class LoginActivity extends Activity
 {
 
-    private final Activity currentActivity = this;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //APP Entry Point (Activity)!!!!
+        startService(new Intent(getBaseContext(), UserUpdateService.class));
         if(LoginData.getUserLoggedInStatus(this)){
-            Intent intent = new Intent(currentActivity,HomeActivity.class);
+            Intent intent = new Intent(getBaseContext(),HomeActivity.class);
             User user = (User) UtilFile.readFromFile(this,UtilFile.USER_FILE);
             intent.putExtra("User",user);
             finish();
@@ -39,7 +39,7 @@ public class LoginActivity extends Activity
     }
 
     public void createAccount(View view) {
-        Intent intent = new Intent(currentActivity, CreateAccountActivity.class);
+        Intent intent = new Intent(getBaseContext(), CreateAccountActivity.class);
         startActivity(intent);
     }
 
@@ -67,12 +67,12 @@ public class LoginActivity extends Activity
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if(response.code() == UtilREST.HTTP_OK){
-                    Intent intent = new Intent(currentActivity,HomeActivity.class);
+                    Intent intent = new Intent(getBaseContext(),HomeActivity.class);
                     User user = response.body();
                     user.userFromServer();
-                    UserData.setUserData(currentActivity, user);
-                    UserData.saveUserData(currentActivity);
-                    LoginData.setLoggedIn(currentActivity,user.getUsername());
+                    UserData.setUserData(getBaseContext(), user);
+                    UserData.saveUserData(getBaseContext());
+                    LoginData.setLoggedIn(getBaseContext(),user.getUsername());
                     intent.putExtra("User", user);
                     finish();
                     startActivity(intent);

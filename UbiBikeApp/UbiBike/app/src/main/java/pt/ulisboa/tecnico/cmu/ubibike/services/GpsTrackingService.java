@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmu.ubibike.location;
+package pt.ulisboa.tecnico.cmu.ubibike.services;
 
 import android.app.Service;
 import android.content.Intent;
@@ -11,9 +11,10 @@ import pt.ulisboa.tecnico.cmu.ubibike.data.UserData;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Trajectory;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
 import pt.ulisboa.tecnico.cmu.ubibike.data.files.UtilFile;
+import pt.ulisboa.tecnico.cmu.ubibike.location.GpsTracking;
 
 
-public class GpsService extends Service {
+public class GpsTrackingService extends Service {
 
     private GpsTracking gpsTracking;
 
@@ -46,6 +47,7 @@ public class GpsService extends Service {
     private void saveTrajectory(Trajectory t){
         User user = UserData.getUserData(this);
         user.addTrajectory(t);
+        user.setIsDirty(true);
         user.updateUserPoints(Math.round(t.getTotalMeters()));
         UserData.saveUserData(this);
     }
