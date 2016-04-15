@@ -26,7 +26,7 @@ public class Coordinates {
 		setLongitude(longitude);
 	}
 	
-	public Coordinates() { }	//Needed for JPA/Hibernate
+	public Coordinates() { }	//Needed for JPA/Hibernate and JSON
 	
 	public void setLatitude(double latitude){
 		this.latitude = latitude;

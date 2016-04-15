@@ -12,6 +12,7 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 
 import pt.ulisboa.tecnico.cmu.ubibike.R;
+import pt.ulisboa.tecnico.cmu.ubibike.data.UserLoginData;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Trajectory;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
 import pt.ulisboa.tecnico.cmu.ubibike.location.UtilMap;
@@ -26,8 +27,11 @@ public class UserPresentationActivity extends BaseDrawerActivity implements OnMa
         setContentView(R.layout.activity_user_presentation);
         user = (User)getIntent().getSerializableExtra("User");
         if (user == null){
-            finish();
-            return;
+            user = UserLoginData.getUser(getBaseContext());
+            if(user == null) {
+                finish();
+                return;
+            }
         }
         ((TextView)findViewById(R.id.username_textView)).setText(user.getUsername());
         String points = getString(R.string.points).concat(user.getPoints() + "");

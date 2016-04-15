@@ -13,6 +13,8 @@ public class Coordinates implements Serializable{
         setLongitude(longitude);
     }
 
+    public Coordinates() { }    //Needed for JSON
+
     public void setLatitude(double latitude){
         this.latitude = latitude;
     }

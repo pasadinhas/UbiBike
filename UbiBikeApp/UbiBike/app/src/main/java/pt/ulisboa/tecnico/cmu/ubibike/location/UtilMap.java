@@ -52,8 +52,6 @@ public abstract class UtilMap {
 
     public static void moveToCurrentLocation(GoogleMap googleMap,LatLng currentLocation) {
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 17));
-        //googleMap.animateCamera(CameraUpdateFactory.zoomIn());
-        //googleMap.animateCamera(CameraUpdateFactory.zoomTo(17), 3000, null);
     }
 
 

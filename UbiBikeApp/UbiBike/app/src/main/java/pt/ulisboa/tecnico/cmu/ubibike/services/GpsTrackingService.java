@@ -42,6 +42,7 @@ public class GpsTrackingService extends Service {
         return null;
     }
 
+    //Persist new trajectory and try synchronize with remote server.
     private void saveTrajectory(Trajectory t){
         User user = UserLoginData.getUser(getBaseContext());
         if(user != null){

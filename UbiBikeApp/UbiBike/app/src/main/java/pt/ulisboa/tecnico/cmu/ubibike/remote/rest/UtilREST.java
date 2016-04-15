@@ -11,7 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public final class UtilREST {
 
-    private final static String DATE_FORMAT = "dd-MM-yyyy HH:mm:ss";
+    public final static String DATE_FORMAT = "dd-MM-yyyy HH:mm:ss";
 
     public final static Gson GSON = new GsonBuilder().setDateFormat(DATE_FORMAT).create();
 

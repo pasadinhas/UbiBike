@@ -9,11 +9,9 @@ public class Bike implements Serializable{
 
     private Coordinates position;
 
-    public Bike(){ }
+    public Bike(){ }    //Needed for JSON
 
-    public void setIdentifier(String id){
-        this.identifier = id;
-    }
+    public void setIdentifier(String id){ this.identifier = id; }
 
     public String getIdentifier() { return this.identifier; }
 

@@ -68,7 +68,7 @@ public class LoginActivity extends Activity
                     User user = response.body();
                     UserLoginData.setUserLoggedIn(getBaseContext(), user.getUsername(), user);
                     finish();
-                    startActivity(new Intent(getBaseContext(),HomeActivity.class));
+                    startActivity(new Intent(getBaseContext(),UserPresentationActivity.class));
                 }
                 else{
                     Toast.makeText(getBaseContext(),R.string.login_failed,Toast.LENGTH_LONG).show();

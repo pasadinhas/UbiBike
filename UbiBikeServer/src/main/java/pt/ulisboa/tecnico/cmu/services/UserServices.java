@@ -1,7 +1,8 @@
 package pt.ulisboa.tecnico.cmu.services;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.TreeSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,11 +22,12 @@ public class UserServices {
 	private UserRepository userRepository;
 	
 	
-	public void loginUser(String username,String password) 
+	public User loginUser(String username,String password) 
 			throws UserDoesntExistException, InvalidLoginException{
 		User user = getUser(username);
 		if(!user.getPassword().equals(password))
 			throw new InvalidLoginException();
+		return user;
 	}
 	
 	public void createUser(String username,String password) throws UserAlreadyExistException{
@@ -41,8 +43,8 @@ public class UserServices {
 		return user;
 	}
 	
-	public List<String> getUsers(String usernamePrefix){
-		List<String> users = new ArrayList<>();
+	public Collection<String> getUsers(String usernamePrefix){
+		TreeSet<String> users = new TreeSet<>();
 		for(User user : userRepository.findAll()){
 			if(user.getUsername().startsWith(usernamePrefix)){
 				users.add(user.getUsername());

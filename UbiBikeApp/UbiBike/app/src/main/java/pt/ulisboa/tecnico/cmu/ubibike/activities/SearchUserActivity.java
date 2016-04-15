@@ -59,7 +59,7 @@ public class SearchUserActivity extends BaseDrawerActivity {
         String username = usernameTextView.getText().toString();
 
         UserServiceREST userService = UtilREST.getRetrofit().create(UserServiceREST.class);
-        Call<List<String>> call = userService.getUsernames(username);
+        Call<List<String>> call = userService.getAllUsernames(username);
         call.enqueue(new Callback<List<String>>() {
             @Override
             public void onResponse(Call<List<String>> call, Response<List<String>> response) {

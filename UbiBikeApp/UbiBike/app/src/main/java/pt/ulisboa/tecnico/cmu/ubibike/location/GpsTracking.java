@@ -41,7 +41,6 @@ public class GpsTracking  implements GoogleApiClient.ConnectionCallbacks,
         currentContext = context;
         locationRequest = new LocationRequest();
         trajectory = new Trajectory(Calendar.getInstance().getTime());
-        trajectory.setAtServer(false);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setFastestInterval(UPDATES_INTERVAL);
         locationRequest.setInterval(UPDATES_INTERVAL);

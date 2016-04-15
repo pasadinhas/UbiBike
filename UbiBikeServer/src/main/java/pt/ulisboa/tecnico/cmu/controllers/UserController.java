@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.cmu.controllers;
 
+import java.util.Collection;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -57,11 +58,12 @@ public class UserController {
 	/* ============= RESTful services =============== */
 	
 	@RequestMapping(value="/ubibike/user/login/{username}",method=RequestMethod.POST)
-	public void login(
+	public ResponseEntity<User> login(
 			@PathVariable String username,
 			@RequestParam(value="password")String password) 
 			throws UserDoesntExistException, InvalidLoginException{
-		userServices.loginUser(username, password);
+		User user = userServices.loginUser(username, password);
+		return new ResponseEntity<User>(user,HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/ubibike/user/{username}",method=RequestMethod.POST)
@@ -79,9 +81,9 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/ubibike/users/{usernamePrefix}",method=RequestMethod.GET)
-	public ResponseEntity<List<String>> getUsers(@PathVariable String usernamePrefix){
-		List<String> users = userServices.getUsers(usernamePrefix);
-		return new ResponseEntity<List<String>>(users,HttpStatus.OK);
+	public ResponseEntity<Collection<String>> getAllUsernames(@PathVariable String usernamePrefix){
+		Collection<String> users = userServices.getUsers(usernamePrefix);
+		return new ResponseEntity<Collection<String>>(users,HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/ubibike/user/{username}/points/{points}",method=RequestMethod.POST)

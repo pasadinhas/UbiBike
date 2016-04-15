@@ -37,7 +37,7 @@ public class Bike {
 		setBooked(false);
 	}
 	
-	public Bike() { } //Needed for JPA/Hibernate
+	public Bike() { } //Needed for JPA/Hibernate and JSON
 	
 	public String getIdentifier(){
 		return this.identifier;

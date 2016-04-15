@@ -9,28 +9,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UtilREST;
+
 public class Trajectory implements Serializable, Comparable<Trajectory>{
 
     private Date date;
 
     private List<Coordinates> trajectory = new ArrayList<>();
 
-    private boolean atServer;
-
     public Trajectory(Date date){
-        setAtServer(true);
         setDate(date);
     }
 
-    public Trajectory() {setAtServer(true); }
-
-    public boolean getAtServer(){
-        return atServer;
-    }
-
-    public void setAtServer(boolean atServer){
-        this.atServer = atServer;
-    }
+    public Trajectory() { } //Needed for JSON
 
     public Date getDate(){
         return date;
@@ -53,7 +44,7 @@ public class Trajectory implements Serializable, Comparable<Trajectory>{
     }
 
     public float getTotalMeters(){
-        float acc = 0;
+        float totalMetersAcc = 0;
         if(trajectory.size() <= 1)
             return 0;
         Coordinates coord = trajectory.get(0);
@@ -62,15 +53,15 @@ public class Trajectory implements Serializable, Comparable<Trajectory>{
             float[] res = new float[1];
                     Location.distanceBetween(coord.getLatitude(),coord.getLongitude(),
                     coord2.getLatitude(),coord2.getLongitude(),res);
-            acc += res[0];
+            totalMetersAcc += res[0];
             coord = coord2;
         }
-        return acc;
+        return totalMetersAcc;
     }
 
     @Override
     public String toString(){
-        DateFormat fm = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        DateFormat fm = new SimpleDateFormat(UtilREST.DATE_FORMAT);
         return fm.format(date);
     }
 

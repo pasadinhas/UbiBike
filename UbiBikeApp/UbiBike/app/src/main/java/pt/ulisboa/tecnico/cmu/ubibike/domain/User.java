@@ -17,15 +17,10 @@ public class User implements Serializable{
 
     private List<Trajectory> localTrajectories;
 
-    public User(String username) {
-        setUsername(username);
-        setPoints(0);
-        setIsDirty(false);
-    }
-
     /* Constructor for GSON */
     protected User(){
         localTrajectories = new ArrayList<>();
+        isDirty = false;
     }
 
     public String getUsername(){
@@ -68,4 +63,5 @@ public class User implements Serializable{
     }
 
     public void addLocalTrajectory(Trajectory trajectory) { this.localTrajectories.add(trajectory); }
+
 }

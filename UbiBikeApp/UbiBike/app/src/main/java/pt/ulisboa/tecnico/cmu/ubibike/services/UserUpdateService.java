@@ -55,7 +55,7 @@ public class UserUpdateService extends Service {
     }
 
     // Try update user information to the remote server.
-    private void updateUserRemotely(User user){
+    private void updateUserRemotely(final User user){
         UserServiceREST userService = UtilREST.getRetrofit().create(UserServiceREST.class);
         Call<ResponseBody> call = userService.synchronizeUser(UtilREST.ACCEPT_HEADER,UtilREST.CONTENT_TYPE_HEADER,
                 user.getUsername(),user.getPoints(),user.getLocalTrajectories());
@@ -63,20 +63,20 @@ public class UserUpdateService extends Service {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if(response.code() == UtilREST.HTTP_OK){
-                    User user = UserLoginData.getUser(getBaseContext());
                     user.setIsDirty(false);
                     user.saveLocalTrajectories();
-                    UserLoginData.setUser(getBaseContext(),user);
+                    UserLoginData.setUser(getBaseContext(), user);
                 }
+                //If not ok DO Nothing, maintain dirty user, will try next time.
             }
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                //DO Nothing
-                //Maintain dirty user, will try next time.
+                //DO Nothing, maintain dirty user, will try next time.
             }
         });
     }
 
+    //Test if device is connected to a network.
     private boolean isConnected(Context context) {
         ConnectivityManager cm =
                 (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);

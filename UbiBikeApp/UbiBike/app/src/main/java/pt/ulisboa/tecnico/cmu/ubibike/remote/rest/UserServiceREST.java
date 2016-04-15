@@ -29,7 +29,7 @@ public interface UserServiceREST {
     Call<User> getUser(@Path("username")String username);
 
     @GET("users/{usernamePrefix}")
-    Call<List<String>> getUsernames(@Path("usernamePrefix")String usernamePrefix);
+    Call<List<String>> getAllUsernames(@Path("usernamePrefix") String usernamePrefix);
 
     @POST("user/{username}/points/{points}")
     Call<ResponseBody> synchronizeUser(@Header(UtilREST.ACCEPT_HEADER) String acceptValue,
