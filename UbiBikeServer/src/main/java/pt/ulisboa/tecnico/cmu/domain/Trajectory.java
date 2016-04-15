@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-public class Trajectory{
+public class Trajectory implements Comparable<Trajectory>{
 	
 	@Id
 	@GeneratedValue
@@ -56,6 +56,16 @@ public class Trajectory{
 	public boolean equals(Object o){
 		Trajectory t = (Trajectory)o;
 		return (date.compareTo(t.getDate()) == 0);
+	}
+
+	@Override
+	public int compareTo(Trajectory another) {
+		int res = getDate().compareTo(another.getDate());
+        if(res < 0)
+            res =  1;
+        else if(res > 0)
+            res = -1;
+        return res;
 	}
 
 

@@ -15,37 +15,36 @@ public class BikeServices {
 	private BikeRepository bikeRepository;
 	
 	
-	public Bike bikePickedUp(String id) throws BikeDoesntExistException{
-		Bike bike = bikeRepository.findOne(id);
-		if(bike == null)
-			throw new BikeDoesntExistException();
+	public void bikePickedUp(String id) throws BikeDoesntExistException{
+		Bike bike = getBike(id);
 		Station s = bike.getStation();
 		if(s == null){
 			System.out.println("Bike: " + id + " out of station");
-			return bike;
+			return ;
 		}
 		bike.setStation(null);
 		bike.setPicked(true);
 		bikeRepository.save(bike);
-		return bike;
 	}
 	
-	public Bike bikePickedOff(String id) throws BikeDoesntExistException{
-		Bike bike = bikeRepository.findOne(id);
-		if(bike == null)
-			throw new BikeDoesntExistException();
+	public void bikePickedOff(String id) throws BikeDoesntExistException{
+		Bike bike = getBike(id);
 		bike.setPicked(false);
 		bike.setBooked(false);
 		bikeRepository.save(bike);
-		return bike;
 	}
 	
-	public Bike bookABike(String id) throws BikeDoesntExistException{
+	public void bookABike(String id) throws BikeDoesntExistException{
+		Bike bike = getBike(id);
+		bike.setBooked(true);
+		bikeRepository.save(bike);
+	}
+	
+	private Bike getBike(String id) throws BikeDoesntExistException{
 		Bike bike = bikeRepository.findOne(id);
 		if(bike == null)
 			throw new BikeDoesntExistException();
-		bike.setBooked(true);
-		bikeRepository.save(bike);
 		return bike;
 	}
+	
 }

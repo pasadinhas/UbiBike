@@ -45,9 +45,9 @@ public class GpsTrackingService extends Service {
     private void saveTrajectory(Trajectory t){
         User user = UserLoginData.getUser(getBaseContext());
         if(user != null){
-            user.addTrajectory(t);
+            user.addLocalTrajectory(t);
             user.setIsDirty(true);
-            user.updateUserPoints(Math.round(t.getTotalMeters()));
+            user.addUserPoints(Math.round(t.getTotalMeters()));
             UserLoginData.setUser(getBaseContext(),user);
             Intent intent = new Intent();
             intent.setAction(UserUpdateService.SYNCHRONIZE_USER_INTENT);

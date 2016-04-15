@@ -57,36 +57,18 @@ public class UserController {
 	/* ============= RESTful services =============== */
 	
 	@RequestMapping(value="/ubibike/user/login/{username}",method=RequestMethod.POST)
-	public ResponseEntity<User> login(
+	public void login(
 			@PathVariable String username,
 			@RequestParam(value="password")String password) 
 			throws UserDoesntExistException, InvalidLoginException{
-		User user = userServices.loginUser(username, password);
-		return new ResponseEntity<User>(user,HttpStatus.OK);
+		userServices.loginUser(username, password);
 	}
 	
 	@RequestMapping(value = "/ubibike/user/{username}",method=RequestMethod.POST)
-	public ResponseEntity<User> createUser(
+	public void createUser(
 			@PathVariable String username,
 			@RequestParam(value="password")String password) throws UserAlreadyExistException {
-		User user = userServices.createUser(username, password);
-		return new ResponseEntity<User>(user,HttpStatus.OK);
-	}
-	
-	@RequestMapping(value = "/ubibike/user/{username}/points/{points}",method=RequestMethod.PUT)
-	public ResponseEntity<User> updateUserPoints(
-			@PathVariable String username,
-			@PathVariable(value="points")long points)throws UserDoesntExistException{
-		User user = userServices.updateUserPoints(username, points);
-		return new ResponseEntity<User>(user, HttpStatus.OK);
-	}
-	
-	@RequestMapping(value= "/ubibike/user/{username}/trajectory",method=RequestMethod.POST)
-	public ResponseEntity<User> addTrajectory(@PathVariable String username,
-			@RequestBody Trajectory trajectory) throws UserDoesntExistException,
-			TrajectoryAlreadyExistException{
-		User user = userServices.addTrajectory(username, trajectory);
-		return new ResponseEntity<User>(user,HttpStatus.OK);
+		userServices.createUser(username, password);
 	}
 	
 	@RequestMapping(value = "/ubibike/user/{username}",method=RequestMethod.GET)
@@ -100,6 +82,12 @@ public class UserController {
 	public ResponseEntity<List<String>> getUsers(@PathVariable String usernamePrefix){
 		List<String> users = userServices.getUsers(usernamePrefix);
 		return new ResponseEntity<List<String>>(users,HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/ubibike/user/{username}/points/{points}",method=RequestMethod.POST)
+	public void synchronizeUser(@PathVariable String username,@PathVariable long points,
+			@RequestBody List<Trajectory> trajectories) throws UserDoesntExistException{
+		userServices.synchronizeUser(username,points,trajectories);
 	}
 	
 }

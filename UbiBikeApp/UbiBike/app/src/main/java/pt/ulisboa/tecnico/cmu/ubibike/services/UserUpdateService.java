@@ -30,12 +30,12 @@ public class UserUpdateService extends Service {
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(isConnected(getBaseContext())){
-                User user = UserLoginData.getUser(getBaseContext());
-                if(user != null && user.getIsDirty()){
-                    updateUserRemotely(user.getUsername(),user.getPoints());
-                }
+        if(isConnected(getBaseContext())){
+            User user = UserLoginData.getUser(getBaseContext());
+            if(user != null && user.getIsDirty()){
+                updateUserRemotely(user);
             }
+        }
         }
     };
 
@@ -55,18 +55,18 @@ public class UserUpdateService extends Service {
     }
 
     // Try update user information to the remote server.
-    private void updateUserRemotely(String username,long points){
+    private void updateUserRemotely(User user){
         UserServiceREST userService = UtilREST.getRetrofit().create(UserServiceREST.class);
-        Call<ResponseBody> call = userService.updateUserPoints(username,points);
+        Call<ResponseBody> call = userService.synchronizeUser(UtilREST.ACCEPT_HEADER,UtilREST.CONTENT_TYPE_HEADER,
+                user.getUsername(),user.getPoints(),user.getLocalTrajectories());
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if(response.code() == UtilREST.HTTP_OK){
                     User user = UserLoginData.getUser(getBaseContext());
-                    if(user != null) {
-                        user.setIsDirty(false);
-                        UserLoginData.setUser(getBaseContext(), user);
-                    }
+                    user.setIsDirty(false);
+                    user.saveLocalTrajectories();
+                    UserLoginData.setUser(getBaseContext(),user);
                 }
             }
             @Override

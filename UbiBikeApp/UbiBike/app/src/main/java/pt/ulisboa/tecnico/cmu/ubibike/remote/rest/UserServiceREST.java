@@ -25,19 +25,17 @@ public interface UserServiceREST {
     @POST("user/{username}")
     Call<ResponseBody> createUsername(@Path("username")String username,@Field("password")String password);
 
-    @PUT("user/{username}/points/{points}")
-    Call<ResponseBody> updateUserPoints(@Path("username")String username,@Path("points") long points);
-
     @GET("user/{username}")
     Call<User> getUser(@Path("username")String username);
 
     @GET("users/{usernamePrefix}")
     Call<List<String>> getUsernames(@Path("usernamePrefix")String usernamePrefix);
 
-    @POST("user/{username}/trajectory")
-    Call<ResponseBody> addTrajectory(@Header(UtilREST.ACCEPT_HEADER) String acceptValue,
+    @POST("user/{username}/points/{points}")
+    Call<ResponseBody> synchronizeUser(@Header(UtilREST.ACCEPT_HEADER) String acceptValue,
                              @Header(UtilREST.CONTENT_TYPE_HEADER) String typeValue,
                              @Path("username")String username,
-                             @Body Trajectory trajectory);
+                             @Path("points")long points,
+                             @Body List<Trajectory> trajectories);
 
 }

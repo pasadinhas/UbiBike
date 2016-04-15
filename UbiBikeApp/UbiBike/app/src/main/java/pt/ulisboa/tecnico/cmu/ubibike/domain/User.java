@@ -2,6 +2,7 @@ package pt.ulisboa.tecnico.cmu.ubibike.domain;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class User implements Serializable{
@@ -14,10 +15,17 @@ public class User implements Serializable{
 
     private List<Trajectory> trajectories = new ArrayList<>();
 
+    private List<Trajectory> localTrajectories;
+
     public User(String username) {
         setUsername(username);
         setPoints(0);
         setIsDirty(false);
+    }
+
+    /* Constructor for GSON */
+    protected User(){
+        localTrajectories = new ArrayList<>();
     }
 
     public String getUsername(){
@@ -40,16 +48,24 @@ public class User implements Serializable{
 
     public void setIsDirty(boolean isDirty) { this.isDirty = isDirty; }
 
-    public List<Trajectory> getTrajectories(){
-        return this.trajectories;
+    public List<Trajectory> getAllTrajectories(){
+        List<Trajectory> allTraj = new ArrayList<>();
+        allTraj.addAll(trajectories);
+        allTraj.addAll(localTrajectories);
+        Collections.sort(allTraj);
+        return allTraj;
     }
 
-    public void updateUserPoints(long points){
+    public List<Trajectory> getLocalTrajectories() { return this.localTrajectories; }
+
+    public void addUserPoints(long points){
         this.points += points;
     }
 
-
-    public void addTrajectory(Trajectory trajectory){
-        this.trajectories.add(trajectory);
+    public void saveLocalTrajectories(){
+        this.trajectories.addAll(localTrajectories);
+        localTrajectories.clear();
     }
+
+    public void addLocalTrajectory(Trajectory trajectory) { this.localTrajectories.add(trajectory); }
 }

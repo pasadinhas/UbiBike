@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -27,6 +28,7 @@ public class User {
 	private long points;
 	
 	@OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
+	@OrderBy("date DESC")
 	private List<Trajectory> trajectories = new ArrayList<>();
 	
 	

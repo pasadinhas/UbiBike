@@ -11,8 +11,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 
-import java.util.Collections;
-
 import pt.ulisboa.tecnico.cmu.ubibike.R;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Trajectory;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
@@ -34,7 +32,7 @@ public class UserPresentationActivity extends BaseDrawerActivity implements OnMa
         ((TextView)findViewById(R.id.username_textView)).setText(user.getUsername());
         String points = getString(R.string.points).concat(user.getPoints() + "");
         ((TextView)findViewById(R.id.points_textView)).setText(points);
-        if(!user.getTrajectories().isEmpty()) {
+        if(!user.getAllTrajectories().isEmpty()) {
             MapFragment mapFragment = (MapFragment)getFragmentManager().findFragmentById(R.id.home_map);
             mapFragment.getMapAsync(this);
         }
@@ -49,9 +47,8 @@ public class UserPresentationActivity extends BaseDrawerActivity implements OnMa
     public void onMapReady(final GoogleMap googleMap) {
         //Populate Trajectories Spinner
         Spinner trajectories = (Spinner) findViewById(R.id.spinner_trajectories);
-        Collections.sort(user.getTrajectories());
         trajectories.setAdapter(new ArrayAdapter<>(this,R.layout.custom_row,R.id.information,
-                user.getTrajectories()));
+                user.getAllTrajectories()));
         trajectories.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
