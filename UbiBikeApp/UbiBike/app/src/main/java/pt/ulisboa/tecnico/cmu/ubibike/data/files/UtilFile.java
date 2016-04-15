@@ -8,6 +8,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+/**
+ * Note: Not being used but can be useful in near future.
+ */
 public abstract class UtilFile {
 
     public static final String USER_FILE = "User";

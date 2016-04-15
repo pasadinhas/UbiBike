@@ -27,18 +27,21 @@ public class UserPresentationActivity extends BaseDrawerActivity implements OnMa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_presentation);
         user = (User)getIntent().getSerializableExtra("User");
-        if (user == null) return;
-
+        if (user == null){
+            finish();
+            return;
+        }
         ((TextView)findViewById(R.id.username_textView)).setText(user.getUsername());
         String points = getString(R.string.points).concat(user.getPoints() + "");
         ((TextView)findViewById(R.id.points_textView)).setText(points);
-        MapFragment mapFragment = (MapFragment)getFragmentManager().findFragmentById(R.id.home_map);
         if(!user.getTrajectories().isEmpty()) {
+            MapFragment mapFragment = (MapFragment)getFragmentManager().findFragmentById(R.id.home_map);
             mapFragment.getMapAsync(this);
         }
         else{
             findViewById(R.id.spinner_trajectories).setVisibility(View.GONE);
-            mapFragment.getView().setVisibility(View.GONE);
+            findViewById(R.id.textView_trajectories).setVisibility(View.GONE);
+            findViewById(R.id.home_map).setVisibility(View.GONE);
         }
     }
 
@@ -47,8 +50,8 @@ public class UserPresentationActivity extends BaseDrawerActivity implements OnMa
         //Populate Trajectories Spinner
         Spinner trajectories = (Spinner) findViewById(R.id.spinner_trajectories);
         Collections.sort(user.getTrajectories());
-        trajectories.setAdapter(new ArrayAdapter<>(this,
-                R.layout.support_simple_spinner_dropdown_item, user.getTrajectories()));
+        trajectories.setAdapter(new ArrayAdapter<>(this,R.layout.custom_row,R.id.information,
+                user.getTrajectories()));
         trajectories.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

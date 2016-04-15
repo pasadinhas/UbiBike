@@ -1,6 +1,5 @@
 package pt.ulisboa.tecnico.cmu.ubibike.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -20,7 +19,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class StationsActivity extends BaseDrawerActivity implements ListView.OnItemClickListener{
+public class StationsActivity extends BaseDrawerActivity {
 
     private List<Station> stations = new ArrayList<>();
 
@@ -28,21 +27,21 @@ public class StationsActivity extends BaseDrawerActivity implements ListView.OnI
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stations);
-        ((ListView)findViewById(R.id.stations_listView)).setOnItemClickListener(this);
+        ((ListView)findViewById(R.id.stations_listView)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Station station = (Station) parent.getItemAtPosition(position);
+                Intent intent = new Intent(getBaseContext(), BookBikesActivity.class);
+                intent.putExtra("Station", station);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         getStations();
-    }
-
-    @Override
-    public void onItemClick(AdapterView parent, View view, int position, long id) {
-        Station station = (Station) parent.getItemAtPosition(position);
-        Intent intent = new Intent(getBaseContext(), BookBikesActivity.class);
-        intent.putExtra("Station", station);
-        startActivity(intent);
     }
 
     // Get station information from the remote server.
@@ -61,6 +60,8 @@ public class StationsActivity extends BaseDrawerActivity implements ListView.OnI
             }
             @Override
             public void onFailure(Call<List<Station>> call, Throwable t) {
+                ListView view = (ListView) findViewById(R.id.stations_listView);
+                view.setAdapter(null);
                 Toast.makeText(getBaseContext(),R.string.impossible_connect_server,Toast.LENGTH_LONG).show();
             }
         });

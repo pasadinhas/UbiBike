@@ -45,7 +45,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/usernames_listView"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="200dp"
-        android:choiceMode="singleChoice" />
+        android:layout_marginTop="10dp"
+        android:choiceMode="singleChoice"
+        android:layout_alignParentEnd="false"
+        android:layout_below="@+id/search_button" />
 
 </RelativeLayout>

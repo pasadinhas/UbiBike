@@ -15,12 +15,14 @@ public class Trajectory implements Serializable, Comparable<Trajectory>{
 
     private List<Coordinates> trajectory = new ArrayList<>();
 
-    private boolean atServer = true;
+    private boolean atServer;
 
     public Trajectory(Date date){
         setAtServer(true);
         setDate(date);
     }
+
+    public Trajectory() {setAtServer(true); }
 
     public boolean getAtServer(){
         return atServer;

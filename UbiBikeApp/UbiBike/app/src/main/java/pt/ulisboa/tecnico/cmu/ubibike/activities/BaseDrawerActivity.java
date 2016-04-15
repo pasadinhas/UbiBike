@@ -11,11 +11,9 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 
 import pt.ulisboa.tecnico.cmu.ubibike.R;
-import pt.ulisboa.tecnico.cmu.ubibike.data.LoginData;
-import pt.ulisboa.tecnico.cmu.ubibike.data.UserData;
-import pt.ulisboa.tecnico.cmu.ubibike.data.files.UtilFile;
+import pt.ulisboa.tecnico.cmu.ubibike.data.UserLoginData;
 
-public abstract class BaseDrawerActivity extends Activity implements ListView.OnItemClickListener {
+public abstract class BaseDrawerActivity extends Activity{
 
     protected DrawerLayout fullLayout;
 
@@ -37,41 +35,38 @@ public abstract class BaseDrawerActivity extends Activity implements ListView.On
         ListView listView = (ListView) findViewById(R.id.left_drawer);
         listView.setAdapter(new ArrayAdapter<>(this,
                 R.layout.support_simple_spinner_dropdown_item, drawerItems));
-        listView.setOnItemClickListener(this);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Intent intent = null;
+            Intent intentHome = new Intent(getBaseContext(), HomeActivity.class);
+            intentHome.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION |
+                Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            if (!this.getClass().equals(HomeActivity.class) && position == 0) {
+                intent = new Intent(getBaseContext(), HomeActivity.class);
+            } else if (!this.getClass().equals(NearbyUsersActivity.class) && position == 1) {
+                intent = new Intent(getBaseContext(), NearbyUsersActivity.class);
+            } else if (!this.getClass().equals(SearchUserActivity.class) && position == 2) {
+                intent = new Intent(getBaseContext(), SearchUserActivity.class);
+            } else if (!this.getClass().equals(StationsActivity.class) && position == 3) {
+                intent = new Intent(getBaseContext(), StationsActivity.class);
+            } else if (position == 4) {
+                intent = new Intent(getBaseContext(), LoginActivity.class);
+                UserLoginData.clearUserLoggedIn(getBaseContext());
+            } else if (!this.getClass().equals(TrackTrajectoryDemo.class) && position == 5) {
+                intent = new Intent(getBaseContext(), TrackTrajectoryDemo.class);
+            }
+            if (intent != null) {
+                startActivity(intentHome);
+                if (position != 0) {
+                    ((DrawerLayout)findViewById(R.id.drawer_layout)).closeDrawers();
+                    startActivity(intent);
+                }
+            }
+            }
+        });
     }
 
-    @Override
-    public void onItemClick(AdapterView parent, View view, int position, long id) {
-        Intent intent = null;
-        Intent intentHome = new Intent(this,HomeActivity.class);
-        intentHome.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION|
-                Intent.FLAG_ACTIVITY_CLEAR_TASK|
-                Intent.FLAG_ACTIVITY_NEW_TASK);
-        if(!this.getClass().equals(HomeActivity.class) && position == 0){
-            intent = new Intent(this, HomeActivity.class);
-        }
-        else if (!this.getClass().equals(NearbyUsersActivity.class) && position == 1){
-            intent = new Intent(this, NearbyUsersActivity.class);
-        }
-        else if (!this.getClass().equals(SearchUserActivity.class) && position == 2){
-            intent = new Intent(this, SearchUserActivity.class);
-        }
-        else if (!this.getClass().equals(StationsActivity.class) && position == 3){
-            intent = new Intent(this, StationsActivity.class);
-        }
-        else if (position == 4){
-            intent = new Intent(this, LoginActivity.class);
-            LoginData.clearLoggedIn(this);
-            UserData.removeUserData(getBaseContext());
-        }
-        else if(!this.getClass().equals(TrackTrajectoryDemo.class) && position == 5) {
-            intent = new Intent(this, TrackTrajectoryDemo.class);
-        }
-        if(intent != null){
-            this.startActivity(intentHome);
-            if(position != 0){
-                this.startActivity(intent);
-            }
-        }
-    }
 }

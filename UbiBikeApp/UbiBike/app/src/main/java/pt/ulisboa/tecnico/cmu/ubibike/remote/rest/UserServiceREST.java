@@ -2,6 +2,7 @@ package pt.ulisboa.tecnico.cmu.ubibike.remote.rest;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Trajectory;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
 import retrofit2.Call;
@@ -22,10 +23,10 @@ public interface UserServiceREST {
 
     @FormUrlEncoded
     @POST("user/{username}")
-    Call<User> createUsername(@Path("username")String username,@Field("password")String password);
+    Call<ResponseBody> createUsername(@Path("username")String username,@Field("password")String password);
 
     @PUT("user/{username}/points/{points}")
-    Call<User> updateUserPoints(@Path("username")String username,@Path("points") long points);
+    Call<ResponseBody> updateUserPoints(@Path("username")String username,@Path("points") long points);
 
     @GET("user/{username}")
     Call<User> getUser(@Path("username")String username);
@@ -34,7 +35,7 @@ public interface UserServiceREST {
     Call<List<String>> getUsernames(@Path("usernamePrefix")String usernamePrefix);
 
     @POST("user/{username}/trajectory")
-    Call<User> addTrajectory(@Header(UtilREST.ACCEPT_HEADER) String acceptValue,
+    Call<ResponseBody> addTrajectory(@Header(UtilREST.ACCEPT_HEADER) String acceptValue,
                              @Header(UtilREST.CONTENT_TYPE_HEADER) String typeValue,
                              @Path("username")String username,
                              @Body Trajectory trajectory);

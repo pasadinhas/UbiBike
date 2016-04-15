@@ -15,6 +15,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.HashMap;
 import java.util.Map;
 
+import okhttp3.ResponseBody;
 import pt.ulisboa.tecnico.cmu.ubibike.R;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Bike;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Station;
@@ -75,10 +76,10 @@ public class BookBikesActivity extends BaseDrawerActivity implements OnMapReadyC
             return;
         }
         BikeServiceREST bikeService = UtilREST.getRetrofit().create(BikeServiceREST.class);
-        Call<Bike> call = bikeService.bookABike(markers.get(selectedMarker).getIdentifier());
-        call.enqueue(new Callback<Bike>() {
+        Call<ResponseBody> call = bikeService.bookABike(markers.get(selectedMarker).getIdentifier());
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<Bike> call, Response<Bike> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.code() == UtilREST.HTTP_OK) {
                     Toast.makeText(getBaseContext(), R.string.booking_success, Toast.LENGTH_LONG).show();
                     station.removeBike(markers.get(selectedMarker));
@@ -91,7 +92,7 @@ public class BookBikesActivity extends BaseDrawerActivity implements OnMapReadyC
             }
 
             @Override
-            public void onFailure(Call<Bike> call, Throwable t) {
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Toast.makeText(getBaseContext(), R.string.impossible_connect_server, Toast.LENGTH_LONG).show();
             }
         });

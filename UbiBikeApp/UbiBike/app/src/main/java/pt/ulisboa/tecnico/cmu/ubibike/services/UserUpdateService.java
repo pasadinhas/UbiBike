@@ -10,9 +10,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
-import pt.ulisboa.tecnico.cmu.ubibike.data.UserData;
+import okhttp3.ResponseBody;
+import pt.ulisboa.tecnico.cmu.ubibike.data.UserLoginData;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UserServiceREST;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UtilREST;
@@ -25,13 +25,14 @@ import retrofit2.Response;
  */
 public class UserUpdateService extends Service {
 
+    public static final String SYNCHRONIZE_USER_INTENT = "pt.ulisboa.tecnico.cmu.ubibike.services.SYNCUSER";
+
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(isConnected(context)){
-                User user = UserData.getUserData(context);
+            if(isConnected(getBaseContext())){
+                User user = UserLoginData.getUser(getBaseContext());
                 if(user != null && user.getIsDirty()){
-                    Log.d("UPDATE","Updating user information in server.");
                     updateUserRemotely(user.getUsername(),user.getPoints());
                 }
             }
@@ -43,7 +44,8 @@ public class UserUpdateService extends Service {
         super.onCreate();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
-        registerReceiver(receiver,intentFilter);
+        intentFilter.addAction(SYNCHRONIZE_USER_INTENT);
+        registerReceiver(receiver, intentFilter);
     }
 
     @Nullable
@@ -52,22 +54,25 @@ public class UserUpdateService extends Service {
         return null;
     }
 
+    // Try update user information to the remote server.
     private void updateUserRemotely(String username,long points){
         UserServiceREST userService = UtilREST.getRetrofit().create(UserServiceREST.class);
-        Call<User> call = userService.updateUserPoints(username,points);
-        call.enqueue(new Callback<User>() {
+        Call<ResponseBody> call = userService.updateUserPoints(username,points);
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if(response.code() == UtilREST.HTTP_OK){
-                    Log.d("UPDATE","User information in server update with success");
-                    User user = UserData.getUserData(getBaseContext());
-                    user.setIsDirty(false);
-                    UserData.saveUserData(getBaseContext());
+                    User user = UserLoginData.getUser(getBaseContext());
+                    if(user != null) {
+                        user.setIsDirty(false);
+                        UserLoginData.setUser(getBaseContext(), user);
+                    }
                 }
             }
             @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                //Maintain dirty user
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                //DO Nothing
+                //Maintain dirty user, will try next time.
             }
         });
     }

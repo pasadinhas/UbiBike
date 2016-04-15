@@ -7,6 +7,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import okhttp3.ResponseBody;
 import pt.ulisboa.tecnico.cmu.ubibike.R;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UserServiceREST;
@@ -54,10 +55,10 @@ public class CreateAccountActivity extends Activity {
         }
 
         UserServiceREST userService = UtilREST.getRetrofit().create(UserServiceREST.class);
-        Call<User> call = userService.createUsername(username,password);
-        call.enqueue(new Callback<User>() {
+        Call<ResponseBody> call = userService.createUsername(username,password);
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if(response.code() == UtilREST.HTTP_OK){
                     Toast.makeText(getBaseContext(),R.string.creation_success,Toast.LENGTH_LONG).show();
                     finish();
@@ -67,7 +68,7 @@ public class CreateAccountActivity extends Activity {
                 }
             }
             @Override
-            public void onFailure(Call<User> call, Throwable t) {
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Toast.makeText(getBaseContext(),R.string.impossible_connect_server,Toast.LENGTH_LONG).show();
             }
         });

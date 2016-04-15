@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.cmu.ubibike.remote.rest;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import retrofit2.Retrofit;
@@ -10,7 +11,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public final class UtilREST {
 
-    private final static String DATE_FORMAT_REST = "dd-MM-yyyy HH:mm:ss";
+    private final static String DATE_FORMAT = "dd-MM-yyyy HH:mm:ss";
+
+    public final static Gson GSON = new GsonBuilder().setDateFormat(DATE_FORMAT).create();
 
     public final static int HTTP_OK = 200;
 
@@ -28,11 +31,7 @@ public final class UtilREST {
 
     private final static Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("http://" + WEB_SERVER_IP + ":8080/ubibike/")
-            .addConverterFactory(GsonConverterFactory.create(
-                    new GsonBuilder()
-                            .setDateFormat(DATE_FORMAT_REST)
-                            .create()))
-            .build();
+            .addConverterFactory(GsonConverterFactory.create(GSON)).build();
 
     public static Retrofit getRetrofit(){
        return retrofit;

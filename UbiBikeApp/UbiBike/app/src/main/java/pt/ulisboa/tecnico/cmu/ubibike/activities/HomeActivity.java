@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.cmu.ubibike.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,8 +17,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 
 import java.util.Collections;
 
+import okhttp3.ResponseBody;
 import pt.ulisboa.tecnico.cmu.ubibike.R;
-import pt.ulisboa.tecnico.cmu.ubibike.data.UserData;
+import pt.ulisboa.tecnico.cmu.ubibike.data.UserLoginData;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Trajectory;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
 import pt.ulisboa.tecnico.cmu.ubibike.location.UtilMap;
@@ -35,32 +37,34 @@ public class HomeActivity extends BaseDrawerActivity implements OnMapReadyCallba
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        user = (User)getIntent().getSerializableExtra("User");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        user = UserLoginData.getUser(getBaseContext());
         if(user == null){
-            user = UserData.getUserData(this);
+            finish();
+            startActivity(new Intent(getBaseContext(), LoginActivity.class));
+            return;
         }
-        if(user.getIsDirty()){
-            Log.d("Dirty", "Dirty");
-        }
-        String points = getString(R.string.points ).concat(user.getPoints()+"");
+        String points = getString(R.string.points).concat(user.getPoints()+"");
         ((TextView)findViewById(R.id.username_textView)).setText(user.getUsername());
         ((TextView)findViewById(R.id.points_textView)).setText(points);
-        MapFragment mapFragment = (MapFragment) getFragmentManager()
-                .findFragmentById(R.id.home_map);
         if(!user.getTrajectories().isEmpty()) {
+            MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.home_map);
             mapFragment.getMapAsync(this);
+            findViewById(R.id.spinner_trajectories).setVisibility(View.VISIBLE);
+            findViewById(R.id.send_traj_button).setVisibility(View.VISIBLE);
+            findViewById(R.id.textView_trajectories).setVisibility(View.VISIBLE);
+            findViewById(R.id.home_map).setVisibility(View.VISIBLE);
         }
         else{
             findViewById(R.id.spinner_trajectories).setVisibility(View.GONE);
             findViewById(R.id.send_traj_button).setVisibility(View.GONE);
-            mapFragment.getView().setVisibility(View.GONE);
+            findViewById(R.id.textView_trajectories).setVisibility(View.GONE);
+            findViewById(R.id.home_map).setVisibility(View.GONE);
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        UserData.saveUserData(this);
     }
 
     @Override
@@ -68,8 +72,9 @@ public class HomeActivity extends BaseDrawerActivity implements OnMapReadyCallba
         //Populate Trajectories Spinner
         Spinner trajectories = (Spinner) findViewById(R.id.spinner_trajectories);
         Collections.sort(user.getTrajectories());
-        trajectories.setAdapter(new ArrayAdapter<>(this,
-                R.layout.support_simple_spinner_dropdown_item, user.getTrajectories()));
+        trajectories.setAdapter(new ArrayAdapter<>(this,R.layout.custom_row,R.id.information
+                , user.getTrajectories()));
+
         trajectories.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -93,11 +98,11 @@ public class HomeActivity extends BaseDrawerActivity implements OnMapReadyCallba
     public void sendTrajectoryCloud(View view){
         final Trajectory t = (Trajectory)((Spinner) findViewById(R.id.spinner_trajectories)).getSelectedItem();
         UserServiceREST userService = UtilREST.getRetrofit().create(UserServiceREST.class);
-        Call<User> call = userService.addTrajectory(UtilREST.CONTENT_HEADER,UtilREST.CONTENT_HEADER,
+        Call<ResponseBody> call = userService.addTrajectory(UtilREST.CONTENT_HEADER,UtilREST.CONTENT_HEADER,
                 user.getUsername(),t);
-        call.enqueue(new Callback<User>() {
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if(response.code() == UtilREST.HTTP_OK){
                     Toast.makeText(getBaseContext(),R.string.send_trajectory_success_toast,
                             Toast.LENGTH_LONG).show();
@@ -109,10 +114,10 @@ public class HomeActivity extends BaseDrawerActivity implements OnMapReadyCallba
                     findViewById(R.id.send_traj_button).setVisibility(View.GONE);
                     t.setAtServer(true);
                 }
-                UserData.saveUserData(getBaseContext());
+                UserLoginData.setUser(getBaseContext(),user);
             }
             @Override
-            public void onFailure(Call<User> call, Throwable t) {
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Toast.makeText(getBaseContext(),R.string.impossible_connect_server,
                         Toast.LENGTH_LONG).show();
             }

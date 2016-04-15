@@ -5,12 +5,10 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.widget.Toast;
 
-import pt.ulisboa.tecnico.cmu.ubibike.data.UserData;
+import pt.ulisboa.tecnico.cmu.ubibike.data.UserLoginData;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Trajectory;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
-import pt.ulisboa.tecnico.cmu.ubibike.data.files.UtilFile;
 import pt.ulisboa.tecnico.cmu.ubibike.location.GpsTracking;
 
 
@@ -32,10 +30,10 @@ public class GpsTrackingService extends Service {
 
     @Override
     public void onDestroy() {
+        super.onDestroy();
         gpsTracking.stopLocationUpdates();
         gpsTracking.disconnect();
         saveTrajectory(gpsTracking.getTrajectory());
-        super.onDestroy();
     }
 
     @Nullable
@@ -45,11 +43,16 @@ public class GpsTrackingService extends Service {
     }
 
     private void saveTrajectory(Trajectory t){
-        User user = UserData.getUserData(this);
-        user.addTrajectory(t);
-        user.setIsDirty(true);
-        user.updateUserPoints(Math.round(t.getTotalMeters()));
-        UserData.saveUserData(this);
+        User user = UserLoginData.getUser(getBaseContext());
+        if(user != null){
+            user.addTrajectory(t);
+            user.setIsDirty(true);
+            user.updateUserPoints(Math.round(t.getTotalMeters()));
+            UserLoginData.setUser(getBaseContext(),user);
+            Intent intent = new Intent();
+            intent.setAction(UserUpdateService.SYNCHRONIZE_USER_INTENT);
+            sendBroadcast(intent);
+        }
     }
 
 }
