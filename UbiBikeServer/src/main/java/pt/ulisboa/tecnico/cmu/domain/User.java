@@ -38,7 +38,7 @@ public class User {
 		setPoints(0);
 	}
 	
-	protected User() { }	//Needed for JPA/Hibernate
+	protected User() { }	//Needed for JPA/Hibernate and JSON
 	
 	public String getUsername(){
 		return username;

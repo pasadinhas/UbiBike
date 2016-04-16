@@ -36,7 +36,7 @@
         <activity
             android:name=".activities.CreateAccountActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_create_account"
+            android:label="@string/create_account_title"
             android:theme="@style/FullscreenTheme" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -56,7 +56,7 @@
         </activity>
         <activity
             android:name=".activities.NearbyUsersActivity"
-            android:label="@string/title_activity_nearby_users" >
+            android:label="@string/nearby_users_title" >
         </activity>
         <activity android:name=".activities.UserPresentationActivity" >
         </activity>

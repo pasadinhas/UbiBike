@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/title_activity_create_account"
+        android:text="@string/create_account_title"
         android:id="@+id/titleTextView"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
@@ -70,7 +70,7 @@
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/accept_terms"
+        android:text="@string/accept_terms_checkbox"
         android:id="@+id/terms_checkBox"
         android:checked="false"
         android:layout_below="@+id/pwd_editText"

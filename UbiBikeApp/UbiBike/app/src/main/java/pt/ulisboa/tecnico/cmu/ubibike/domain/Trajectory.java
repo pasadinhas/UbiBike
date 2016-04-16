@@ -1,6 +1,7 @@
 package pt.ulisboa.tecnico.cmu.ubibike.domain;
 
 import android.location.Location;
+import android.support.annotation.NonNull;
 
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -8,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UtilREST;
 
@@ -43,7 +45,7 @@ public class Trajectory implements Serializable, Comparable<Trajectory>{
         return trajectory.isEmpty();
     }
 
-    public float getTotalMeters(){
+    public float calculateTotalMeters(){
         float totalMetersAcc = 0;
         if(trajectory.size() <= 1)
             return 0;
@@ -61,12 +63,12 @@ public class Trajectory implements Serializable, Comparable<Trajectory>{
 
     @Override
     public String toString(){
-        DateFormat fm = new SimpleDateFormat(UtilREST.DATE_FORMAT);
+        DateFormat fm = new SimpleDateFormat(UtilREST.DATE_FORMAT, Locale.ENGLISH);
         return fm.format(date);
     }
 
     @Override
-    public int compareTo(Trajectory another) {
+    public int compareTo(@NonNull Trajectory another) {
         int res = getDate().compareTo(another.getDate());
         if(res < 0)
             res =  1;

@@ -3,7 +3,7 @@ package pt.ulisboa.tecnico.cmu;
 import java.util.Calendar;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Component;
 
 import pt.ulisboa.tecnico.cmu.domain.Bike;
 import pt.ulisboa.tecnico.cmu.domain.Coordinates;
@@ -14,7 +14,7 @@ import pt.ulisboa.tecnico.cmu.domain.repositories.BikeRepository;
 import pt.ulisboa.tecnico.cmu.domain.repositories.StationRepository;
 import pt.ulisboa.tecnico.cmu.domain.repositories.UserRepository;
 
-@Controller
+@Component
 public class InitializeDatabase {
 
 	@Autowired

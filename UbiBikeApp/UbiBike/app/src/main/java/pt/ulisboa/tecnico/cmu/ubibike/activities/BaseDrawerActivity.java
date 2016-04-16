@@ -19,6 +19,8 @@ public abstract class BaseDrawerActivity extends Activity{
 
     protected FrameLayout subLayout;
 
+    protected abstract int getPosition();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,26 +46,27 @@ public abstract class BaseDrawerActivity extends Activity{
             intentHome.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION |
                 Intent.FLAG_ACTIVITY_CLEAR_TOP |
                 Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            if (!this.getClass().equals(HomeActivity.class) && position == 0) {
+            if (position == 0 && !(getPosition() == 0)) {
                 intent = new Intent(getBaseContext(), HomeActivity.class);
-            } else if (!this.getClass().equals(NearbyUsersActivity.class) && position == 1) {
+            } else if (position == 1 && !(getPosition() == 1)) {
                 intent = new Intent(getBaseContext(), NearbyUsersActivity.class);
-            } else if (!this.getClass().equals(SearchUserActivity.class) && position == 2) {
+            } else if (position == 2 && !(getPosition() == 2)) {
                 intent = new Intent(getBaseContext(), SearchUserActivity.class);
-            } else if (!this.getClass().equals(StationsActivity.class) && position == 3) {
+            } else if (position == 3 && !(getPosition() == 3)) {
                 intent = new Intent(getBaseContext(), StationsActivity.class);
             } else if (position == 4) {
                 intent = new Intent(getBaseContext(), LoginActivity.class);
                 UserLoginData.clearUserLoggedIn(getBaseContext());
-            } else if (!this.getClass().equals(TrackTrajectoryDemo.class) && position == 5) {
+            } else if (position == 5 && !(getPosition() == 5)) {
                 intent = new Intent(getBaseContext(), TrackTrajectoryDemo.class);
             }
-            if (intent != null) {
-                startActivity(intentHome);
-                if (position != 0) {
-                    ((DrawerLayout)findViewById(R.id.drawer_layout)).closeDrawers();
-                    startActivity(intent);
-                }
+            else{
+                return;
+            }
+            startActivity(intentHome);
+            if (position != 0) {
+                ((DrawerLayout)findViewById(R.id.drawer_layout)).closeDrawers();
+                startActivity(intent);
             }
             }
         });

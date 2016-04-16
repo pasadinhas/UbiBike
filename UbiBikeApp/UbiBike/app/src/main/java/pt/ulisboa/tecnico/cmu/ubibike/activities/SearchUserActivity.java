@@ -24,6 +24,11 @@ import retrofit2.Response;
 public class SearchUserActivity extends BaseDrawerActivity {
 
     @Override
+    protected int getPosition() {
+        return 2;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_user);
@@ -46,7 +51,7 @@ public class SearchUserActivity extends BaseDrawerActivity {
 
                     @Override
                     public void onFailure(Call<User> call, Throwable t) {
-                        Toast.makeText(getBaseContext(), R.string.impossible_connect_server,
+                        Toast.makeText(getBaseContext(), R.string.impossible_connect_server_toast,
                                 Toast.LENGTH_LONG).show();
                     }
                 });
@@ -71,13 +76,13 @@ public class SearchUserActivity extends BaseDrawerActivity {
                         listView.setAdapter(new ArrayAdapter<>(getBaseContext(),
                                 R.layout.support_simple_spinner_dropdown_item,usernamesList));
                     }
-                    Toast.makeText(getBaseContext(),usernamesList.size()+" "+getString(R.string.users_found),
+                    Toast.makeText(getBaseContext(),usernamesList.size()+" "+getString(R.string.users_found_toast),
                             Toast.LENGTH_LONG).show();
                 }
             }
             @Override
             public void onFailure(Call<List<String>> call, Throwable t) {
-                Toast.makeText(getBaseContext(),R.string.impossible_connect_server,
+                Toast.makeText(getBaseContext(),R.string.impossible_connect_server_toast,
                         Toast.LENGTH_LONG).show();
             }
         });

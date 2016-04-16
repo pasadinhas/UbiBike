@@ -4,7 +4,6 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import pt.ulisboa.tecnico.cmu.ubibike.data.UserLoginData;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Trajectory;
@@ -48,7 +47,7 @@ public class GpsTrackingService extends Service {
         if(user != null){
             user.addLocalTrajectory(t);
             user.setIsDirty(true);
-            user.addUserPoints(Math.round(t.getTotalMeters()));
+            user.addUserPoints(Math.round(t.calculateTotalMeters()));
             UserLoginData.setUser(getBaseContext(),user);
             Intent intent = new Intent();
             intent.setAction(UserUpdateService.SYNCHRONIZE_USER_INTENT);

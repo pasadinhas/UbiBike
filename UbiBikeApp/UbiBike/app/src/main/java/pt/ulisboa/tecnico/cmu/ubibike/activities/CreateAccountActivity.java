@@ -9,7 +9,6 @@ import android.widget.Toast;
 
 import okhttp3.ResponseBody;
 import pt.ulisboa.tecnico.cmu.ubibike.R;
-import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UserServiceREST;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UtilREST;
 import retrofit2.Call;
@@ -31,23 +30,23 @@ public class CreateAccountActivity extends Activity {
         String password = ((EditText)findViewById(R.id.pwd_editText)).getText().toString();
         String verifyPassword = ((EditText)findViewById(R.id.pwd_verify_editText)).getText().toString();
         if(username.isEmpty()) {
-            ((EditText)findViewById(R.id.username_editText)).setError(getString(R.string.field_required));
+            ((EditText)findViewById(R.id.username_editText)).setError(getString(R.string.field_required_hint));
             valid = false;
         }
         else if(password.isEmpty()){
-            ((EditText)findViewById(R.id.pwd_editText)).setError(getString(R.string.field_required));
+            ((EditText)findViewById(R.id.pwd_editText)).setError(getString(R.string.field_required_hint));
             valid = false;
         }
         else if(verifyPassword.isEmpty()){
-            ((EditText)findViewById(R.id.pwd_verify_editText)).setError(getString(R.string.field_required));
+            ((EditText)findViewById(R.id.pwd_verify_editText)).setError(getString(R.string.field_required_hint));
             valid = false;
         }
         else if(!password.equals(verifyPassword)){
-            ((EditText)findViewById(R.id.pwd_verify_editText)).setError(getString(R.string.password_doesnt_match));
+            ((EditText)findViewById(R.id.pwd_verify_editText)).setError(getString(R.string.password_doesnt_match_toast));
             valid = false;
         }
         else if(!((CheckBox)findViewById(R.id.terms_checkBox)).isChecked()){
-            ((CheckBox)findViewById(R.id.terms_checkBox)).setError(getString(R.string.accept_terms));
+            ((CheckBox)findViewById(R.id.terms_checkBox)).setError(getString(R.string.accept_terms_checkbox));
             valid = false;
         }
         if(!valid){
@@ -60,16 +59,16 @@ public class CreateAccountActivity extends Activity {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if(response.code() == UtilREST.HTTP_OK){
-                    Toast.makeText(getBaseContext(),R.string.creation_success,Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(),R.string.creation_success_toast,Toast.LENGTH_LONG).show();
                     finish();
                 }
                 else{
-                    Toast.makeText(getBaseContext(),R.string.username_already_exist,Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(),R.string.username_already_exist_toast,Toast.LENGTH_LONG).show();
                 }
             }
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(getBaseContext(),R.string.impossible_connect_server,Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(),R.string.impossible_connect_server_toast,Toast.LENGTH_LONG).show();
             }
         });
     }

@@ -22,9 +22,19 @@ public class UserPresentationActivity extends BaseDrawerActivity implements OnMa
     private User user;
 
     @Override
+    protected int getPosition() {
+        return -1;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_presentation);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         user = (User)getIntent().getSerializableExtra("User");
         if (user == null){
             user = UserLoginData.getUser(getBaseContext());
@@ -34,7 +44,7 @@ public class UserPresentationActivity extends BaseDrawerActivity implements OnMa
             }
         }
         ((TextView)findViewById(R.id.username_textView)).setText(user.getUsername());
-        String points = getString(R.string.points).concat(user.getPoints() + "");
+        String points = getString(R.string.points_text_view).concat(user.getPoints() + "");
         ((TextView)findViewById(R.id.points_textView)).setText(points);
         if(!user.getAllTrajectories().isEmpty()) {
             MapFragment mapFragment = (MapFragment)getFragmentManager().findFragmentById(R.id.home_map);

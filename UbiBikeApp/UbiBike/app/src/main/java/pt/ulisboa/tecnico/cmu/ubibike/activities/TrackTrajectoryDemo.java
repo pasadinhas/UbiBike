@@ -10,6 +10,11 @@ import pt.ulisboa.tecnico.cmu.ubibike.services.GpsTrackingService;
 public class TrackTrajectoryDemo extends BaseDrawerActivity {
 
     @Override
+    protected int getPosition() {
+        return 5;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_track_trajectory_demo);

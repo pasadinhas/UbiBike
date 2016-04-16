@@ -35,6 +35,11 @@ public class BookBikesActivity extends BaseDrawerActivity implements OnMapReadyC
     private Marker selectedMarker = null;
 
     @Override
+    protected int getPosition() {
+        return -1;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_bikes);
@@ -72,7 +77,7 @@ public class BookBikesActivity extends BaseDrawerActivity implements OnMapReadyC
 
     public void clickBookBike(View v){
         if(selectedMarker == null) {
-            Toast.makeText(this,R.string.select_bike, Toast.LENGTH_LONG).show();
+            Toast.makeText(this,R.string.select_bike_toast, Toast.LENGTH_LONG).show();
             return;
         }
         BikeServiceREST bikeService = UtilREST.getRetrofit().create(BikeServiceREST.class);
@@ -81,19 +86,19 @@ public class BookBikesActivity extends BaseDrawerActivity implements OnMapReadyC
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.code() == UtilREST.HTTP_OK) {
-                    Toast.makeText(getBaseContext(), R.string.booking_success, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(), R.string.booking_success_toast, Toast.LENGTH_LONG).show();
                     station.removeBike(markers.get(selectedMarker));
                     selectedMarker.remove();
                     markers.remove(selectedMarker);
                     selectedMarker = null;
                 } else {
-                    Toast.makeText(getBaseContext(), R.string.booking_failed, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(), R.string.booking_failed_toast, Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(getBaseContext(), R.string.impossible_connect_server, Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(), R.string.impossible_connect_server_toast, Toast.LENGTH_LONG).show();
             }
         });
     }

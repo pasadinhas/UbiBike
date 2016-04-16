@@ -3,7 +3,6 @@ package pt.ulisboa.tecnico.cmu.ubibike.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -11,7 +10,6 @@ import android.widget.Toast;
 
 import pt.ulisboa.tecnico.cmu.ubibike.R;
 import pt.ulisboa.tecnico.cmu.ubibike.data.UserLoginData;
-import pt.ulisboa.tecnico.cmu.ubibike.data.files.UtilFile;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UserServiceREST;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UtilREST;
@@ -49,11 +47,11 @@ public class LoginActivity extends Activity
         String password = passwordTextView.getText().toString();
 
         if(username.isEmpty()){
-            usernameTextView.setError(getString(R.string.field_required));
+            usernameTextView.setError(getString(R.string.field_required_hint));
             valid = false;
         }
         else if(password.isEmpty()){
-            passwordTextView.setError(getString(R.string.field_required));
+            passwordTextView.setError(getString(R.string.field_required_hint));
             valid = false;
         }
         if(!valid)
@@ -68,15 +66,15 @@ public class LoginActivity extends Activity
                     User user = response.body();
                     UserLoginData.setUserLoggedIn(getBaseContext(), user.getUsername(), user);
                     finish();
-                    startActivity(new Intent(getBaseContext(),UserPresentationActivity.class));
+                    startActivity(new Intent(getBaseContext(),HomeActivity.class));
                 }
                 else{
-                    Toast.makeText(getBaseContext(),R.string.login_failed,Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(),R.string.login_failed_toast,Toast.LENGTH_LONG).show();
                 }
             }
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                Toast.makeText(getBaseContext(),R.string.impossible_connect_server,Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(),R.string.impossible_connect_server_toast,Toast.LENGTH_LONG).show();
             }
         });
     }

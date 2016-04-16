@@ -24,16 +24,21 @@ public class StationsActivity extends BaseDrawerActivity {
     private List<Station> stations = new ArrayList<>();
 
     @Override
+    protected int getPosition() {
+        return 3;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stations);
         ((ListView)findViewById(R.id.stations_listView)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Station station = (Station) parent.getItemAtPosition(position);
-                Intent intent = new Intent(getBaseContext(), BookBikesActivity.class);
-                intent.putExtra("Station", station);
-                startActivity(intent);
+            Station station = (Station) parent.getItemAtPosition(position);
+            Intent intent = new Intent(getBaseContext(), BookBikesActivity.class);
+            intent.putExtra("Station", station);
+            startActivity(intent);
             }
         });
     }
@@ -62,7 +67,7 @@ public class StationsActivity extends BaseDrawerActivity {
             public void onFailure(Call<List<Station>> call, Throwable t) {
                 ListView view = (ListView) findViewById(R.id.stations_listView);
                 view.setAdapter(null);
-                Toast.makeText(getBaseContext(),R.string.impossible_connect_server,Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(),R.string.impossible_connect_server_toast,Toast.LENGTH_LONG).show();
             }
         });
     }

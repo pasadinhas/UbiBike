@@ -45,7 +45,8 @@ public class UserServices {
 	
 	public Collection<String> getUsers(String usernamePrefix){
 		TreeSet<String> users = new TreeSet<>();
-		for(User user : userRepository.findAll()){
+		Iterable<User> storedUsers = userRepository.findAll();
+		for(User user : storedUsers){
 			if(user.getUsername().startsWith(usernamePrefix)){
 				users.add(user.getUsername());
 			}

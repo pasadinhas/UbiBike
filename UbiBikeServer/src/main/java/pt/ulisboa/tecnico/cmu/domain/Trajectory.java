@@ -34,7 +34,7 @@ public class Trajectory implements Comparable<Trajectory>{
 		setDate(date);
 	}
 	
-	protected Trajectory() { }	//Needed for JPA/Hibernate
+	protected Trajectory() { }	//Needed for JPA/Hibernate and JSON
 	
 	public Date getDate(){
 		return date;
