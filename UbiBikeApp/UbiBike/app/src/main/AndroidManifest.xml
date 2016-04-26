@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="pt.ulisboa.tecnico.cmu.ubibike" >
+
+    <uses-sdk android:minSdkVersion="15" />
 
     <!-- Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -16,7 +19,8 @@
         android:icon="@mipmap/marker"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme"
+        tools:replace="android:icon,android:theme">
 
         <!-- Google Maps API KEY -->
         <meta-data
@@ -63,12 +67,14 @@
         <activity android:name=".activities.TrackTrajectoryDemo" >
         </activity>
 
+
         <!-- Services -->
         <service android:name=".services.GpsTrackingService" />
         <service
             android:name=".services.UserUpdateService"
             android:exported="false" >
         </service>
+        <service android:name="pt.inesc.termite.wifidirect.service.SimWifiP2pService" />
     </application>
 
 </manifest>

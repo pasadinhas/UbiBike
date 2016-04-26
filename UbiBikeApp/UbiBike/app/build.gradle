@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "pt.ulisboa.tecnico.cmu.ubibike"
-        minSdkVersion 14
+        minSdkVersion 15
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -28,4 +28,10 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta4'
     compile 'com.google.android.gms:play-services:8.4.0'
     compile 'com.android.support:design:23.2.1'
+    compile(name:'Termite-WifiP2P-API', ext:'aar')
+}
+repositories{
+    flatDir{
+        dirs 'libs'
+    }
 }

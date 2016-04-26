@@ -45,4 +45,6 @@
     <string name="users_found_toast">Users found</string>
     <!-- Nearby Users Activity -->
     <string name="nearby_users_title">NearbyUsersActivity</string>
+    <string name="port">10001</string>
+
 </resources>

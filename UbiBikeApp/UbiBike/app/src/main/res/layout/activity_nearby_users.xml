@@ -1,7 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="pt.ulisboa.tecnico.cmu.ubibike.activities.NearbyUsersActivity">
+    tools:context="pt.ulisboa.tecnico.cmu.ubibike.activities.NearbyUsersActivity"
+    android:orientation="vertical">
 
-</RelativeLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Messages"
+            android:id="@+id/switch_wifi_direct" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Find Peers"
+            android:id="@+id/find_peers_button"
+            android:onClick="findPeers"/>
+
+
+    </LinearLayout>
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/nearby_listView"
+        android:layout_marginTop="10dp"
+        android:choiceMode="singleChoice" />
+
+</LinearLayout>
