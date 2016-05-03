@@ -2,6 +2,7 @@ package pt.ulisboa.tecnico.cmu.ubibike.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 
 import pt.ulisboa.tecnico.cmu.ubibike.R;
+import pt.ulisboa.tecnico.cmu.ubibike.data.DatabaseManager;
 import pt.ulisboa.tecnico.cmu.ubibike.data.UserLoginData;
 
 public abstract class BaseDrawerActivity extends Activity{
@@ -24,6 +26,11 @@ public abstract class BaseDrawerActivity extends Activity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getBaseContext().deleteDatabase(DatabaseManager.DB_NAME);
+        DatabaseManager.getInstance(this).close();
+        getBaseContext().deleteDatabase(DatabaseManager.DB_NAME);
+        DatabaseManager.getInstance(getBaseContext());
     }
 
     @Override

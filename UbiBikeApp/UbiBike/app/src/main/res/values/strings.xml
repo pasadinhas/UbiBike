@@ -46,5 +46,7 @@
     <!-- Nearby Users Activity -->
     <string name="nearby_users_title">NearbyUsersActivity</string>
     <string name="port">10001</string>
+    <string name="title_activity_chat">Chat</string>
+    <string name="action_settings">Settings</string>
 
 </resources>

@@ -16,15 +16,6 @@
             android:text="Messages"
             android:id="@+id/switch_wifi_direct" />
 
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Find Peers"
-            android:id="@+id/find_peers_button"
-            android:onClick="findPeers"/>
-
-
     </LinearLayout>
 
     <ListView
