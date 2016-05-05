@@ -1,25 +1,34 @@
 package pt.ulisboa.tecnico.cmu.ubibike.activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+
+import java.util.Date;
 
 import pt.ulisboa.tecnico.cmu.ubibike.R;
 import pt.ulisboa.tecnico.cmu.ubibike.data.UserLoginData;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Trajectory;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
 import pt.ulisboa.tecnico.cmu.ubibike.location.UtilMap;
+import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UserServiceREST;
+import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UtilREST;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class UserPresentationActivity extends BaseDrawerActivity implements OnMapReadyCallback {
 
-    private User user;
+    protected User user;
 
     @Override
     protected int getPosition() {
@@ -66,9 +75,12 @@ public class UserPresentationActivity extends BaseDrawerActivity implements OnMa
         trajectories.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                googleMap.clear();
                 Trajectory traj = (Trajectory) parent.getItemAtPosition(position);
-                UtilMap.drawTrajectory(googleMap, traj);
+                if (traj.getTrajectory() == null) {                     //Not in memory.
+                    getTrajectoryFromServer(traj.getDate(), googleMap); //Bring from server.
+                } else {
+                    UtilMap.drawTrajectory(googleMap, traj);
+                }
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -76,4 +88,25 @@ public class UserPresentationActivity extends BaseDrawerActivity implements OnMa
             }
         });
     }
+
+    private void getTrajectoryFromServer(Date trajectoryDate,final GoogleMap map){
+        UserServiceREST userService = UtilREST.getRetrofit().create(UserServiceREST.class);
+        Call<Trajectory> call = userService.getUserTrajectory(user.getUsername(),trajectoryDate.getTime());
+        call.enqueue(new Callback<Trajectory>() {
+            @Override
+            public void onResponse(Call<Trajectory> call, Response<Trajectory> response) {
+                if (response.code() == UtilREST.HTTP_OK) {
+                    Trajectory t = response.body();
+                    user.replaceTrajectory(t);
+                    UtilMap.drawTrajectory(map, t);
+                }
+            }
+            @Override
+            public void onFailure(Call<Trajectory> call, Throwable t) {
+                Toast.makeText(getBaseContext(), R.string.impossible_connect_server_toast,
+                        Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
 }

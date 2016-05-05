@@ -14,16 +14,11 @@ import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UtilREST;
 /**
  * Manipulates (persistent) preferences to control user local Login (Data).
  */
-public abstract class UserLoginData {
+public abstract class UserLoginData extends PreferencesData{
 
     private static final String PREF_LOGGEDIN_USER_USERNAME = "logged_in_username";
     private static final String PREF_USER_LOGGEDIN_STATUS = "logged_in_status";
     private static final String PREF_USER_JSON_OBJECT = "user_json_object";
-
-    private static SharedPreferences getSharedPreferences(Context ctx)
-    {
-        return PreferenceManager.getDefaultSharedPreferences(ctx);
-    }
 
 
     public static void setUserLoggedIn(Context ctx, String username,User jsonUser)

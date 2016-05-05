@@ -52,6 +52,10 @@ public class Trajectory implements Comparable<Trajectory>{
 		return this.trajectory;
 	}
 	
+	public void removeAllCoordinates(){
+		this.trajectory = null;
+	}
+	
 	@Override
 	public boolean equals(Object o){
 		Trajectory t = (Trajectory)o;

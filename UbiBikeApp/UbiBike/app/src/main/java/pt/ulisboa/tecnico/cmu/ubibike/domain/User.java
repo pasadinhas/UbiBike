@@ -57,6 +57,15 @@ public class User implements Serializable{
         this.points += points;
     }
 
+    public void replaceTrajectory(Trajectory t){
+        for(int i = 0; i < trajectories.size(); i++){
+            if(trajectories.get(i).equals(t)){
+                trajectories.set(i,t);
+                return;
+            }
+        }
+    }
+
     public void saveLocalTrajectories(){
         this.trajectories.addAll(localTrajectories);
         localTrajectories.clear();

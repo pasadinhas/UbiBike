@@ -1,6 +1,7 @@
 package pt.ulisboa.tecnico.cmu.services;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.TreeSet;
 
@@ -11,6 +12,7 @@ import pt.ulisboa.tecnico.cmu.domain.Trajectory;
 import pt.ulisboa.tecnico.cmu.domain.User;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.InvalidLoginException;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.TrajectoryAlreadyExistException;
+import pt.ulisboa.tecnico.cmu.domain.exceptions.TrajectoryDoesntExistException;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.UserAlreadyExistException;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.UserDoesntExistException;
 import pt.ulisboa.tecnico.cmu.domain.repositories.UserRepository;
@@ -38,9 +40,10 @@ public class UserServices {
 	}
 	
 	
-	public User getUserInformation(String username) throws UserDoesntExistException{
+	public Trajectory getUserTrajectory(String username,Date date) 
+			throws UserDoesntExistException, TrajectoryDoesntExistException{
 		User user = getUser(username);
-		return user;
+		return user.getTrajectory(date);
 	}
 	
 	public Collection<String> getUsers(String usernamePrefix){
@@ -67,6 +70,26 @@ public class UserServices {
 		}
 		userRepository.save(user);
 	}
+	
+	
+	public User getUserInformation(String username) throws UserDoesntExistException{
+		User user = getUser(username);
+		return user;
+	}
+	
+	public User getUserInformationMedium(String username) throws UserDoesntExistException{
+		User user = getUser(username);
+		user.setUserDetailMedium();
+		return user;
+	}
+	
+	public User getUserInformationLow(String username) throws UserDoesntExistException{
+		User user = getUser(username);
+		user.setUserDetailLow();
+		return user;
+	}
+	
+	/*======================== Private methods ======================= */
 	
 	private User getUser(String username) throws UserDoesntExistException{
 		User user = userRepository.findOne(username);

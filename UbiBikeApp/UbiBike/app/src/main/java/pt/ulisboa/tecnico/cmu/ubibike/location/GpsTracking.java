@@ -37,10 +37,12 @@ public class GpsTracking  implements GoogleApiClient.ConnectionCallbacks,
     private boolean isConnected;
 
     public GpsTracking(Context context){
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.MILLISECOND,0);
         isConnected = false;
         currentContext = context;
         locationRequest = new LocationRequest();
-        trajectory = new Trajectory(Calendar.getInstance().getTime());
+        trajectory = new Trajectory(c.getTime());
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setFastestInterval(UPDATES_INTERVAL);
         locationRequest.setInterval(UPDATES_INTERVAL);
@@ -76,13 +78,11 @@ public class GpsTracking  implements GoogleApiClient.ConnectionCallbacks,
         if(isConnected){
             LocationServices.FusedLocationApi.removeLocationUpdates(
                     googleClient, this);
-            Log.d("GPS","Track stopped");
         }
     }
 
     public void connect(){
         if(!isConnected){
-            Log.d("GPS","API Connected");
             isConnected = true;
             googleClient.connect();
         }

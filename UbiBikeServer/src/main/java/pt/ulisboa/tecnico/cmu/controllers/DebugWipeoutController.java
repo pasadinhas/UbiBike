@@ -17,4 +17,6 @@ public class DebugWipeoutController {
 		init.resetDatabase();
 	}
 	
+	
+
 }

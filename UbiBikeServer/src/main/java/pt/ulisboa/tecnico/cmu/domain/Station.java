@@ -85,4 +85,10 @@ public class Station {
 		return false;
 	}
 	
+	/* =========== Object Detail Control Methods ======= */
+	
+	public void setStationDetailLow(){
+		this.bikes = null;
+	}
+	
 }

@@ -29,6 +29,7 @@ public class InitializeDatabase {
 	public void populateDatabase(){
 		System.out.println("###### Initializing BD ######");
 		Calendar c = Calendar.getInstance();
+		c.set(Calendar.MILLISECOND, 0);
 		c.set(2015, 11, 6, 18, 11, 32);
 		Date d = c.getTime();
 		Trajectory t = new Trajectory(d);
@@ -55,7 +56,7 @@ public class InitializeDatabase {
         Bike b4 = new Bike(new Coordinates(38.736976, -9.139048),"4");
         Bike b5 = new Bike(new Coordinates(38.754206, -9.145207),"5");
         User u = new User("Admin","root");
-        u.setPoints(7890);
+        u.setPoints(619);
         try{
         	u.addTrajectory(t);
             u.addTrajectory(t1);

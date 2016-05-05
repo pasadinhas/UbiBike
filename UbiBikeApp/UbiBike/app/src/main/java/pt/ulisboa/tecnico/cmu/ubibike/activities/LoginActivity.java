@@ -8,9 +8,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.List;
+
 import pt.ulisboa.tecnico.cmu.ubibike.R;
+import pt.ulisboa.tecnico.cmu.ubibike.data.StationsData;
 import pt.ulisboa.tecnico.cmu.ubibike.data.UserLoginData;
+import pt.ulisboa.tecnico.cmu.ubibike.domain.Station;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
+import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.StationServiceREST;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UserServiceREST;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UtilREST;
 import pt.ulisboa.tecnico.cmu.ubibike.services.UserUpdateService;
@@ -62,21 +67,41 @@ public class LoginActivity extends Activity
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                if(response.code() == UtilREST.HTTP_OK){
+                if (response.code() == UtilREST.HTTP_OK) {
                     User user = response.body();
+                    getAllStations();
                     UserLoginData.setUserLoggedIn(getBaseContext(), user.getUsername(), user);
                     finish();
-                    startActivity(new Intent(getBaseContext(),HomeActivity.class));
-                }
-                else{
-                    Toast.makeText(getBaseContext(),R.string.login_failed_toast,Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(getBaseContext(), HomeActivity.class));
+                } else {
+                    Toast.makeText(getBaseContext(), R.string.login_failed_toast, Toast.LENGTH_LONG).show();
                 }
             }
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                Toast.makeText(getBaseContext(),R.string.impossible_connect_server_toast,Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(), R.string.impossible_connect_server_toast, Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    private void getAllStations(){
+        if(!StationsData.getStationsSaved(getBaseContext())){
+            StationServiceREST stationService = UtilREST.getRetrofit().create(StationServiceREST.class);
+            Call<List<Station>> call = stationService.getStations(StationServiceREST.STATION_DETAIL_LOW);
+            call.enqueue(new Callback<List<Station>>() {
+                @Override
+                public void onResponse(Call<List<Station>> call, Response<List<Station>> response) {
+                    if (response.code() == UtilREST.HTTP_OK) {
+                        List<Station> stations = response.body();
+                        StationsData.setStations(getBaseContext(),stations);
+                    }
+                }
+                @Override
+                public void onFailure(Call<List<Station>> call, Throwable t) {
+                    Toast.makeText(getBaseContext(), R.string.impossible_connect_server_toast, Toast.LENGTH_LONG).show();
+                }
+            });
+        }
     }
 
 }

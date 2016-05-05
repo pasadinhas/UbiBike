@@ -25,6 +25,7 @@ public abstract class UtilMap {
     private final static int TRAJECTORY_WIDTH = 10;
 
     public static void drawTrajectory(GoogleMap map,Trajectory t){
+        map.clear();
         PolylineOptions opt = new PolylineOptions();
         if(!t.isEmpty()){
             moveToCurrentLocation(map,new LatLng(t.getTrajectory().get(0).getLatitude(),

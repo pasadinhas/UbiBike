@@ -1,6 +1,8 @@
 package pt.ulisboa.tecnico.cmu.domain;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -13,6 +15,7 @@ import javax.persistence.OrderBy;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import pt.ulisboa.tecnico.cmu.domain.exceptions.TrajectoryAlreadyExistException;
+import pt.ulisboa.tecnico.cmu.domain.exceptions.TrajectoryDoesntExistException;
 
 @Entity
 public class User {
@@ -64,21 +67,42 @@ public class User {
 		this.points = points;
 	}
 	
-	public List<Trajectory> getTrajectories(){
-		return this.trajectories;
-	}
-	
 	public void addPoints(long points){
 		this.points += points;
 	}
 	
+	public Collection<Trajectory> getTrajectories(){
+		return this.trajectories;
+	}
+	
+	public Trajectory getTrajectory(Date date) throws TrajectoryDoesntExistException{
+		for(Trajectory t : this.trajectories){
+			if(t.getDate().compareTo(date) == 0){
+				return t;
+			}
+		}
+		throw new TrajectoryDoesntExistException();
+	}
+	
 	public void addTrajectory(Trajectory t) throws TrajectoryAlreadyExistException{
-		for(Trajectory traj : trajectories){
+		for(Trajectory traj : this.trajectories){
 			if(t.equals(traj)){
 				throw new TrajectoryAlreadyExistException();
 			}
 		}
 		trajectories.add(t);
+	}
+	
+	/* =========== Object Detail Control Methods ======= */
+	
+	public void setUserDetailMedium(){
+		for(Trajectory t : this.trajectories){
+			t.removeAllCoordinates();
+		}
+	}
+	
+	public void setUserDetailLow(){
+		this.trajectories = null;
 	}
 	
 }

@@ -38,7 +38,7 @@ public class SearchUserActivity extends BaseDrawerActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String username = (String) parent.getItemAtPosition(position);
                 UserServiceREST userService = UtilREST.getRetrofit().create(UserServiceREST.class);
-                Call<User> call = userService.getUser(username);
+                Call<User> call = userService.getUser(username,UserServiceREST.USER_DETAIL_MEDIUM);
                 call.enqueue(new Callback<User>() {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {
@@ -48,7 +48,6 @@ public class SearchUserActivity extends BaseDrawerActivity {
                             startActivity(intent);
                         }
                     }
-
                     @Override
                     public void onFailure(Call<User> call, Throwable t) {
                         Toast.makeText(getBaseContext(), R.string.impossible_connect_server_toast,
