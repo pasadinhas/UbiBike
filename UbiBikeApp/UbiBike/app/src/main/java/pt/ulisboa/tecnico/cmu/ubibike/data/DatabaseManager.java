@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.util.Pair;
 
+import java.sql.SQLClientInfoException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -89,13 +90,15 @@ public class DatabaseManager extends SQLiteOpenHelper {
         }
     }
 
-    public Cursor getMessages (String ownUsername, String otherUsername) {
+    public Cursor getMessagesSinceTime (String ownUsername, String otherUsername, long time) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "SELECT * from " + MESSAGES_TABLE +
-                    " WHERE " + USERNAME + "=? OR " + USERNAME + "=?" +
+                    " WHERE (" + USERNAME + "=? OR " + USERNAME + "=?)" + " AND " + TIME + ">?" +
                     " ORDER BY " + TIME;
 
-        String[] args = new String[] {ownUsername, otherUsername};
+        String timeString = time + "";
+
+        String[] args = new String[] {ownUsername, otherUsername, timeString};
 
         Cursor res = db.rawQuery(query, args);
 
@@ -109,20 +112,33 @@ public class DatabaseManager extends SQLiteOpenHelper {
         String[] data = new String[] {ip};
         Cursor cursor = db.rawQuery(query, data);
 
+        ContentValues values = new ContentValues();
+        values.put(IP, ip);
+        values.put(PEERNAME, name);
+
         boolean success = false;
 
         if(cursor.getCount() <= 0){
-            ContentValues values = new ContentValues();
-            values.put(IP, ip);
-            values.put(PEERNAME, name);
-
             long result = db.insert(PEERS_TABLE, null, values);
 
             success = (result == -1) ? false : true;
+        } else {
+            cursor.moveToFirst();
+            String current = cursor.getString(cursor.getColumnIndex(USERNAME));
+            if (current.equals(name)) {
+                db.update(PEERS_TABLE, values, IP + "='" + ip + "'", null);
+                success = true;
+            }
         }
 
         cursor.close();
         return success;
+    }
+
+    public boolean removePeer(String ip) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        return db.delete(PEERS_TABLE, IP + "=" + ip, null) > 0;
     }
 
     public Set<Pair<String, String>> getPeersSet() {
@@ -141,4 +157,5 @@ public class DatabaseManager extends SQLiteOpenHelper {
         }
         return output;
     }
+
 }

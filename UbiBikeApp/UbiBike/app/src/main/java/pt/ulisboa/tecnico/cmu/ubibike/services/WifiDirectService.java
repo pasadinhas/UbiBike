@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.AsyncTask;
+import android.os.DropBoxManager;
 import android.os.IBinder;
 import android.os.Messenger;
 import android.util.Log;
@@ -38,6 +39,7 @@ import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocket;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketManager;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketServer;
 import pt.ulisboa.tecnico.cmu.ubibike.R;
+import pt.ulisboa.tecnico.cmu.ubibike.activities.ChatActivity;
 import pt.ulisboa.tecnico.cmu.ubibike.data.DatabaseManager;
 import pt.ulisboa.tecnico.cmu.ubibike.data.UserLoginData;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
@@ -47,6 +49,8 @@ import static android.content.Intent.getIntent;
 
 public class WifiDirectService extends Service implements
         SimWifiP2pManager.PeerListListener, SimWifiP2pManager.GroupInfoListener {
+
+    private ChatActivity chatListener = null;
 
     public static final String TAG = "ubibike";
     private String username = null;
@@ -58,14 +62,24 @@ public class WifiDirectService extends Service implements
     private SimWifiP2pSocketServer mSrvSocket = null;
     private SimWifiP2pSocket mCliSocket = null;
     private UbiBroadcastReceiver mReceiver;
-    private Set<String> peerIPs = new TreeSet<>();
+    private Set<String> currentPeerIPs = new TreeSet<>();
     private Map<String, String> peers = new HashMap<>();
     private Map<String, String> peerIPbyNames = new HashMap<>();
     private String deviceName = null;
     private Pair<String, String> ownID = new Pair<>(null, null);
 
-    public WifiDirectService() {
+    private static WifiDirectService instance = null;
 
+    public WifiDirectService() {
+        instance = this;
+    }
+
+    public static WifiDirectService getInstance() {
+        return instance;
+    }
+
+    public void setChatListener(ChatActivity listener) {
+        chatListener = listener;
     }
 
     @Override
@@ -104,11 +118,9 @@ public class WifiDirectService extends Service implements
         new IncommingCommTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    public void findPeers(View view) {
-        updatePeers();
-    }
-
     public void updatePeers() {
+
+        Log.d(TAG, "updatePeers: entered!");
         if (mBound) {
             mManager.requestPeers(mChannel, WifiDirectService.this);
         } else {
@@ -117,7 +129,7 @@ public class WifiDirectService extends Service implements
     }
 
     private void findPeerNames() {
-        for (String ip : peerIPs) {
+        for (String ip : peerIPbyNames.values()) {
             exchangeIdentity(ip);
         }
     }
@@ -158,8 +170,6 @@ public class WifiDirectService extends Service implements
     private void registerPeer(String msg, String ip) {
         final String[] parts = msg.split(" ");
         if (parts[0].equals("[Protocol]AHOY")) {
-            peers.put(ip, parts[1]);
-            peerIPbyNames.put(parts[1], ip);
             DatabaseManager.getInstance(getBaseContext()).insertPeer(ip, parts[1]);
             Log.d(TAG, "registerPeer: registered: " + peers.get(ip) + " ip: " + ip );
         }
@@ -174,14 +184,28 @@ public class WifiDirectService extends Service implements
     @Override
     public void onPeersAvailable(SimWifiP2pDeviceList peers) {
         mManager.requestGroupInfo(mChannel, WifiDirectService.this);
+        currentPeerIPs.clear();
+
         for (SimWifiP2pDevice device : peers.getDeviceList()) {
             String ip = device.getVirtIp();
-            peerIPs.add(ip);
+            currentPeerIPs.add(ip);
             peerIPbyNames.put(device.deviceName, ip);
         }
 
+        removeOldPeers();
+
+        Log.d(TAG, "onPeersAvailable: Starting boradcast");
         broadcastPeerIdentities();
         //findPeerNames();
+    }
+
+    private void removeOldPeers() {
+        for(Map.Entry<String, String> oldPeer : peerIPbyNames.entrySet()) {
+            if (! currentPeerIPs.contains(oldPeer.getValue())) {
+                peerIPbyNames.remove(oldPeer.getKey());
+                DatabaseManager.getInstance(this).removePeer(oldPeer.getValue());
+            }
+        }
     }
 
     private ServiceConnection mConnection = new ServiceConnection() {
@@ -227,7 +251,7 @@ public class WifiDirectService extends Service implements
 
                         String st = sockIn.readLine();
                         Log.d(TAG, "incommingCommTask: line read: " + st);
-                        String[] parts = st.split(" ");
+                        String[] parts = st.split(" ", 3);
                         if (parts[0].equals("[Protocol]AHOY")) {
                             registerPeer(st, parts[2]);
                             response = "[Protocol]AHOY " + username;
@@ -237,7 +261,10 @@ public class WifiDirectService extends Service implements
                             findPeerNames();
                         }
                         else if (parts[0].equals("[Protocol]MESSAGE")) {
-                            DatabaseManager.getInstance(getBaseContext()).insertMessage(parts[1], "correct this " + parts[2]);
+                            DatabaseManager.getInstance(getBaseContext()).insertMessage(parts[1], parts[2]);
+                            if (chatListener != null) {
+                                chatListener.updateChat();
+                            }
                             Log.d(TAG, "IncommingCommTask msg received from: " + parts[1]);
                         }
 
@@ -266,6 +293,8 @@ public class WifiDirectService extends Service implements
             try {
                 mCliSocket = new SimWifiP2pSocket(msg[1],
                         Integer.parseInt(getString(R.string.port)));
+
+                Log.d(TAG, "doInBackground: going to broadcast " + msg[0]);
 
                 mCliSocket.getOutputStream().write((msg[0] + "\n").getBytes());
                 BufferedReader sockIn = new BufferedReader(
@@ -300,6 +329,8 @@ public class WifiDirectService extends Service implements
             try {
                 mCliSocket = new SimWifiP2pSocket(msg[1],
                         Integer.parseInt(getString(R.string.port)));
+
+                Log.d(TAG, "doInBackground: going to broadcast " + msg[0]);
 
                 mCliSocket.getOutputStream().write((msg[0] + "\n").getBytes());
                 BufferedReader sockIn = new BufferedReader(

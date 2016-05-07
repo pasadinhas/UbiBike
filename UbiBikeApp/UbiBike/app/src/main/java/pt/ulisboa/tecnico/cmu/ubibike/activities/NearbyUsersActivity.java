@@ -132,7 +132,6 @@ public class NearbyUsersActivity extends BaseDrawerActivity implements
                 e.printStackTrace();
             }
 
-            // TODO get current name and next start time from db
             Event event = new Event();
             event.name = "Google I/O " + System.currentTimeMillis();
             event.nextStartTime = System.currentTimeMillis() + 10000;
