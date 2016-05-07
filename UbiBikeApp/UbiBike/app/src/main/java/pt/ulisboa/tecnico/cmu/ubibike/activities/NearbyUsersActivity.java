@@ -48,6 +48,7 @@ import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketServer;
 import pt.ulisboa.tecnico.cmu.ubibike.R;
 import pt.ulisboa.tecnico.cmu.ubibike.data.DatabaseManager;
 import pt.ulisboa.tecnico.cmu.ubibike.data.UserLoginData;
+import pt.ulisboa.tecnico.cmu.ubibike.data.WifiDirectData;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UserServiceREST;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UtilREST;
@@ -59,6 +60,8 @@ import retrofit2.Response;
 
 public class NearbyUsersActivity extends BaseDrawerActivity implements
         Runnable {
+    public static final String TAG = "UbiBike";
+
     private User user = null;
 
     private Handler handler;
@@ -81,7 +84,11 @@ public class NearbyUsersActivity extends BaseDrawerActivity implements
 
         Switch wifiDirectSwitch = (Switch) findViewById(R.id.switch_wifi_direct);
 
-        wifiDirectSwitch.setChecked(false);
+        if (WifiDirectData.getIsEnabled(this)) {
+            wifiDirectSwitch.setChecked(true);
+        } else {
+            wifiDirectSwitch.setChecked(false);
+        }
 
         wifiDirectSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -90,8 +97,13 @@ public class NearbyUsersActivity extends BaseDrawerActivity implements
                     Intent serviceIntent = new Intent(getBaseContext(), WifiDirectService.class);
                     serviceIntent.putExtra("USERNAME", user.getUsername());
                     startService(serviceIntent);
+                    WifiDirectData.setIsEnabled(getApplicationContext(), true);
+                    Log.d(TAG, "onCheckedChanged: conn wifi direct to " +  WifiDirectData.getIsEnabled(getApplicationContext()));
                 } else {
                     stopService(new Intent(getBaseContext(), WifiDirectService.class));
+                    WifiDirectData.setIsEnabled(getApplicationContext(), false);
+                    Log.d(TAG, "onCheckedChanged: disco wifi direct to " + WifiDirectData.getIsEnabled(getApplicationContext()));
+
                 }
             }
         });
@@ -113,9 +125,20 @@ public class NearbyUsersActivity extends BaseDrawerActivity implements
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onResume() {
+        super.onResume();
+        Switch wifiDirectSwitch = (Switch) findViewById(R.id.switch_wifi_direct);
+
+        if (WifiDirectData.getIsEnabled(this)) {
+            wifiDirectSwitch.setChecked(true);
+            Log.d(TAG, "onResume: wifiDirect is enabled");
+        } else {
+            wifiDirectSwitch.setChecked(false);
+            Log.d(TAG, "onResume: wifiDirect is NOT enabled");
+        }
+
         new GetEventTask().execute();
+
     }
 
     @Override

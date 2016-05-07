@@ -11,6 +11,7 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,6 +21,7 @@ import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocket;
 import pt.ulisboa.tecnico.cmu.ubibike.R;
 import pt.ulisboa.tecnico.cmu.ubibike.data.DatabaseManager;
 import pt.ulisboa.tecnico.cmu.ubibike.data.UserLoginData;
+import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
 import pt.ulisboa.tecnico.cmu.ubibike.services.WifiDirectService;
 
 public class ChatActivity extends BaseDrawerActivity {
@@ -52,6 +54,7 @@ public class ChatActivity extends BaseDrawerActivity {
     protected void onResume() {
         super.onResume();
         WifiDirectService.getInstance().setChatListener(this);
+        updateChat();
     }
 
     @Override
@@ -89,6 +92,47 @@ public class ChatActivity extends BaseDrawerActivity {
 
             } while (res.moveToNext());
         }
+    }
+
+    public void sendPoints(View view) {
+        TextView textView = (TextView) findViewById(R.id.chatPointsInput);
+        if (textView.getText() == null || textView.getText().toString().equals("Points")) {
+            Toast.makeText(this, "Please insert the number of points to be sent", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Long input = Long.parseLong(textView.getText().toString());
+
+        if (input <= 0) {
+            Toast.makeText(this, "Please a positive number of points to be sent", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        User user = UserLoginData.getUser(this);
+
+        if (user == null) {return;} //should not happen
+
+        long currentPoints = user.getPoints();
+
+        if (input > currentPoints) {
+            Toast.makeText(this, "Can't send more points than those you have, sorry", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        long newPoints = currentPoints - input;
+
+        user.setPoints(newPoints);
+
+        UserLoginData.setUser(this, user);
+
+        String content = "[Protocol]POINTS " + username + " " + input;
+        new SendMessageTask().executeOnExecutor(
+                AsyncTask.THREAD_POOL_EXECUTOR,
+                content, otherIP);
+
+        Toast.makeText(this, "Sent " + input + " points to " + otherUsername, Toast.LENGTH_SHORT).show();
+
+        return;
     }
 
     public class SendMessageTask extends AsyncTask<String, String, Void> {

@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.DropBoxManager;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.Messenger;
 import android.util.Log;
@@ -42,6 +43,7 @@ import pt.ulisboa.tecnico.cmu.ubibike.R;
 import pt.ulisboa.tecnico.cmu.ubibike.activities.ChatActivity;
 import pt.ulisboa.tecnico.cmu.ubibike.data.DatabaseManager;
 import pt.ulisboa.tecnico.cmu.ubibike.data.UserLoginData;
+import pt.ulisboa.tecnico.cmu.ubibike.data.WifiDirectData;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
 import pt.ulisboa.tecnico.cmu.ubibike.wifidirect.UbiBroadcastReceiver;
 
@@ -94,6 +96,16 @@ public class WifiDirectService extends Service implements
         bindWifiDirect();
 
         return 0;
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mBound) {
+            unbindService(mConnection);
+            mBound = false;
+            unregisterReceiver(mReceiver);
+        }
+        WifiDirectData.setIsEnabled(this, false);
     }
 
     private void initializeWifiDirect() {
@@ -208,6 +220,36 @@ public class WifiDirectService extends Service implements
         }
     }
 
+    private void registerPoints(final String username, final String pointsStr) {
+        long points = Long.parseLong(pointsStr);
+        User user = UserLoginData.getUser(this);
+        user.addUserPoints(points);
+
+        UserLoginData.setUser(this, user);
+
+        Handler h = new Handler(WifiDirectService.this.getMainLooper());
+
+        h.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(WifiDirectService.this, "Received " + pointsStr + " from " + username, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+
+    private void toastMessage(final String username) {
+        Handler h = new Handler(WifiDirectService.this.getMainLooper());
+
+        h.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(WifiDirectService.this, "Received new message from " + username, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+
     private ServiceConnection mConnection = new ServiceConnection() {
         // callbacks for service binding, passed to bindService()
 
@@ -264,8 +306,13 @@ public class WifiDirectService extends Service implements
                             DatabaseManager.getInstance(getBaseContext()).insertMessage(parts[1], parts[2]);
                             if (chatListener != null) {
                                 chatListener.updateChat();
+                            } else {
+                                toastMessage(parts[1]);
                             }
                             Log.d(TAG, "IncommingCommTask msg received from: " + parts[1]);
+                        }
+                        else if (parts[0].equals("[Protocol]POINTS")) {
+                            registerPoints(parts[1], parts[2]);
                         }
 
                         publishProgress(st);
@@ -273,6 +320,8 @@ public class WifiDirectService extends Service implements
 
                     } catch (IOException e) {
                         Log.d("Error reading socket:", e.getMessage());
+                    } catch (NullPointerException e) {
+                        Log.d("Error reading socket:", " null (quick disconnect?)" + e.getMessage());
                     } finally {
                         sock.close();
                     }
@@ -280,6 +329,8 @@ public class WifiDirectService extends Service implements
                     Log.d("Error socket:", e.getMessage());
                     break;
                     //e.printStackTrace();
+                } catch (NullPointerException e) {
+                    Log.d("Error reading socket:", " null (quick disconnect?)" + e.getMessage());
                 }
             }
             return null;

@@ -14,6 +14,7 @@ import android.widget.ListView;
 import pt.ulisboa.tecnico.cmu.ubibike.R;
 import pt.ulisboa.tecnico.cmu.ubibike.data.DatabaseManager;
 import pt.ulisboa.tecnico.cmu.ubibike.data.UserLoginData;
+import pt.ulisboa.tecnico.cmu.ubibike.data.WifiDirectData;
 
 public abstract class BaseDrawerActivity extends Activity{
 
@@ -26,11 +27,6 @@ public abstract class BaseDrawerActivity extends Activity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        getBaseContext().deleteDatabase(DatabaseManager.DB_NAME);
-        DatabaseManager.getInstance(this).close();
-        getBaseContext().deleteDatabase(DatabaseManager.DB_NAME);
-        DatabaseManager.getInstance(getBaseContext());
     }
 
     @Override

@@ -7,10 +7,34 @@
     android:weightSum="1">
 
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Points"
+            android:id="@+id/chatPointsInput"
+            android:numeric="integer"
+            android:inputType="number" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Send Points"
+            android:id="@+id/ChatButtonSendPoints"
+            android:onClick="sendPoints"/>
+
+    </LinearLayout>
+
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textMultiLine"
+        android:inputType="none"
         android:ems="10"
         android:id="@+id/chatTextShow"
         android:layout_weight="0.90" />
