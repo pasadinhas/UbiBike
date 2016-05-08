@@ -5,7 +5,8 @@
     <color name="colorAccent">#FF4081</color>
     <color name="black_overlay">#66000000</color>
     <!-- Custom -->
-    <color name="background">#34bAA6</color>
+    <color name="login">#34bAA6</color>
+    <color name="background">#DEDEDE</color>
     <color name="title">#ffffff</color>
-    <color name="drawer">#344AA2</color>
+    <color name="drawer">#34bAA6</color>
 </resources>

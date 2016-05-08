@@ -57,6 +57,9 @@ public class UbiBroadcastReceiver extends BroadcastReceiver {
             SimWifiP2pInfo ginfo = (SimWifiP2pInfo) intent.getSerializableExtra(
                     SimWifiP2pBroadcast.EXTRA_GROUP_INFO);
             ginfo.print();
+
+            mService.updateGroup();
+
             Toast.makeText(mService, "Network membership changed", Toast.LENGTH_SHORT).show();
 
         } else if (SimWifiP2pBroadcast.WIFI_P2P_GROUP_OWNERSHIP_CHANGED_ACTION.equals(action)) {

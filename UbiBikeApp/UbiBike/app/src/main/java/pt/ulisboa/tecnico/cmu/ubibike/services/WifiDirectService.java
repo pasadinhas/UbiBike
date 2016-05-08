@@ -140,6 +140,14 @@ public class WifiDirectService extends Service implements
         }
     }
 
+    public void updateGroup() {
+        if (mBound) {
+            mManager.requestGroupInfo(mChannel, WifiDirectService.this);
+        } else {
+            Toast.makeText(getBaseContext(), "Service not bound", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void findPeerNames() {
         for (String ip : peerIPbyNames.values()) {
             exchangeIdentity(ip);
@@ -188,27 +196,42 @@ public class WifiDirectService extends Service implements
     }
 
     @Override
-    public void onGroupInfoAvailable(SimWifiP2pDeviceList simWifiP2pDeviceList, SimWifiP2pInfo info) {
+    public void onGroupInfoAvailable(SimWifiP2pDeviceList peers, SimWifiP2pInfo info) {
+        if (! info.askIsConnected()) {
+            DatabaseManager.getInstance(this).clearPeers();
+            peerIPbyNames.clear();
+        }
+
         deviceName = info.getDeviceName();
         Log.d(TAG, "onGroupInfoAvailable: " + deviceName);
-    }
 
-    @Override
-    public void onPeersAvailable(SimWifiP2pDeviceList peers) {
-        mManager.requestGroupInfo(mChannel, WifiDirectService.this);
         currentPeerIPs.clear();
 
         for (SimWifiP2pDevice device : peers.getDeviceList()) {
+            if (device.deviceName.equals(deviceName)) {
+                continue;
+            }
             String ip = device.getVirtIp();
             currentPeerIPs.add(ip);
             peerIPbyNames.put(device.deviceName, ip);
+            Log.d(TAG, "onGroupInfoAvailable: regsietred:" + device.deviceName);
         }
 
         removeOldPeers();
 
         Log.d(TAG, "onPeersAvailable: Starting boradcast");
         broadcastPeerIdentities();
-        //findPeerNames();
+    }
+
+    @Override
+    public void onPeersAvailable(SimWifiP2pDeviceList peers) {
+        mManager.requestGroupInfo(mChannel, WifiDirectService.this);
+
+        for (SimWifiP2pDevice device : peers.getDeviceList()) {
+            if (device.deviceName.startsWith("Bike")){
+                Log.d(TAG, "onPeersAvailable: registerd bike" + device.deviceName);
+            }
+        }
     }
 
     private void removeOldPeers() {

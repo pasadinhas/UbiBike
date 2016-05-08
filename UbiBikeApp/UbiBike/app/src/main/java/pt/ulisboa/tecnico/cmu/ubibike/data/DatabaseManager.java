@@ -138,7 +138,13 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public boolean removePeer(String ip) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        return db.delete(PEERS_TABLE, IP + "=" + ip, null) > 0;
+        return db.delete(PEERS_TABLE, IP + "='" + ip +"'", null) > 0;
+    }
+
+    public boolean clearPeers() {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        return db.delete(PEERS_TABLE, null, null) > 0;
     }
 
     public Set<Pair<String, String>> getPeersSet() {

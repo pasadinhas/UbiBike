@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Messenger;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
@@ -98,12 +99,11 @@ public class NearbyUsersActivity extends BaseDrawerActivity implements
                     serviceIntent.putExtra("USERNAME", user.getUsername());
                     startService(serviceIntent);
                     WifiDirectData.setIsEnabled(getApplicationContext(), true);
-                    Log.d(TAG, "onCheckedChanged: conn wifi direct to " +  WifiDirectData.getIsEnabled(getApplicationContext()));
                 } else {
                     stopService(new Intent(getBaseContext(), WifiDirectService.class));
                     WifiDirectData.setIsEnabled(getApplicationContext(), false);
-                    Log.d(TAG, "onCheckedChanged: disco wifi direct to " + WifiDirectData.getIsEnabled(getApplicationContext()));
-
+                    DatabaseManager.getInstance(getBaseContext()).clearPeers();
+                    peerIPbyNames.clear();
                 }
             }
         });
@@ -166,6 +166,7 @@ public class NearbyUsersActivity extends BaseDrawerActivity implements
         protected void onPostExecute(Event event) {
             ListView listView = (ListView)findViewById(R.id.nearby_listView);
             Set<Pair<String, String>> peers = DatabaseManager.getInstance(getBaseContext()).getPeersSet();
+            peerIPbyNames.clear();
             for (Pair<String, String> peerAndIp : peers) {
                 peerIPbyNames.put(peerAndIp.second, peerAndIp.first);
             }
