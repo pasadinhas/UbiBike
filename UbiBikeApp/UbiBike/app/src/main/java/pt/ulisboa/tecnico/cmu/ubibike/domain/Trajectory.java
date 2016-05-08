@@ -19,6 +19,7 @@ public class Trajectory implements Serializable, Comparable<Trajectory>{
 
     private List<Coordinates> trajectory = new ArrayList<>();
 
+
     public Trajectory(Date date){
         setDate(date);
     }
@@ -37,6 +38,8 @@ public class Trajectory implements Serializable, Comparable<Trajectory>{
         return this.trajectory;
     }
 
+    public void setTrajectory(List<Coordinates> t) { this.trajectory = t; }
+
     public void addCoordinate(Coordinates coord){
         trajectory.add(coord);
     }
@@ -45,7 +48,25 @@ public class Trajectory implements Serializable, Comparable<Trajectory>{
         return trajectory.isEmpty();
     }
 
-    public float calculateTotalMeters(){
+    public Coordinates getInitialPosition(){
+        if(trajectory != null && !trajectory.isEmpty()){
+            return trajectory.get(0);
+        }
+        return null;
+    }
+
+    public Coordinates getLastPosition(){
+        if(trajectory != null && !trajectory.isEmpty()){
+            return trajectory.get(trajectory.size() - 1);
+        }
+        return null;
+    }
+
+    /**
+     * Return trajectory distance in meters.
+     * @return
+     */
+    public long calculateTotalMeters(){
         float totalMetersAcc = 0;
         if(trajectory.size() <= 1)
             return 0;
@@ -58,13 +79,17 @@ public class Trajectory implements Serializable, Comparable<Trajectory>{
             totalMetersAcc += res[0];
             coord = coord2;
         }
-        return totalMetersAcc;
+        return Math.round(totalMetersAcc);
+    }
+
+    public int calculateTotalKm(){
+        return Math.round(calculateTotalMeters()/1000);
     }
 
     @Override
-    public String toString(){
-        DateFormat fm = new SimpleDateFormat(UtilREST.DATE_FORMAT, Locale.ENGLISH);
-        return fm.format(date);
+    public boolean equals(Object o) {
+        Trajectory t  = (Trajectory) o;
+        return (this.getDate().compareTo(t.getDate()) == 0);
     }
 
     @Override
@@ -75,6 +100,12 @@ public class Trajectory implements Serializable, Comparable<Trajectory>{
         else if(res > 0)
             res = -1;
         return res;
+    }
+
+    @Override
+    public String toString(){
+        DateFormat fm = new SimpleDateFormat(UtilREST.DATE_FORMAT, Locale.ENGLISH);
+        return fm.format(date) + " " + calculateTotalKm() + "km";
     }
 }
 

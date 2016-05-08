@@ -20,7 +20,7 @@ import pt.ulisboa.tecnico.cmu.ubibike.R;
 import pt.ulisboa.tecnico.cmu.ubibike.data.UserLoginData;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Bike;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Station;
-import pt.ulisboa.tecnico.cmu.ubibike.location.UtilMap;
+import pt.ulisboa.tecnico.cmu.ubibike.location.MapTrajectoryDrawing;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.BikeServiceREST;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UtilREST;
 import retrofit2.Call;
@@ -66,7 +66,7 @@ public class BookBikesActivity extends BaseDrawerActivity implements OnMapReadyC
                 selectedMarker = null;
             }
         });
-        UtilMap.moveToCurrentLocation(map, new LatLng(station.getPosition().getLatitude(),
+        MapTrajectoryDrawing.moveToCurrentLocation(map, new LatLng(station.getPosition().getLatitude(),
                 station.getPosition().getLongitude()));
         for(Bike bike : station.getBikes()){
             latlng = new LatLng(bike.getPosition().getLatitude(),bike.getPosition().getLongitude());

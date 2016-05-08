@@ -9,15 +9,22 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
+import pt.ulisboa.tecnico.cmu.controllers.util.JsonViews;
+
 @Entity
 public class Station {
 
+	@JsonView(JsonViews.LowDetailed.class)
 	@Id
 	private String name;
 	
+	@JsonView(JsonViews.LowDetailed.class)
 	@OneToOne(cascade = {CascadeType.ALL})
 	private Coordinates position;
 	
+	@JsonView(JsonViews.MediumDetailed.class)
 	@OneToMany(cascade = CascadeType.ALL,mappedBy = "station",orphanRemoval = false)
 	private List<Bike> bikes = new ArrayList<>();
 	
@@ -83,12 +90,6 @@ public class Station {
 			}
 		}
 		return false;
-	}
-	
-	/* =========== Object Detail Control Methods ======= */
-	
-	public void setStationDetailLow(){
-		this.bikes = null;
 	}
 	
 }

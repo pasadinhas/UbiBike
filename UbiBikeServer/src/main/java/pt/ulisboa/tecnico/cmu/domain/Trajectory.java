@@ -13,6 +13,9 @@ import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
+
+import pt.ulisboa.tecnico.cmu.controllers.util.JsonViews;
 
 @Entity
 public class Trajectory implements Comparable<Trajectory>{
@@ -24,9 +27,11 @@ public class Trajectory implements Comparable<Trajectory>{
 	
 	@Column
 	@JsonFormat(pattern="dd-MM-yyyy HH:mm:ss")
+	@JsonView(JsonViews.LowDetailed.class)
 	private Date date;
 	
 	@OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
+	@JsonView(JsonViews.HighlyDetailed.class)
 	private List<Coordinates> trajectory = new ArrayList<>();
 	
 	
@@ -50,10 +55,6 @@ public class Trajectory implements Comparable<Trajectory>{
 	
 	public List<Coordinates> getTrajectory(){
 		return this.trajectory;
-	}
-	
-	public void removeAllCoordinates(){
-		this.trajectory = null;
 	}
 	
 	@Override

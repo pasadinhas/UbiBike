@@ -8,6 +8,7 @@ import pt.ulisboa.tecnico.cmu.domain.Bike;
 import pt.ulisboa.tecnico.cmu.domain.Coordinates;
 import pt.ulisboa.tecnico.cmu.domain.Station;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.BikeDoesntExistException;
+import pt.ulisboa.tecnico.cmu.domain.exceptions.StationDoesntExistException;
 import pt.ulisboa.tecnico.cmu.domain.repositories.BikeRepository;
 import pt.ulisboa.tecnico.cmu.domain.repositories.StationRepository;
 
@@ -21,8 +22,8 @@ public class BikeServices {
 	private StationRepository stationRepository;
 	
 	
-	public void bikePickedUp(String id) throws BikeDoesntExistException{
-		Bike bike = getBike(id);
+	public void bikePickedUp(String bikeId) throws BikeDoesntExistException{
+		Bike bike = getBike(bikeId);
 		if(!bike.getPicked()){
 			bike.setStation(null);
 			bike.setPicked(true);
@@ -31,14 +32,14 @@ public class BikeServices {
 	}
 	
 	@Transactional
-	public void bikePickedOff(String id,String station,Coordinates coord) 
-			throws BikeDoesntExistException{
-		Bike bike = getBike(id);
-		Station sta = stationRepository.findOne(station);
-		if(sta != null && bike.getPicked()){
+	public void bikePickedOff(String bikeId,String stationName,Coordinates bikePos) 
+			throws BikeDoesntExistException, StationDoesntExistException{
+		Bike bike = getBike(bikeId);
+		Station sta = getStation(stationName);
+		if(bike.getPicked()){
 			sta.addBike(bike);
 			bike.setStation(sta);
-			bike.setPosition(coord);
+			bike.setPosition(bikePos);
 			bike.setPicked(false);
 			bike.setBooked(false);
 			bikeRepository.save(bike);
@@ -46,10 +47,19 @@ public class BikeServices {
 		}
 	}
 	
-	public void bookABike(String id) throws BikeDoesntExistException{
-		Bike bike = getBike(id);
+	public void bookABike(String bikeId) throws BikeDoesntExistException{
+		Bike bike = getBike(bikeId);
 		bike.setBooked(true);
 		bikeRepository.save(bike);
+	}
+	
+	/* ======================= Private methods ======================= */
+	
+	private Station getStation(String stationName) throws StationDoesntExistException{
+		Station station = stationRepository.findOne(stationName);
+		if(station == null)
+			throw new StationDoesntExistException();
+		return station;
 	}
 	
 	private Bike getBike(String id) throws BikeDoesntExistException{

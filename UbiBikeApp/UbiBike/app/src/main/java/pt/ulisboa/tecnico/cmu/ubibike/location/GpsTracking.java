@@ -19,12 +19,16 @@ import java.util.Calendar;
 
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Coordinates;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Trajectory;
+import pt.ulisboa.tecnico.cmu.ubibike.services.gps.GpsTrackingService;
+import pt.ulisboa.tecnico.cmu.ubibike.services.gps.IGPSCallback;
 
 
 public class GpsTracking  implements GoogleApiClient.ConnectionCallbacks,
                         GoogleApiClient.OnConnectionFailedListener,LocationListener{
 
     private final static int UPDATES_INTERVAL = 4000;
+
+    private IGPSCallback serviceCallback;
 
     private Trajectory trajectory;
 
@@ -36,9 +40,10 @@ public class GpsTracking  implements GoogleApiClient.ConnectionCallbacks,
 
     private boolean isConnected;
 
-    public GpsTracking(Context context){
+    public GpsTracking(Context context,IGPSCallback serviceCallback){
         Calendar c = Calendar.getInstance();
         c.set(Calendar.MILLISECOND,0);
+        this.serviceCallback = serviceCallback;
         isConnected = false;
         currentContext = context;
         locationRequest = new LocationRequest();
@@ -51,13 +56,6 @@ public class GpsTracking  implements GoogleApiClient.ConnectionCallbacks,
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
-    }
-
-
-    @Override
-    public void onLocationChanged(Location location) {
-        trajectory.addCoordinate(new Coordinates(location.getLatitude(), location.getLongitude()));
-        Log.d("GPS Current Coordinates",location.getLatitude()+ " " + location.getLongitude());
     }
 
     private void startLocationUpdates() {
@@ -93,6 +91,13 @@ public class GpsTracking  implements GoogleApiClient.ConnectionCallbacks,
             isConnected = false;
             googleClient.disconnect();
         }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        trajectory.addCoordinate(new Coordinates(location.getLatitude(), location.getLongitude()));
+        serviceCallback.setLocation(location.getLatitude(), location.getLongitude());
+        Log.d("GPS Current Coordinates",location.getLatitude()+ " " + location.getLongitude());
     }
 
     @Override

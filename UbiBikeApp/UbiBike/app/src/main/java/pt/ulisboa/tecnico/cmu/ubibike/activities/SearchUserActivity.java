@@ -2,6 +2,7 @@ package pt.ulisboa.tecnico.cmu.ubibike.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -36,9 +37,10 @@ public class SearchUserActivity extends BaseDrawerActivity {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String username = (String) parent.getItemAtPosition(position);
+                User username = (User) parent.getItemAtPosition(position);
                 UserServiceREST userService = UtilREST.getRetrofit().create(UserServiceREST.class);
-                Call<User> call = userService.getUser(username,UserServiceREST.USER_DETAIL_MEDIUM);
+                Call<User> call = userService.getUserWithDetailSpecified(username.getUsername(),
+                        UserServiceREST.USER_DETAIL_MEDIUM);
                 call.enqueue(new Callback<User>() {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {
@@ -47,6 +49,7 @@ public class SearchUserActivity extends BaseDrawerActivity {
                             intent.putExtra("User", response.body());
                             startActivity(intent);
                         }
+                        Log.d("Asda", response.message());
                     }
                     @Override
                     public void onFailure(Call<User> call, Throwable t) {
@@ -60,27 +63,27 @@ public class SearchUserActivity extends BaseDrawerActivity {
 
     public void search(View view){
         TextView usernameTextView = (EditText)findViewById(R.id.username_editText);
-        String username = usernameTextView.getText().toString();
+        String usernamePrefix = usernameTextView.getText().toString();
 
         UserServiceREST userService = UtilREST.getRetrofit().create(UserServiceREST.class);
-        Call<List<String>> call = userService.getAllUsernames(username);
-        call.enqueue(new Callback<List<String>>() {
+        Call<List<User>> call = userService.getAllUsers(usernamePrefix);
+        call.enqueue(new Callback<List<User>>() {
             @Override
-            public void onResponse(Call<List<String>> call, Response<List<String>> response) {
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
                 if(response.code() == UtilREST.HTTP_OK){
-                    List<String> usernamesList = response.body();
-                    usernamesList = ((usernamesList == null) ? new ArrayList<String>() : usernamesList);
-                    if(!usernamesList.isEmpty()){
+                    List<User> userList = response.body();
+                    userList = ((userList == null) ? new ArrayList<User>() : userList);
+                    if(!userList.isEmpty()){
                         ListView listView = (ListView)findViewById(R.id.usernames_listView);
                         listView.setAdapter(new ArrayAdapter<>(getBaseContext(),
-                                R.layout.support_simple_spinner_dropdown_item,usernamesList));
+                                R.layout.support_simple_spinner_dropdown_item,userList));
                     }
-                    Toast.makeText(getBaseContext(),usernamesList.size()+" "+getString(R.string.users_found_toast),
+                    Toast.makeText(getBaseContext(),userList.size()+" "+getString(R.string.users_found_toast),
                             Toast.LENGTH_LONG).show();
                 }
             }
             @Override
-            public void onFailure(Call<List<String>> call, Throwable t) {
+            public void onFailure(Call<List<User>> call, Throwable t) {
                 Toast.makeText(getBaseContext(),R.string.impossible_connect_server_toast,
                         Toast.LENGTH_LONG).show();
             }

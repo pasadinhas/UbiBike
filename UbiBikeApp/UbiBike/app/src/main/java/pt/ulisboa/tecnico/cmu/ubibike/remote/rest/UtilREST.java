@@ -17,8 +17,6 @@ public final class UtilREST {
 
     public final static int HTTP_OK = 200;
 
-    public final static int HTTP_CONFLICT = 409;
-
     public final static String ACCEPT_HEADER = "Accept";
 
     public final static String CONTENT_TYPE_HEADER = "Content-Type";

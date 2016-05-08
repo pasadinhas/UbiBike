@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmu.controllers;
+package pt.ulisboa.tecnico.cmu.controllers.util;
 
 public class Error {
 

@@ -8,10 +8,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
+
+import pt.ulisboa.tecnico.cmu.controllers.util.JsonViews;
 
 @Entity
 public class Bike {
 
+	@JsonView(JsonViews.LowDetailed.class)
 	@Id
 	private String identifier;
 	
@@ -23,6 +27,7 @@ public class Bike {
 	@Column(nullable = false)
 	private boolean booked;
 	
+	@JsonView(JsonViews.LowDetailed.class)
 	@OneToOne(cascade = {CascadeType.ALL})
 	private Coordinates position;
 	

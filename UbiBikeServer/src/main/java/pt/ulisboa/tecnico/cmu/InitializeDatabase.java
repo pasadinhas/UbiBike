@@ -79,7 +79,17 @@ public class InitializeDatabase {
         stationRepo.save(s1);
         stationRepo.save(s2);
         stationRepo.save(s3);
+        User u1 = new User("Andre","123");
+        User u2 = new User("António","123");
+        User u3 = new User("Alexandre","123");
+        User u4 = new User("Álvaro","123");
+        User u5 = new User("Bruno","123");
         userRepo.save(u);
+        userRepo.save(u1);
+        userRepo.save(u2);
+        userRepo.save(u3);
+        userRepo.save(u4);
+        userRepo.save(u5);
         System.out.println("###### BD Initialized ######");
 	}
 	

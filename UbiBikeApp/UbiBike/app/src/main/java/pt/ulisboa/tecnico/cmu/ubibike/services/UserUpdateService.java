@@ -54,7 +54,7 @@ public class UserUpdateService extends Service {
         return null;
     }
 
-    // Try update user information to the remote server.
+    // Try synchronize user (local replica) with remote server.
     private void updateUserRemotely(final User user){
         UserServiceREST userService = UtilREST.getRetrofit().create(UserServiceREST.class);
         Call<ResponseBody> call = userService.synchronizeUser(UtilREST.ACCEPT_HEADER,UtilREST.CONTENT_TYPE_HEADER,
@@ -63,7 +63,6 @@ public class UserUpdateService extends Service {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if(response.code() == UtilREST.HTTP_OK){
-                    user.setIsDirty(false);
                     user.saveLocalTrajectories();
                     UserLoginData.setUser(getBaseContext(), user);
                 }

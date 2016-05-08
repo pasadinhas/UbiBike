@@ -2,7 +2,6 @@ package pt.ulisboa.tecnico.cmu.ubibike.activities;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
@@ -44,7 +43,7 @@ public abstract class BaseDrawerActivity extends Activity{
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Intent intent = null;
+            Intent intent;
             Intent intentHome = new Intent(getBaseContext(), HomeActivity.class);
             intentHome.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION |
                 Intent.FLAG_ACTIVITY_CLEAR_TOP |
@@ -57,10 +56,12 @@ public abstract class BaseDrawerActivity extends Activity{
                 intent = new Intent(getBaseContext(), SearchUserActivity.class);
             } else if (position == 3 && !(getPosition() == 3)) {
                 intent = new Intent(getBaseContext(), StationsActivity.class);
-            } else if (position == 4) {
+            }else if(position == 4) {
+                intent = new Intent(getBaseContext(), RealTimeTrackingActivity.class);
+            }else if (position == 5) {
                 intent = new Intent(getBaseContext(), LoginActivity.class);
                 UserLoginData.clearUserLoggedIn(getBaseContext());
-            } else if (position == 5 && !(getPosition() == 5)) {
+            } else if (position == 6 && !(getPosition() == 6)) {
                 intent = new Intent(getBaseContext(), TrackTrajectoryDemo.class);
             }   else if (position == 6 && !(getPosition() == 6)) {
                 intent = new Intent(getBaseContext(), MyBikeActiviy.class);

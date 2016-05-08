@@ -6,6 +6,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
+
+import pt.ulisboa.tecnico.cmu.controllers.util.JsonViews;
 
 @Entity
 public class Coordinates {
@@ -15,9 +18,11 @@ public class Coordinates {
 	@JsonIgnore
 	private long coorId;
 	
+	@JsonView(JsonViews.LowDetailed.class)
 	@Column
 	private double latitude;
 	
+	@JsonView(JsonViews.LowDetailed.class)
 	@Column
 	private double longitude;
 	

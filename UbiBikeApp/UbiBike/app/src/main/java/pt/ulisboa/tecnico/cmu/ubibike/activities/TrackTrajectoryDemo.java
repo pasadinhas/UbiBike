@@ -5,13 +5,13 @@ import android.os.Bundle;
 import android.view.View;
 
 import pt.ulisboa.tecnico.cmu.ubibike.R;
-import pt.ulisboa.tecnico.cmu.ubibike.services.GpsTrackingService;
+import pt.ulisboa.tecnico.cmu.ubibike.services.gps.GpsTrackingService;
 
 public class TrackTrajectoryDemo extends BaseDrawerActivity {
 
     @Override
     protected int getPosition() {
-        return 5;
+        return 6;
     }
 
     @Override

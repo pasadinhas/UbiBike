@@ -52,7 +52,7 @@ public class StationsActivity extends BaseDrawerActivity {
     // Get station information from the remote server.
     private void getStations(){
         StationServiceREST stationService = UtilREST.getRetrofit().create(StationServiceREST.class);
-        Call<List<Station>> call = stationService.getStations(null);
+        Call<List<Station>> call = stationService.getStations(StationServiceREST.STATION_DETAIL_HIGH);
         call.enqueue(new Callback<List<Station>>() {
             @Override
             public void onResponse(Call<List<Station>> call, Response<List<Station>> response) {

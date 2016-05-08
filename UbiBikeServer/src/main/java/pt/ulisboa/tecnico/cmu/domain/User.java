@@ -13,7 +13,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 
+import pt.ulisboa.tecnico.cmu.controllers.util.JsonViews;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.TrajectoryAlreadyExistException;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.TrajectoryDoesntExistException;
 
@@ -21,6 +23,7 @@ import pt.ulisboa.tecnico.cmu.domain.exceptions.TrajectoryDoesntExistException;
 public class User {
 	
 	@Id
+	@JsonView(JsonViews.LowDetailed.class)
 	private String username;
 	
 	@Column(nullable = false)
@@ -28,10 +31,12 @@ public class User {
 	private String password;
 	
 	@Column(nullable = false)
+	@JsonView(JsonViews.LowDetailed.class)
 	private long points;
 	
 	@OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
 	@OrderBy("date DESC")
+	@JsonView(JsonViews.MediumDetailed.class)
 	private List<Trajectory> trajectories = new ArrayList<>();
 	
 	
@@ -91,18 +96,6 @@ public class User {
 			}
 		}
 		trajectories.add(t);
-	}
-	
-	/* =========== Object Detail Control Methods ======= */
-	
-	public void setUserDetailMedium(){
-		for(Trajectory t : this.trajectories){
-			t.removeAllCoordinates();
-		}
-	}
-	
-	public void setUserDetailLow(){
-		this.trajectories = null;
 	}
 	
 }

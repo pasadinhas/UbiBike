@@ -1,12 +1,13 @@
 package pt.ulisboa.tecnico.cmu.services;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.TreeSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import pt.ulisboa.tecnico.cmu.domain.Trajectory;
 import pt.ulisboa.tecnico.cmu.domain.User;
@@ -26,7 +27,7 @@ public class UserServices {
 	
 	public User loginUser(String username,String password) 
 			throws UserDoesntExistException, InvalidLoginException{
-		User user = getUser(username);
+		User user = getUserFromRepository(username);
 		if(!user.getPassword().equals(password))
 			throw new InvalidLoginException();
 		return user;
@@ -42,24 +43,25 @@ public class UserServices {
 	
 	public Trajectory getUserTrajectory(String username,Date date) 
 			throws UserDoesntExistException, TrajectoryDoesntExistException{
-		User user = getUser(username);
+		User user = getUserFromRepository(username);
 		return user.getTrajectory(date);
 	}
 	
-	public Collection<String> getUsers(String usernamePrefix){
-		TreeSet<String> users = new TreeSet<>();
+	public Collection<User> getUsersByUsernamePrefix(String usernamePrefix){
+		List<User> users = new ArrayList<>();
 		Iterable<User> storedUsers = userRepository.findAll();
 		for(User user : storedUsers){
 			if(user.getUsername().startsWith(usernamePrefix)){
-				users.add(user.getUsername());
+				users.add(user);
 			}
 		}
 		return users;
 	}
 	
+	@Transactional
 	public void synchronizeUser(String username,long points,List<Trajectory> trajectories)
 		throws UserDoesntExistException{
-		User user = getUser(username);
+		User user = getUserFromRepository(username);
 		user.setPoints(points);
 		for(Trajectory newTraj : trajectories){
 			try{
@@ -72,26 +74,14 @@ public class UserServices {
 	}
 	
 	
-	public User getUserInformation(String username) throws UserDoesntExistException{
-		User user = getUser(username);
-		return user;
-	}
-	
-	public User getUserInformationMedium(String username) throws UserDoesntExistException{
-		User user = getUser(username);
-		user.setUserDetailMedium();
-		return user;
-	}
-	
-	public User getUserInformationLow(String username) throws UserDoesntExistException{
-		User user = getUser(username);
-		user.setUserDetailLow();
+	public User getUser(String username) throws UserDoesntExistException{
+		User user = getUserFromRepository(username);
 		return user;
 	}
 	
 	/*======================== Private methods ======================= */
 	
-	private User getUser(String username) throws UserDoesntExistException{
+	private User getUserFromRepository(String username) throws UserDoesntExistException{
 		User user = userRepository.findOne(username);
 		if(user == null)
 			throw new UserDoesntExistException();

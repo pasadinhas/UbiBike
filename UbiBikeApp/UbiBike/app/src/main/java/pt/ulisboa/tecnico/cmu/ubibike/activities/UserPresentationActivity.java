@@ -1,7 +1,6 @@
 package pt.ulisboa.tecnico.cmu.ubibike.activities;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -19,7 +18,7 @@ import pt.ulisboa.tecnico.cmu.ubibike.R;
 import pt.ulisboa.tecnico.cmu.ubibike.data.UserLoginData;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Trajectory;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
-import pt.ulisboa.tecnico.cmu.ubibike.location.UtilMap;
+import pt.ulisboa.tecnico.cmu.ubibike.location.MapTrajectoryDrawing;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UserServiceREST;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UtilREST;
 import retrofit2.Call;
@@ -76,10 +75,14 @@ public class UserPresentationActivity extends BaseDrawerActivity implements OnMa
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Trajectory traj = (Trajectory) parent.getItemAtPosition(position);
-                if (traj.getTrajectory() == null) {                     //Not in memory.
-                    getTrajectoryFromServer(traj.getDate(), googleMap); //Bring from server.
+                 if (traj.getTrajectory().isEmpty()) {                      //Not in memory.
+                     getTrajectoryFromServer(traj.getDate(), googleMap);    //Bring from server.
                 } else {
-                    UtilMap.drawTrajectory(googleMap, traj);
+                    findViewById(R.id.home_map).setVisibility(View.VISIBLE);
+                    MapTrajectoryDrawing mapDrawing = new MapTrajectoryDrawing(googleMap,traj,getBaseContext());
+                    mapDrawing.drawInitialMarker();
+                    mapDrawing.drawTrajectory();
+                    mapDrawing.drawLastMarker();
                 }
             }
             @Override
@@ -89,6 +92,7 @@ public class UserPresentationActivity extends BaseDrawerActivity implements OnMa
         });
     }
 
+    /* Get a user trajectory from remote server to the application. */
     private void getTrajectoryFromServer(Date trajectoryDate,final GoogleMap map){
         UserServiceREST userService = UtilREST.getRetrofit().create(UserServiceREST.class);
         Call<Trajectory> call = userService.getUserTrajectory(user.getUsername(),trajectoryDate.getTime());
@@ -96,13 +100,20 @@ public class UserPresentationActivity extends BaseDrawerActivity implements OnMa
             @Override
             public void onResponse(Call<Trajectory> call, Response<Trajectory> response) {
                 if (response.code() == UtilREST.HTTP_OK) {
+                    findViewById(R.id.home_map).setVisibility(View.VISIBLE);
                     Trajectory t = response.body();
                     user.replaceTrajectory(t);
-                    UtilMap.drawTrajectory(map, t);
+                    MapTrajectoryDrawing mapDrawing = new MapTrajectoryDrawing(map,t,getBaseContext());
+                    mapDrawing.clearMap();
+                    mapDrawing.drawInitialMarker();
+                    mapDrawing.drawTrajectory();
+                    mapDrawing.drawLastMarker();
+                    mapDrawing.moveToBegining();
                 }
             }
             @Override
             public void onFailure(Call<Trajectory> call, Throwable t) {
+                findViewById(R.id.home_map).setVisibility(View.GONE);
                 Toast.makeText(getBaseContext(), R.string.impossible_connect_server_toast,
                         Toast.LENGTH_LONG).show();
             }

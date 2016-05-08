@@ -40,7 +40,7 @@ public class Station implements Serializable {
     }
 
     public String toString(){
-        return name + " station has " + bikes.size() + " bikes available";
+        return name + ": " + bikes.size() + " bikes available";
     }
 
 }

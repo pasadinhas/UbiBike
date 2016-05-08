@@ -1,27 +1,18 @@
 package pt.ulisboa.tecnico.cmu.ubibike.activities;
 
-
-import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 
-import java.util.Date;
-
 import pt.ulisboa.tecnico.cmu.ubibike.R;
+import pt.ulisboa.tecnico.cmu.ubibike.domain.Coordinates;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Trajectory;
-import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
-import pt.ulisboa.tecnico.cmu.ubibike.location.UtilMap;
-import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UserServiceREST;
-import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UtilREST;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import pt.ulisboa.tecnico.cmu.ubibike.location.MapTrajectoryDrawing;
+
 
 public class HomeActivity extends UserPresentationActivity {
 
@@ -40,7 +31,12 @@ public class HomeActivity extends UserPresentationActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Trajectory traj = (Trajectory) parent.getItemAtPosition(position);
-                UtilMap.drawTrajectory(googleMap, traj);
+                MapTrajectoryDrawing mapDrawing = new MapTrajectoryDrawing(googleMap,traj,getBaseContext());
+                mapDrawing.clearMap();
+                mapDrawing.drawInitialMarker();
+                mapDrawing.drawTrajectory();
+                mapDrawing.drawLastMarker();
+                mapDrawing.moveToBegining();
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {

@@ -11,17 +11,16 @@ public class User implements Serializable{
 
     private long points;
 
-    private boolean isDirty;
+    /**
+     * If the this (replica) is synchronized or not with server.
+     */
+    private boolean isDirty = false;
 
     private List<Trajectory> trajectories = new ArrayList<>();
 
-    private List<Trajectory> localTrajectories;
+    private List<Trajectory> localTrajectories = new ArrayList<>();
 
-    /* Constructor for GSON */
-    protected User(){
-        localTrajectories = new ArrayList<>();
-        isDirty = false;
-    }
+    public User() { }    //Needed for JSON
 
     public String getUsername(){
         return username;
@@ -43,6 +42,10 @@ public class User implements Serializable{
 
     public void setIsDirty(boolean isDirty) { this.isDirty = isDirty; }
 
+    /**
+     * Get all trajectories EVEN the ones that aren't synchronized in server
+     * @return
+     */
     public List<Trajectory> getAllTrajectories(){
         List<Trajectory> allTraj = new ArrayList<>();
         allTraj.addAll(trajectories);
@@ -51,26 +54,43 @@ public class User implements Serializable{
         return allTraj;
     }
 
-    public List<Trajectory> getLocalTrajectories() { return this.localTrajectories; }
-
-    public void addUserPoints(long points){
-        this.points += points;
+    /**
+     * Get only the trajectories that aren't synchronized with server.
+     * @return
+     */
+    public List<Trajectory> getLocalTrajectories() {
+        return this.localTrajectories;
     }
 
     public void replaceTrajectory(Trajectory t){
-        for(int i = 0; i < trajectories.size(); i++){
-            if(trajectories.get(i).equals(t)){
-                trajectories.set(i,t);
-                return;
+        for(Trajectory traj : trajectories){
+            if(traj.equals(t)){
+                traj.setTrajectory(t.getTrajectory());
             }
         }
     }
 
+    /**
+     * Done when user (local replica) is synchronized with server.
+     */
     public void saveLocalTrajectories(){
         this.trajectories.addAll(localTrajectories);
         localTrajectories.clear();
+        isDirty = false;
     }
 
-    public void addLocalTrajectory(Trajectory trajectory) { this.localTrajectories.add(trajectory); }
+    /**
+     * Add a new trajectory captured in application.
+     * @param trajectory
+     */
+    public void addLocalTrajectory(Trajectory trajectory) {
+        isDirty = true;
+        points += trajectory.calculateTotalMeters();
+        this.localTrajectories.add(trajectory);
+    }
 
+    @Override
+    public String toString() {
+        return username + " " + "Points: " + points;
+    }
 }

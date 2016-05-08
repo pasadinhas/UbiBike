@@ -17,6 +17,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
+import pt.ulisboa.tecnico.cmu.controllers.util.Error;
+import pt.ulisboa.tecnico.cmu.controllers.util.JsonViews;
 import pt.ulisboa.tecnico.cmu.domain.Trajectory;
 import pt.ulisboa.tecnico.cmu.domain.User;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.InvalidLoginException;
@@ -28,10 +32,6 @@ import pt.ulisboa.tecnico.cmu.services.UserServices;
 
 @RestController
 public class UserController {
-	
-	private static final String USER_DETAIL_MEDIUM = "medium";
-	
-	private static final String USER_DETAIL_LOW = "low";
 	
 	@Autowired
 	private UserServices userServices;
@@ -102,34 +102,40 @@ public class UserController {
 	/**
 	 * Get User information according to wanted detail.
 	 * @param username - User's username.
-	 * @param detail - Specify the detail of the returned objects. 
 	 * @return - User object
 	 * @throws UserDoesntExistException
 	 */
 	@RequestMapping(value = "/ubibike/user/{username}",method=RequestMethod.GET)
 	public ResponseEntity<User> getUserInformation(
-			@PathVariable String username,
-			@RequestParam(required = false) String detail) throws UserDoesntExistException{
-		User user = null;
-		if(detail != null && detail.equals(USER_DETAIL_MEDIUM)){
-			user = userServices.getUserInformationMedium(username);
-		}else if(detail != null && detail.equals(USER_DETAIL_LOW)){
-			user = userServices.getUserInformationLow(username);
-		}else{
-			user = userServices.getUserInformation(username);
-		}
-		return new ResponseEntity<User>(user,HttpStatus.OK);
+			@PathVariable String username) throws UserDoesntExistException{
+		return new ResponseEntity<User>(userServices.getUser(username),HttpStatus.OK);
 	}
 	
+	@JsonView(JsonViews.MediumDetailed.class)
+	@RequestMapping(value = "/ubibike/user/{username}/medium",method=RequestMethod.GET)
+	public ResponseEntity<User> getUserInformationMediumDetail(
+			@PathVariable String username) throws UserDoesntExistException{
+		return new ResponseEntity<User>(userServices.getUser(username),HttpStatus.OK);
+	}
+	
+	@JsonView(JsonViews.LowDetailed.class)
+	@RequestMapping(value = "/ubibike/user/{username}/low",method=RequestMethod.GET)
+	public ResponseEntity<User> getUserInformationLowDetail(
+			@PathVariable String username) throws UserDoesntExistException{
+		return new ResponseEntity<User>(userServices.getUser(username),HttpStatus.OK);
+	}
+	
+	
 	/**
-	 * Get all usernames given an username prefix.
+	 * Get all Users given an username prefix.
 	 * @param usernamePrefix
 	 * @return
 	 */
+	@JsonView(JsonViews.LowDetailed.class)
 	@RequestMapping(value = "/ubibike/users/{usernamePrefix}",method=RequestMethod.GET)
-	public ResponseEntity<Collection<String>> getAllUsernames(@PathVariable String usernamePrefix){
-		Collection<String> users = userServices.getUsers(usernamePrefix);
-		return new ResponseEntity<Collection<String>>(users,HttpStatus.OK);
+	public ResponseEntity<Collection<User>> getAllUsernames(@PathVariable String usernamePrefix){
+		Collection<User> users = userServices.getUsersByUsernamePrefix(usernamePrefix);
+		return new ResponseEntity<Collection<User>>(users,HttpStatus.OK);
 	}
 	
 	/**

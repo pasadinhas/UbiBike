@@ -21,8 +21,6 @@ public interface UserServiceREST {
 
     String USER_DETAIL_MEDIUM = "medium";
 
-    String USER_DETAIL_LOW = "low";
-
     @FormUrlEncoded
     @POST("user/login/{username}")
     Call<User> login(@Path("username")String username,@Field("password")String password);
@@ -31,11 +29,11 @@ public interface UserServiceREST {
     @POST("user/{username}")
     Call<ResponseBody> createUsername(@Path("username")String username,@Field("password")String password);
 
-    @GET("user/{username}")
-    Call<User> getUser(@Path("username")String username,@Query("detail") String detail);
+    @GET("user/{username}/{detail}")
+    Call<User> getUserWithDetailSpecified(@Path("username")String username,@Path("detail") String detail);
 
     @GET("users/{usernamePrefix}")
-    Call<List<String>> getAllUsernames(@Path("usernamePrefix") String usernamePrefix);
+    Call<List<User>> getAllUsers(@Path("usernamePrefix") String usernamePrefix);
 
     @GET("user/{username}/trajectory/{date}")
     Call<Trajectory> getUserTrajectory(@Path("username") String username,
