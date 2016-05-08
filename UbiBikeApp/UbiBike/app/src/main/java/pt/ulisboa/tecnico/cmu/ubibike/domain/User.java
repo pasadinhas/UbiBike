@@ -11,6 +11,8 @@ public class User implements Serializable{
 
     private long points;
 
+    private Bike reservedBike;
+
     /**
      * If the this (replica) is synchronized or not with server.
      */
@@ -41,6 +43,16 @@ public class User implements Serializable{
     public boolean getIsDirty() { return isDirty; }
 
     public void setIsDirty(boolean isDirty) { this.isDirty = isDirty; }
+
+    public void setReservedBike(Bike bike){
+        reservedBike = bike;
+    }
+
+    public Bike getReservedBike(){
+        return reservedBike;
+    }
+
+    public void addUserPoints(long points){ this.points += points; }
 
     /**
      * Get all trajectories EVEN the ones that aren't synchronized in server

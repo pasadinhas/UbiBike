@@ -15,13 +15,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.HashMap;
 import java.util.Map;
 
-import okhttp3.ResponseBody;
 import pt.ulisboa.tecnico.cmu.ubibike.R;
 import pt.ulisboa.tecnico.cmu.ubibike.data.UserLoginData;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Bike;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Station;
+import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
 import pt.ulisboa.tecnico.cmu.ubibike.location.MapTrajectoryDrawing;
-import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.BikeServiceREST;
+import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UserServiceREST;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UtilREST;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,6 +35,8 @@ public class BookBikesActivity extends BaseDrawerActivity implements OnMapReadyC
 
     private Marker selectedMarker = null;
 
+    private User user;
+
     @Override
     protected int getPosition() {
         return -1;
@@ -45,6 +47,7 @@ public class BookBikesActivity extends BaseDrawerActivity implements OnMapReadyC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_bikes);
         station = (Station) getIntent().getSerializableExtra("Station");
+        user = UserLoginData.getUser(getBaseContext());
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -81,14 +84,15 @@ public class BookBikesActivity extends BaseDrawerActivity implements OnMapReadyC
             Toast.makeText(this,R.string.select_bike_toast, Toast.LENGTH_LONG).show();
             return;
         }
-        BikeServiceREST bikeService = UtilREST.getRetrofit().create(BikeServiceREST.class);
-        Call<ResponseBody> call = bikeService.bookABike(markers.get(selectedMarker).getIdentifier());
-        call.enqueue(new Callback<ResponseBody>() {
+        UserServiceREST userService = UtilREST.getRetrofit().create(UserServiceREST.class);
+        Call<Bike> call = userService.bookBike(user.getUsername(),markers.get(selectedMarker).getIdentifier());
+        call.enqueue(new Callback<Bike>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<Bike> call, Response<Bike> response) {
                 if (response.code() == UtilREST.HTTP_OK) {
                     Toast.makeText(getBaseContext(), R.string.booking_success_toast, Toast.LENGTH_LONG).show();
-                    //UserLoginData.setBike(selectedMarker);
+                    user.setReservedBike(response.body());
+                    UserLoginData.setUser(getBaseContext(),user);
                     station.removeBike(markers.get(selectedMarker));
                     selectedMarker.remove();
                     markers.remove(selectedMarker);
@@ -99,7 +103,7 @@ public class BookBikesActivity extends BaseDrawerActivity implements OnMapReadyC
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<Bike> call, Throwable t) {
                 Toast.makeText(getBaseContext(), R.string.impossible_connect_server_toast, Toast.LENGTH_LONG).show();
             }
         });

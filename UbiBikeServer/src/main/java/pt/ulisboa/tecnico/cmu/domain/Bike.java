@@ -35,6 +35,10 @@ public class Bike {
 	@ManyToOne(cascade = CascadeType.ALL)
 	private Station station;
 	
+	@JsonIgnore
+	@OneToOne(cascade = {CascadeType.ALL})
+	private User user;
+	
 	public Bike(Coordinates position,String identifier){
 		setIdentifier(identifier);
 		setPosition(position);
@@ -82,6 +86,14 @@ public class Bike {
 	
 	public Station getStation(){
 		return this.station;
+	}
+	
+	public void setUser(User user){
+		this.user = user;
+	}
+	
+	public User getUser(){
+		return this.user;
 	}
 	
 }

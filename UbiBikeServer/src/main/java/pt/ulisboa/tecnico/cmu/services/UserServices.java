@@ -9,18 +9,31 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import pt.ulisboa.tecnico.cmu.domain.Bike;
+import pt.ulisboa.tecnico.cmu.domain.Coordinates;
+import pt.ulisboa.tecnico.cmu.domain.Station;
 import pt.ulisboa.tecnico.cmu.domain.Trajectory;
 import pt.ulisboa.tecnico.cmu.domain.User;
+import pt.ulisboa.tecnico.cmu.domain.exceptions.BikeDoesntExistException;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.InvalidLoginException;
+import pt.ulisboa.tecnico.cmu.domain.exceptions.StationDoesntExistException;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.TrajectoryAlreadyExistException;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.TrajectoryDoesntExistException;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.UserAlreadyExistException;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.UserDoesntExistException;
+import pt.ulisboa.tecnico.cmu.domain.repositories.BikeRepository;
+import pt.ulisboa.tecnico.cmu.domain.repositories.StationRepository;
 import pt.ulisboa.tecnico.cmu.domain.repositories.UserRepository;
 
 @Service
 public class UserServices {
 
+	@Autowired
+	private BikeRepository bikeRepository;
+	
+	@Autowired
+	private StationRepository stationRepository;
+	
 	@Autowired
 	private UserRepository userRepository;
 	
@@ -78,6 +91,48 @@ public class UserServices {
 		User user = getUserFromRepository(username);
 		return user;
 	}
+
+	//############################## Bike services ####################################
+	
+	public void bikePickedUp(String user,String bikeId) throws BikeDoesntExistException{
+		Bike bike = getBike(bikeId);
+		if(bike.getBooked() && !bike.getPicked() && user.equals(bike.getUser().getUsername())){
+			bike.setStation(null);
+			bike.setPicked(true);
+			bikeRepository.save(bike);
+		}
+	}
+	
+	@Transactional
+	public void bikePickedOff(String bikeId,String stationName,Coordinates bikePos) 
+			throws BikeDoesntExistException, StationDoesntExistException{
+		Bike bike = getBike(bikeId);
+		Station sta = getStation(stationName);
+		if(bike.getPicked()){
+			sta.addBike(bike);
+			bike.setStation(sta);
+			bike.setPosition(bikePos);
+			bike.setPicked(false);
+			bike.setBooked(false);
+			User user = bike.getUser();
+			user.setReservedBike(null);
+			bike.setUser(null);
+			bikeRepository.save(bike);
+			stationRepository.save(sta);
+			userRepository.save(user);
+		}
+	}
+	
+	public Bike bookABike(String username,String bikeId) throws BikeDoesntExistException{
+		Bike bike = getBike(bikeId);
+		User user = userRepository.findOne(username);
+		user.setReservedBike(bike);
+		bike.setBooked(true);
+		bike.setUser(user);
+		bikeRepository.save(bike);
+		userRepository.save(user);
+		return bike;
+	}
 	
 	/*======================== Private methods ======================= */
 	
@@ -88,5 +143,18 @@ public class UserServices {
 		return user;
 	}
 	
+	private Station getStation(String stationName) throws StationDoesntExistException{
+		Station station = stationRepository.findOne(stationName);
+		if(station == null)
+			throw new StationDoesntExistException();
+		return station;
+	}
+	
+	private Bike getBike(String id) throws BikeDoesntExistException{
+		Bike bike = bikeRepository.findOne(id);
+		if(bike == null)
+			throw new BikeDoesntExistException();
+		return bike;
+	}
 	
 }

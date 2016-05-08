@@ -10,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -34,6 +35,10 @@ public class User {
 	@JsonView(JsonViews.LowDetailed.class)
 	private long points;
 	
+	@JsonView(JsonViews.HighlyDetailed.class)
+	@OneToOne(cascade = {CascadeType.ALL},mappedBy = "user")
+	private Bike reservedBike; 
+	
 	@OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
 	@OrderBy("date DESC")
 	@JsonView(JsonViews.MediumDetailed.class)
@@ -44,6 +49,7 @@ public class User {
 		setUsername(username);
 		setPassword(password);
 		setPoints(0);
+		reservedBike = null;
 	}
 	
 	protected User() { }	//Needed for JPA/Hibernate and JSON
@@ -74,6 +80,14 @@ public class User {
 	
 	public void addPoints(long points){
 		this.points += points;
+	}
+	
+	public void setReservedBike(Bike bike){
+		this.reservedBike = bike;
+	}
+	
+	public Bike getReservedBike(){
+		return this.reservedBike;
 	}
 	
 	public Collection<Trajectory> getTrajectories(){

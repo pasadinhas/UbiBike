@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import okhttp3.ResponseBody;
+import pt.ulisboa.tecnico.cmu.ubibike.domain.Bike;
+import pt.ulisboa.tecnico.cmu.ubibike.domain.Coordinates;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Trajectory;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
 import retrofit2.Call;
@@ -45,5 +47,19 @@ public interface UserServiceREST {
                                  @Path("username")String username,
                                  @Path("points")long points,
                                  @Body List<Trajectory> trajectories);
+
+
+    @PUT("user/{username}/pick/bike/{id}")
+    Call<ResponseBody> pickBike(@Path("username") String username,@Path("id")String id);
+
+    @PUT("user/drop/bike/{id}/station/{station}")
+    Call<ResponseBody> dropBike(@Header(UtilREST.ACCEPT_HEADER) String acceptValue,
+                                   @Header(UtilREST.CONTENT_TYPE_HEADER) String typeValue,
+                                   @Path("id")String id,
+                                   @Path("station")String station,
+                                   @Body Coordinates position);
+
+    @PUT("user/{username}/book/bike/{id}")
+    Call<Bike> bookBike(@Path("username") String username,@Path("id") String id);
 
 }

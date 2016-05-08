@@ -21,9 +21,13 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 import pt.ulisboa.tecnico.cmu.controllers.util.Error;
 import pt.ulisboa.tecnico.cmu.controllers.util.JsonViews;
+import pt.ulisboa.tecnico.cmu.domain.Bike;
+import pt.ulisboa.tecnico.cmu.domain.Coordinates;
 import pt.ulisboa.tecnico.cmu.domain.Trajectory;
 import pt.ulisboa.tecnico.cmu.domain.User;
+import pt.ulisboa.tecnico.cmu.domain.exceptions.BikeDoesntExistException;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.InvalidLoginException;
+import pt.ulisboa.tecnico.cmu.domain.exceptions.StationDoesntExistException;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.TrajectoryAlreadyExistException;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.TrajectoryDoesntExistException;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.UserAlreadyExistException;
@@ -35,6 +39,7 @@ public class UserController {
 	
 	@Autowired
 	private UserServices userServices;
+	
 	
 	/* ============== Controller Exception Handling ================ */
 	
@@ -64,6 +69,16 @@ public class UserController {
 	@ExceptionHandler(TrajectoryDoesntExistException.class)
 	public ResponseEntity<Error> handleTrajectoryDoesntExistException(TrajectoryDoesntExistException ex,
 			HttpServletRequest request){
+		return new ResponseEntity<Error>(new Error(404,ex.getLocalizedMessage()),HttpStatus.NOT_FOUND);
+	}
+	
+	@ExceptionHandler(BikeDoesntExistException.class)
+	private ResponseEntity<Error> handleBikeDoesntExist(BikeDoesntExistException ex,HttpServletRequest req){
+		return new ResponseEntity<Error>(new Error(404,ex.getLocalizedMessage()),HttpStatus.NOT_FOUND);
+	}
+	
+	@ExceptionHandler(StationDoesntExistException.class)
+	private ResponseEntity<Error> handleStationDoesntExist(StationDoesntExistException ex,HttpServletRequest req){
 		return new ResponseEntity<Error>(new Error(404,ex.getLocalizedMessage()),HttpStatus.NOT_FOUND);
 	}
 	
@@ -165,6 +180,46 @@ public class UserController {
 	public void synchronizeUser(@PathVariable String username,@PathVariable long points,
 			@RequestBody List<Trajectory> trajectories) throws UserDoesntExistException{
 		userServices.synchronizeUser(username,points,trajectories);
+	}
+	
+	// ######################## Bike Stuff #################################
+	
+	/**
+	 * Alert when a bike has been picked by a user.
+	 * @param id - Bike unique identifier.
+	 * @throws BikeDoesntExistException
+	 */
+	@RequestMapping(value="/ubibike/user/{username}/pick/bike/{id}",method=RequestMethod.PUT)
+	public void userPickBike(@PathVariable String id,
+			@PathVariable String username) throws BikeDoesntExistException{
+		userServices.bikePickedUp(username,id);
+	}
+	
+	/**
+	 * Alert when a bike has been dropped in a station by user.
+	 * @param id - Bike identifier.
+	 * @param station - Station name.
+	 * @param position - Bike position (coordinates).
+	 * @throws BikeDoesntExistException
+	 * @throws StationDoesntExistException 
+	 */
+	@RequestMapping(value="/ubibike/user/drop/bike/{id}/station/{station}",method=RequestMethod.PUT)
+	public void bikePickedOff(@PathVariable String id,
+			@PathVariable String station,
+			@RequestBody Coordinates position) throws BikeDoesntExistException, StationDoesntExistException{
+		userServices.bikePickedOff(id,station,position);
+	}
+	
+	/**
+	 * Call when a user book a specific bike.
+	 * @param id - Bike identifier.
+	 * @throws BikeDoesntExistException
+	 */
+	@RequestMapping(value="/ubibike/user/{username}/book/bike/{id}",method=RequestMethod.PUT)
+	public ResponseEntity<Bike> bookABike(@PathVariable String id,
+			@PathVariable String username) throws BikeDoesntExistException{
+		Bike bike = userServices.bookABike(username,id);
+		return new ResponseEntity<Bike>(bike,HttpStatus.OK);
 	}
 	
 }
