@@ -11,6 +11,7 @@
         <item>Stations</item>
         <item>Logout</item>
         <item>Tracking Demo</item>
+        <item>My Bike</item>
     </array>
     <!-- Login Activity -->
     <string name="username_placeholder">Username</string>

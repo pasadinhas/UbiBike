@@ -17,6 +17,7 @@ import java.util.Map;
 
 import okhttp3.ResponseBody;
 import pt.ulisboa.tecnico.cmu.ubibike.R;
+import pt.ulisboa.tecnico.cmu.ubibike.data.UserLoginData;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Bike;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Station;
 import pt.ulisboa.tecnico.cmu.ubibike.location.UtilMap;
@@ -87,6 +88,7 @@ public class BookBikesActivity extends BaseDrawerActivity implements OnMapReadyC
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.code() == UtilREST.HTTP_OK) {
                     Toast.makeText(getBaseContext(), R.string.booking_success_toast, Toast.LENGTH_LONG).show();
+                    //UserLoginData.setBike(selectedMarker);
                     station.removeBike(markers.get(selectedMarker));
                     selectedMarker.remove();
                     markers.remove(selectedMarker);
