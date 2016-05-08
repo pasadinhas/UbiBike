@@ -208,7 +208,7 @@ public class WifiDirectService extends Service implements
         currentPeerIPs.clear();
 
         for (SimWifiP2pDevice device : peers.getDeviceList()) {
-            if (device.deviceName.equals(deviceName)) {
+            if (device.deviceName.equals(deviceName) || device.deviceName.startsWith("Bike")) {
                 continue;
             }
             String ip = device.getVirtIp();
@@ -219,17 +219,16 @@ public class WifiDirectService extends Service implements
 
         removeOldPeers();
 
-        Log.d(TAG, "onPeersAvailable: Starting boradcast");
+        Log.d(TAG, "onGroupInfo: Starting boradcast");
         broadcastPeerIdentities();
     }
 
     @Override
     public void onPeersAvailable(SimWifiP2pDeviceList peers) {
-        mManager.requestGroupInfo(mChannel, WifiDirectService.this);
 
         for (SimWifiP2pDevice device : peers.getDeviceList()) {
             if (device.deviceName.startsWith("Bike")){
-                Log.d(TAG, "onPeersAvailable: registerd bike" + device.deviceName);
+                Log.d(TAG, "onPeersAvailable: registered bike: " + device.deviceName);
             }
         }
     }
