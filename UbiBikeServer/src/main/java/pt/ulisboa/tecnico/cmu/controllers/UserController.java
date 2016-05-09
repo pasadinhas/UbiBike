@@ -40,7 +40,6 @@ public class UserController {
 	@Autowired
 	private UserServices userServices;
 	
-	
 	/* ============== Controller Exception Handling ================ */
 	
 	@ExceptionHandler(UserAlreadyExistException.class)
@@ -115,7 +114,7 @@ public class UserController {
 	}
 	
 	/**
-	 * Get User information according to wanted detail.
+	 * Get User information according (with all the information).
 	 * @param username - User's username.
 	 * @return - User object
 	 * @throws UserDoesntExistException
@@ -126,6 +125,12 @@ public class UserController {
 		return new ResponseEntity<User>(userServices.getUser(username),HttpStatus.OK);
 	}
 	
+	/**
+	 * Get User information according (with partial information).
+	 * @param username
+	 * @return
+	 * @throws UserDoesntExistException
+	 */
 	@JsonView(JsonViews.MediumDetailed.class)
 	@RequestMapping(value = "/ubibike/user/{username}/medium",method=RequestMethod.GET)
 	public ResponseEntity<User> getUserInformationMediumDetail(
@@ -133,6 +138,12 @@ public class UserController {
 		return new ResponseEntity<User>(userServices.getUser(username),HttpStatus.OK);
 	}
 	
+	/**
+	 * Get User information according (with partial information).
+	 * @param username
+	 * @return
+	 * @throws UserDoesntExistException
+	 */
 	@JsonView(JsonViews.LowDetailed.class)
 	@RequestMapping(value = "/ubibike/user/{username}/low",method=RequestMethod.GET)
 	public ResponseEntity<User> getUserInformationLowDetail(
@@ -192,7 +203,7 @@ public class UserController {
 	@RequestMapping(value="/ubibike/user/{username}/pick/bike/{id}",method=RequestMethod.PUT)
 	public void userPickBike(@PathVariable String id,
 			@PathVariable String username) throws BikeDoesntExistException{
-		userServices.bikePickedUp(username,id);
+		userServices.bikePicked(username,id);
 	}
 	
 	/**
@@ -204,10 +215,9 @@ public class UserController {
 	 * @throws StationDoesntExistException 
 	 */
 	@RequestMapping(value="/ubibike/user/drop/bike/{id}/station/{station}",method=RequestMethod.PUT)
-	public void bikePickedOff(@PathVariable String id,
-			@PathVariable String station,
+	public void bikePickedOff(@PathVariable String id, @PathVariable String station,
 			@RequestBody Coordinates position) throws BikeDoesntExistException, StationDoesntExistException{
-		userServices.bikePickedOff(id,station,position);
+		userServices.bikeDropped(id,station,position);
 	}
 	
 	/**

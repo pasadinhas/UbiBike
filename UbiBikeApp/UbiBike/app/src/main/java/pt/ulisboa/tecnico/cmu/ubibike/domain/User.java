@@ -51,12 +51,16 @@ public class User implements Serializable{
     public Bike getReservedBike(){
         return reservedBike;
     }
-
+    
     public boolean hasBike() { return reservedBike == null; }
 
     public void dropBike() { reservedBike = null; }
 
-    public void addUserPoints(long points){ this.points += points; }
+    public void addUserPoints(long points){
+        this.isDirty = true;
+        this.points += points;
+    }
+
 
     /**
      * Get all trajectories EVEN the ones that aren't synchronized in server
@@ -89,10 +93,10 @@ public class User implements Serializable{
     /**
      * Done when user (local replica) is synchronized with server.
      */
-    public void saveLocalTrajectories(){
+    public void archiveLocalModifications(){
         this.trajectories.addAll(localTrajectories);
-        localTrajectories.clear();
-        isDirty = false;
+        this.localTrajectories.clear();
+        this.isDirty = false;
     }
 
     /**
@@ -100,8 +104,8 @@ public class User implements Serializable{
      * @param trajectory
      */
     public void addLocalTrajectory(Trajectory trajectory) {
-        isDirty = true;
-        points += trajectory.calculateTotalMeters();
+        this.isDirty = true;
+        this.points += trajectory.calculateTotalMeters();
         this.localTrajectories.add(trajectory);
     }
 

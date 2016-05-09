@@ -13,9 +13,9 @@ import pt.ulisboa.tecnico.cmu.controllers.util.JsonViews;
 @Entity
 public class Coordinates {
 
+	@JsonIgnore
 	@Id
 	@GeneratedValue
-	@JsonIgnore
 	private long coorId;
 	
 	@JsonView(JsonViews.LowDetailed.class)

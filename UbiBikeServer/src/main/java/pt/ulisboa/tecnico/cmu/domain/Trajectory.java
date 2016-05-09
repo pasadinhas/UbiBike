@@ -20,18 +20,18 @@ import pt.ulisboa.tecnico.cmu.controllers.util.JsonViews;
 @Entity
 public class Trajectory implements Comparable<Trajectory>{
 	
+	@JsonIgnore
 	@Id
 	@GeneratedValue
-	@JsonIgnore
 	private long trajId;
 	
-	@Column
-	@JsonFormat(pattern="dd-MM-yyyy HH:mm:ss")
 	@JsonView(JsonViews.LowDetailed.class)
+	@JsonFormat(pattern="dd-MM-yyyy HH:mm:ss")
+	@Column
 	private Date date;
 	
-	@OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
 	@JsonView(JsonViews.HighlyDetailed.class)
+	@OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
 	private List<Coordinates> trajectory = new ArrayList<>();
 	
 	

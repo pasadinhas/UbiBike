@@ -13,23 +13,23 @@ import java.util.concurrent.ConcurrentHashMap;
 import pt.ulisboa.tecnico.cmu.ubibike.data.UserLoginData;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Trajectory;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
-import pt.ulisboa.tecnico.cmu.ubibike.location.GpsTracking;
 import pt.ulisboa.tecnico.cmu.ubibike.services.UserUpdateService;
 
 
 public class GpsTrackingService extends Service implements IGPSCallback {
 
+    public static boolean RUNNING = false;
+
     private GpsTracking gpsTracking;
 
     private final GpsTrackingBinder localBinder = new GpsTrackingBinder();
-
-    public static boolean RUNNING = false;
 
     /* Save all interested activities and the respective callbacks */
     private Map<Activity,IGPSCallback> activityClients = new ConcurrentHashMap<>();
 
     /* Return Binder (interface) to be used by clients to commnicate with running service. */
     public class GpsTrackingBinder extends Binder implements IGPSTrackingService {
+
         @Override
         public void registerActivity(Activity activity, IGPSCallback callback) {
             activityClients.put(activity,callback);
@@ -83,7 +83,7 @@ public class GpsTrackingService extends Service implements IGPSCallback {
         return localBinder;
     }
 
-    //Persist new trajectory and try synchronize with remote server.
+    //Save new trajectory and try synchronize with remote server.
     private void saveTrajectory(Trajectory t){
         User user = UserLoginData.getUser(getBaseContext());
         if(user != null){

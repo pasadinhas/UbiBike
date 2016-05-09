@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmu.ubibike.location;
+package pt.ulisboa.tecnico.cmu.ubibike.services.gps;
 
 import android.Manifest;
 import android.content.Context;
@@ -26,7 +26,7 @@ import pt.ulisboa.tecnico.cmu.ubibike.services.gps.IGPSCallback;
 public class GpsTracking  implements GoogleApiClient.ConnectionCallbacks,
                         GoogleApiClient.OnConnectionFailedListener,LocationListener{
 
-    private final static int UPDATES_INTERVAL = 4000;
+    private final static int UPDATES_INTERVAL = 5000;
 
     private IGPSCallback serviceCallback;
 
@@ -62,7 +62,6 @@ public class GpsTracking  implements GoogleApiClient.ConnectionCallbacks,
         int permission = ContextCompat.checkSelfPermission(currentContext,
                 android.Manifest.permission.ACCESS_FINE_LOCATION);
         if(permission == PackageManager.PERMISSION_GRANTED && isConnected) {
-            Log.d("GPS","Track started");
             LocationServices.FusedLocationApi.requestLocationUpdates(googleClient, locationRequest
                     , this);
         }
@@ -97,7 +96,6 @@ public class GpsTracking  implements GoogleApiClient.ConnectionCallbacks,
     public void onLocationChanged(Location location) {
         trajectory.addCoordinate(new Coordinates(location.getLatitude(), location.getLongitude()));
         serviceCallback.setLocation(location.getLatitude(), location.getLongitude());
-        Log.d("GPS Current Coordinates",location.getLatitude()+ " " + location.getLongitude());
     }
 
     @Override

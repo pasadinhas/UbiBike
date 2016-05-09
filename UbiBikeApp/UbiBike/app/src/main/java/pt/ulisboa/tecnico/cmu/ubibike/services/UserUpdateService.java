@@ -63,7 +63,7 @@ public class UserUpdateService extends Service {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if(response.code() == UtilREST.HTTP_OK){
-                    user.saveLocalTrajectories();
+                    user.archiveLocalModifications();
                     UserLoginData.setUser(getBaseContext(), user);
                 }
                 //If not ok DO Nothing, maintain dirty user, will try next time.

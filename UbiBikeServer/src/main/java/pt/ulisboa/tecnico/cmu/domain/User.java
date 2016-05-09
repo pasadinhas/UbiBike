@@ -23,25 +23,25 @@ import pt.ulisboa.tecnico.cmu.domain.exceptions.TrajectoryDoesntExistException;
 @Entity
 public class User {
 	
-	@Id
 	@JsonView(JsonViews.LowDetailed.class)
+	@Id
 	private String username;
 	
-	@Column(nullable = false)
 	@JsonIgnore
+	@Column(nullable = false)
 	private String password;
 	
-	@Column(nullable = false)
 	@JsonView(JsonViews.LowDetailed.class)
+	@Column(nullable = false)
 	private long points;
 	
 	@JsonView(JsonViews.HighlyDetailed.class)
 	@OneToOne(cascade = {CascadeType.ALL},mappedBy = "user")
 	private Bike reservedBike; 
 	
+	@JsonView(JsonViews.MediumDetailed.class)
 	@OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
 	@OrderBy("date DESC")
-	@JsonView(JsonViews.MediumDetailed.class)
 	private List<Trajectory> trajectories = new ArrayList<>();
 	
 	

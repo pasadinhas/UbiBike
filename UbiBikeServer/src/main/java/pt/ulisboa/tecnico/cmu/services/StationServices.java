@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import pt.ulisboa.tecnico.cmu.domain.Station;
-import pt.ulisboa.tecnico.cmu.domain.repositories.StationRepository;
+import pt.ulisboa.tecnico.cmu.persistence.repositories.StationRepository;
 
 @Service
 public class StationServices {

@@ -21,9 +21,9 @@ import pt.ulisboa.tecnico.cmu.domain.exceptions.TrajectoryAlreadyExistException;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.TrajectoryDoesntExistException;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.UserAlreadyExistException;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.UserDoesntExistException;
-import pt.ulisboa.tecnico.cmu.domain.repositories.BikeRepository;
-import pt.ulisboa.tecnico.cmu.domain.repositories.StationRepository;
-import pt.ulisboa.tecnico.cmu.domain.repositories.UserRepository;
+import pt.ulisboa.tecnico.cmu.persistence.repositories.BikeRepository;
+import pt.ulisboa.tecnico.cmu.persistence.repositories.StationRepository;
+import pt.ulisboa.tecnico.cmu.persistence.repositories.UserRepository;
 
 @Service
 public class UserServices {
@@ -92,10 +92,10 @@ public class UserServices {
 		return user;
 	}
 
-	//############################## Bike services ####################################
+	//############################## Bike Methods ####################################
 	
-	public void bikePickedUp(String user,String bikeId) throws BikeDoesntExistException{
-		Bike bike = getBike(bikeId);
+	public void bikePicked(String user,String bikeId) throws BikeDoesntExistException{
+		Bike bike = getBikeFromRepository(bikeId);
 		if(bike.getBooked() && !bike.getPicked() && user.equals(bike.getUser().getUsername())){
 			bike.setStation(null);
 			bike.setPicked(true);
@@ -104,10 +104,10 @@ public class UserServices {
 	}
 	
 	@Transactional
-	public void bikePickedOff(String bikeId,String stationName,Coordinates bikePos) 
+	public void bikeDropped(String bikeId,String stationName,Coordinates bikePos) 
 			throws BikeDoesntExistException, StationDoesntExistException{
-		Bike bike = getBike(bikeId);
-		Station sta = getStation(stationName);
+		Bike bike = getBikeFromRepository(bikeId);
+		Station sta = getStationFromRepository(stationName);
 		if(bike.getPicked()){
 			sta.addBike(bike);
 			bike.setStation(sta);
@@ -124,7 +124,7 @@ public class UserServices {
 	}
 	
 	public Bike bookABike(String username,String bikeId) throws BikeDoesntExistException{
-		Bike bike = getBike(bikeId);
+		Bike bike = getBikeFromRepository(bikeId);
 		User user = userRepository.findOne(username);
 		user.setReservedBike(bike);
 		bike.setBooked(true);
@@ -134,7 +134,7 @@ public class UserServices {
 		return bike;
 	}
 	
-	/*======================== Private methods ======================= */
+	/*========================= Repository Access Methods =========================== */
 	
 	private User getUserFromRepository(String username) throws UserDoesntExistException{
 		User user = userRepository.findOne(username);
@@ -143,14 +143,14 @@ public class UserServices {
 		return user;
 	}
 	
-	private Station getStation(String stationName) throws StationDoesntExistException{
+	private Station getStationFromRepository(String stationName) throws StationDoesntExistException{
 		Station station = stationRepository.findOne(stationName);
 		if(station == null)
 			throw new StationDoesntExistException();
 		return station;
 	}
 	
-	private Bike getBike(String id) throws BikeDoesntExistException{
+	private Bike getBikeFromRepository(String id) throws BikeDoesntExistException{
 		Bike bike = bikeRepository.findOne(id);
 		if(bike == null)
 			throw new BikeDoesntExistException();

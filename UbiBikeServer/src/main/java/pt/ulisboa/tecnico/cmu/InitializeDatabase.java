@@ -10,9 +10,9 @@ import pt.ulisboa.tecnico.cmu.domain.Coordinates;
 import pt.ulisboa.tecnico.cmu.domain.Station;
 import pt.ulisboa.tecnico.cmu.domain.Trajectory;
 import pt.ulisboa.tecnico.cmu.domain.User;
-import pt.ulisboa.tecnico.cmu.domain.repositories.BikeRepository;
-import pt.ulisboa.tecnico.cmu.domain.repositories.StationRepository;
-import pt.ulisboa.tecnico.cmu.domain.repositories.UserRepository;
+import pt.ulisboa.tecnico.cmu.persistence.repositories.BikeRepository;
+import pt.ulisboa.tecnico.cmu.persistence.repositories.StationRepository;
+import pt.ulisboa.tecnico.cmu.persistence.repositories.UserRepository;
 
 @Component
 public class InitializeDatabase {
