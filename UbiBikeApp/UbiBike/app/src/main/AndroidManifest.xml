@@ -82,6 +82,9 @@
             android:name=".services.WifiDirectService"
             android:enabled="true"
             android:exported="false" />
+
+        <service android:name=".services.gps.GeofenceIntentService"/>
+
         <activity android:name=".activities.MyBikeActiviy"></activity>
 
         <activity

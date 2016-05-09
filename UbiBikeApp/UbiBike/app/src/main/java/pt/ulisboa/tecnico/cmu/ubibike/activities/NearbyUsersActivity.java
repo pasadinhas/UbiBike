@@ -85,6 +85,8 @@ public class NearbyUsersActivity extends BaseDrawerActivity implements
 
         Switch wifiDirectSwitch = (Switch) findViewById(R.id.switch_wifi_direct);
 
+        wifiDirectSwitch.setVisibility(View.INVISIBLE);
+
         if (WifiDirectData.getIsEnabled(this)) {
             wifiDirectSwitch.setChecked(true);
         } else {

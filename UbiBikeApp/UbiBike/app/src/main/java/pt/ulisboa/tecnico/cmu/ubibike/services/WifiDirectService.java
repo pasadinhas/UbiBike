@@ -41,6 +41,7 @@ import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketManager;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketServer;
 import pt.ulisboa.tecnico.cmu.ubibike.R;
 import pt.ulisboa.tecnico.cmu.ubibike.activities.ChatActivity;
+import pt.ulisboa.tecnico.cmu.ubibike.data.BikeStatusData;
 import pt.ulisboa.tecnico.cmu.ubibike.data.DatabaseManager;
 import pt.ulisboa.tecnico.cmu.ubibike.data.UserLoginData;
 import pt.ulisboa.tecnico.cmu.ubibike.data.WifiDirectData;
@@ -80,6 +81,10 @@ public class WifiDirectService extends Service implements
         return instance;
     }
 
+    public static Boolean isRunning() {
+        return instance != null;
+    }
+
     public void setChatListener(ChatActivity listener) {
         chatListener = listener;
     }
@@ -105,6 +110,7 @@ public class WifiDirectService extends Service implements
             mBound = false;
             unregisterReceiver(mReceiver);
         }
+        instance = null;
         WifiDirectData.setIsEnabled(this, false);
     }
 
@@ -226,10 +232,19 @@ public class WifiDirectService extends Service implements
     @Override
     public void onPeersAvailable(SimWifiP2pDeviceList peers) {
 
-        for (SimWifiP2pDevice device : peers.getDeviceList()) {
-            if (device.deviceName.startsWith("Bike")){
-                Log.d(TAG, "onPeersAvailable: registered bike: " + device.deviceName);
+        if (UserLoginData.getUser(this).hasBike()) {
+            boolean bikeIsNear = false;
+            for (SimWifiP2pDevice device : peers.getDeviceList()) {
+                if (device.deviceName.startsWith("Bike")) {
+                    Log.d(TAG, "onPeersAvailable: seen bike: " + device.deviceName);
+
+                    if (device.deviceName.equals(UserLoginData.getUser(this).getReservedBike().getIdentifier())){
+                        bikeIsNear = true;
+                        break;
+                    }
+                }
             }
+            BikeStatusData.setIsNear(this, bikeIsNear);
         }
     }
 

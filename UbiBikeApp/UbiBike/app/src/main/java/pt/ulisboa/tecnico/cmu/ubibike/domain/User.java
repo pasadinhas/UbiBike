@@ -52,6 +52,10 @@ public class User implements Serializable{
         return reservedBike;
     }
 
+    public boolean hasBike() { return reservedBike == null; }
+
+    public void dropBike() { reservedBike = null; }
+
     public void addUserPoints(long points){ this.points += points; }
 
     /**
