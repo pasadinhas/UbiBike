@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.SyncStateContract;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -27,6 +28,7 @@ import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UserServiceREST;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UtilREST;
 import pt.ulisboa.tecnico.cmu.ubibike.services.UserUpdateService;
 import pt.ulisboa.tecnico.cmu.ubibike.services.WifiDirectService;
+import pt.ulisboa.tecnico.cmu.ubibike.services.gps.GeofencingManagerService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -47,10 +49,16 @@ public class LoginActivity extends Activity
                 stopService(new Intent(getBaseContext(), WifiDirectService.class));
             }
 
+            if (StationsData.getStationsSaved(getBaseContext())) {
+                Log.d("UbiBike", "onResponse: invoking start GeofenceManagerService");
+                Intent serviceIntent = new Intent(getBaseContext(), GeofencingManagerService.class);
+                startService(serviceIntent);
+            }
+
             startWifiDirect(user);
 
             finish();
-            startActivity(new Intent(getBaseContext(),HomeActivity.class));
+            startActivity(new Intent(getBaseContext(), HomeActivity.class));
             return;
         }
         setContentView(R.layout.activity_login);
@@ -123,37 +131,19 @@ public class LoginActivity extends Activity
                     if (response.code() == UtilREST.HTTP_OK) {
                         List<Station> stations = response.body();
                         StationsData.setStations(getBaseContext(), stations);
-
-                        List<Geofence> mGeofenceList = new ArrayList<>();
-
-                        for (Station station : stations) {
-
-                            mGeofenceList.add(new Geofence.Builder()
-                                    .setRequestId(station.getName())
-
-                                    .setCircularRegion(
-                                            station.getPosition().getLatitude(),
-                                            station.getPosition().getLongitude(),
-                                            getResources().getDimension(R.dimen.GEOFENCE_RADIUS)
-                                    )
-                                    .setExpirationDuration(Geofence.NEVER_EXPIRE)
-                                    .setLoiteringDelay(1 * 60 * 1000)
-                                    .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_DWELL |
-                                            Geofence.GEOFENCE_TRANSITION_EXIT)
-                                    .build());
-                        }
-
-                        GeofenceData.getInstance().setGeofenceList(mGeofenceList);
                     }
-
-
                 }
                 @Override
                 public void onFailure(Call<List<Station>> call, Throwable t) {
                     Toast.makeText(getBaseContext(), R.string.impossible_connect_server_toast, Toast.LENGTH_LONG).show();
                 }
             });
+            Log.d("UbiBike", "onResponse: invoking start GeofenceManagerService");
+            Intent serviceIntent = new Intent(getBaseContext(), GeofencingManagerService.class);
+            startService(serviceIntent);
         }
+
+
     }
 
 

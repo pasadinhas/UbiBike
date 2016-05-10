@@ -1,16 +1,24 @@
 package pt.ulisboa.tecnico.cmu.ubibike.activities;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationServices;
 
 import pt.ulisboa.tecnico.cmu.ubibike.R;
@@ -21,11 +29,13 @@ import pt.ulisboa.tecnico.cmu.ubibike.data.WifiDirectData;
 import pt.ulisboa.tecnico.cmu.ubibike.services.WifiDirectService;
 import pt.ulisboa.tecnico.cmu.ubibike.services.gps.GeofenceIntentService;
 
-public abstract class BaseDrawerActivity extends Activity{
+public abstract class BaseDrawerActivity extends Activity {
 
     protected DrawerLayout fullLayout;
 
     protected FrameLayout subLayout;
+
+    private GoogleApiClient mGoogleApiClient = null;
 
     protected abstract int getPosition();
 
@@ -36,7 +46,7 @@ public abstract class BaseDrawerActivity extends Activity{
 
     @Override
     public void setContentView(int layoutResID) {
-        fullLayout = (DrawerLayout) getLayoutInflater().inflate(R.layout.activity_base_drawer,null);
+        fullLayout = (DrawerLayout) getLayoutInflater().inflate(R.layout.activity_base_drawer, null);
         subLayout = (FrameLayout) fullLayout.findViewById(R.id.content_frame);
         getLayoutInflater().inflate(layoutResID, subLayout, true);
         super.setContentView(fullLayout);
@@ -84,21 +94,7 @@ public abstract class BaseDrawerActivity extends Activity{
                 }
             }
         });
+
     }
 
-    public void startGeofencing() { /*
-        LocationServices.GeofencingApi.addGeofences(
-                mGoogleApiClient,
-                GeofenceData.getGeofencingRequest(),
-                getGeofencePendingIntent()
-        ).setResultCallback(this); */
-    }
-
-    private PendingIntent getGeofencePendingIntent() {
-        Intent intent = new Intent(this, GeofenceIntentService.class);
-        // We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when
-        // calling addGeofences() and removeGeofences().
-        return PendingIntent.getService(this, 0, intent, PendingIntent.
-                FLAG_UPDATE_CURRENT);
-    }
 }

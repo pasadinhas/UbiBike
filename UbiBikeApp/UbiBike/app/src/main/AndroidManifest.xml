@@ -14,9 +14,9 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
-    <android:uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <android:uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name=".UbiApp"
@@ -83,7 +83,10 @@
             android:enabled="true"
             android:exported="false" />
 
-        <service android:name=".services.gps.GeofenceIntentService"/>
+        <service android:name=".services.gps.GeofenceIntentService"
+                 android:exported="true"/>
+
+        <service android:name=".services.gps.GeofencingManagerService"/>
 
         <activity android:name=".activities.MyBikeActiviy"></activity>
 
@@ -92,6 +95,7 @@
             android:label="@string/title_activity_real_time_tracking"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
+
     </application>
 
 </manifest>
