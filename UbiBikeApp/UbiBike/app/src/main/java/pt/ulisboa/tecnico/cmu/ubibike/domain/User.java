@@ -51,7 +51,7 @@ public class User implements Serializable{
     public Bike getReservedBike(){
         return reservedBike;
     }
-    
+
     public boolean hasBike() { return reservedBike == null; }
 
     public void dropBike() { reservedBike = null; }
