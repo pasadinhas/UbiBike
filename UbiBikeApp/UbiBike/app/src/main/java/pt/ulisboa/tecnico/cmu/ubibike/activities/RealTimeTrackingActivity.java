@@ -13,7 +13,7 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 
 import pt.ulisboa.tecnico.cmu.ubibike.R;
-import pt.ulisboa.tecnico.cmu.ubibike.location.MapTrajectoryDrawing;
+import pt.ulisboa.tecnico.cmu.ubibike.map.MapTrajectoryDrawing;
 import pt.ulisboa.tecnico.cmu.ubibike.services.gps.track.GpsTrackingService;
 import pt.ulisboa.tecnico.cmu.ubibike.services.gps.track.IGPSCallback;
 import pt.ulisboa.tecnico.cmu.ubibike.services.gps.track.IGPSTrackingService;

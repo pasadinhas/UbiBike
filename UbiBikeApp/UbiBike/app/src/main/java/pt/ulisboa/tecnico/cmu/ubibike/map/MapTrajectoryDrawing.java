@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmu.ubibike.location;
+package pt.ulisboa.tecnico.cmu.ubibike.map;
 
 import android.content.Context;
 import android.graphics.Color;

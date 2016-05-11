@@ -2,7 +2,6 @@ package pt.ulisboa.tecnico.cmu.services;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +55,6 @@ public class UserServices {
 	
 	public Trajectory getUserTrajectory(String username,long date) 
 			throws UserDoesntExistException, TrajectoryDoesntExistException{
-		System.out.println("[GET DATE AFTER]"+date);
 		User user = getUserFromRepository(username);
 		return user.getTrajectory(date);
 	}
@@ -79,7 +77,6 @@ public class UserServices {
 		user.setPoints(points);
 		for(Trajectory newTraj : trajectories){
 			try{
-				System.out.println("[NEWDATE SYNC]"+newTraj.getDate());
 				user.addTrajectory(newTraj);
 			}catch(TrajectoryAlreadyExistException ex){
 				continue;

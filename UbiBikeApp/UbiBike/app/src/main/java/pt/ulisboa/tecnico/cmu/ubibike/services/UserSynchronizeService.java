@@ -24,7 +24,7 @@ import retrofit2.Response;
 /**
  * Service updates user information in the cloud when user has internet connection.
  */
-public class UserUpdateService extends Service {
+public class UserSynchronizeService extends Service {
 
     public static final String SYNCHRONIZE_USER_INTENT = "pt.ulisboa.tecnico.cmu.ubibike.services.SYNCUSER";
 

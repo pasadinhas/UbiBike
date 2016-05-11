@@ -1,17 +1,13 @@
 package pt.ulisboa.tecnico.cmu.ubibike.activities;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 
 import com.google.android.gms.maps.GoogleMap;
 
-import pt.ulisboa.tecnico.cmu.ubibike.R;
-import pt.ulisboa.tecnico.cmu.ubibike.domain.Coordinates;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Trajectory;
-import pt.ulisboa.tecnico.cmu.ubibike.location.MapTrajectoryDrawing;
+import pt.ulisboa.tecnico.cmu.ubibike.map.MapTrajectoryDrawing;
+import pt.ulisboa.tecnico.cmu.ubibike.services.util.ServicesUtil;
 
 
 public class HomeActivity extends UserPresentationActivity {
@@ -26,7 +22,6 @@ public class HomeActivity extends UserPresentationActivity {
         trajectoriesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("DRAW","DRAWING HOME MAP!");
                 Trajectory traj = (Trajectory) parent.getItemAtPosition(position);
                 MapTrajectoryDrawing mapDrawing = new MapTrajectoryDrawing(googleMap,traj,getBaseContext());
                 mapDrawing.clearMap();
@@ -37,9 +32,15 @@ public class HomeActivity extends UserPresentationActivity {
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                //C'est la vie
+                //Nothing selected -> do nothing
             }
         });
     }
 
+    /* IMPORTANTE: Before app closes this is always executed. */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ServicesUtil.closesAllRunningServices(getBaseContext());
+    }
 }

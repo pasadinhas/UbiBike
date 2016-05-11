@@ -17,36 +17,44 @@ import retrofit2.Response;
 
 public class CreateAccountActivity extends Activity {
 
+    protected EditText usernameEditText;
+    protected EditText passwordEditText;
+    protected EditText verifyPasswordEditText;
+    protected CheckBox termsCheckBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_account);
+        usernameEditText = (EditText)findViewById(R.id.username_editText);
+        passwordEditText = (EditText)findViewById(R.id.pwd_editText);
+        verifyPasswordEditText = (EditText)findViewById(R.id.pwd_verify_editText);
+        termsCheckBox = (CheckBox)findViewById(R.id.terms_checkBox);
     }
 
     public void submitCreateAccount(View view){
         boolean valid = true;
-        String username = ((EditText)findViewById(R.id.username_editText)).getText().toString();
-        String password = ((EditText)findViewById(R.id.pwd_editText)).getText().toString();
-        String verifyPassword = ((EditText)findViewById(R.id.pwd_verify_editText)).getText().toString();
+        String username = usernameEditText.getText().toString();
+        String password = passwordEditText.getText().toString();
+        String verifyPassword = verifyPasswordEditText.getText().toString();
         if(username.isEmpty()) {
-            ((EditText)findViewById(R.id.username_editText)).setError(getString(R.string.field_required_hint));
+            usernameEditText.setError(getString(R.string.field_required_hint));
             valid = false;
         }
         else if(password.isEmpty()){
-            ((EditText)findViewById(R.id.pwd_editText)).setError(getString(R.string.field_required_hint));
+            passwordEditText.setError(getString(R.string.field_required_hint));
             valid = false;
         }
         else if(verifyPassword.isEmpty()){
-            ((EditText)findViewById(R.id.pwd_verify_editText)).setError(getString(R.string.field_required_hint));
+            verifyPasswordEditText.setError(getString(R.string.field_required_hint));
             valid = false;
         }
         else if(!password.equals(verifyPassword)){
-            ((EditText)findViewById(R.id.pwd_verify_editText)).setError(getString(R.string.password_doesnt_match_toast));
+            verifyPasswordEditText.setError(getString(R.string.password_doesnt_match_toast));
             valid = false;
         }
         else if(!((CheckBox)findViewById(R.id.terms_checkBox)).isChecked()){
-            ((CheckBox)findViewById(R.id.terms_checkBox)).setError(getString(R.string.accept_terms_checkbox));
+            termsCheckBox.setError(getString(R.string.accept_terms_checkbox));
             valid = false;
         }
         if(!valid){

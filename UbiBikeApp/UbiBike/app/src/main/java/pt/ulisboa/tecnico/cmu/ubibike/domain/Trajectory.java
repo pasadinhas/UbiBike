@@ -104,8 +104,8 @@ public class Trajectory implements Serializable, Comparable<Trajectory>{
 
     @Override
     public String toString(){
-        //DateFormat fm = new SimpleDateFormat(UtilREST.DATE_FORMAT, Locale.ENGLISH);
-        return date + " " + calculateTotalKm() + "km";
+        DateFormat fm = new SimpleDateFormat(UtilREST.DATE_FORMAT, Locale.ENGLISH);
+        return fm.format(new Date(date)) + " " + calculateTotalKm() + "km";
     }
 }
 

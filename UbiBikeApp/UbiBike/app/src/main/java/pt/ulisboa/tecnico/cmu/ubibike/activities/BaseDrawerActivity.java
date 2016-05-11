@@ -13,9 +13,7 @@ import android.widget.ListView;
 import pt.ulisboa.tecnico.cmu.ubibike.R;
 import pt.ulisboa.tecnico.cmu.ubibike.UbiApp;
 import pt.ulisboa.tecnico.cmu.ubibike.data.UserLoginData;
-import pt.ulisboa.tecnico.cmu.ubibike.services.UserUpdateService;
-import pt.ulisboa.tecnico.cmu.ubibike.services.WifiDirectService;
-import pt.ulisboa.tecnico.cmu.ubibike.services.gps.track.GpsTrackingService;
+import pt.ulisboa.tecnico.cmu.ubibike.services.util.ServicesUtil;
 
 public abstract class BaseDrawerActivity extends Activity {
 
@@ -63,18 +61,10 @@ public abstract class BaseDrawerActivity extends Activity {
                 } else if (position == 5 && !(getPosition() == 5)) {
                     intent = new Intent(getBaseContext(), MyBikeActiviy.class);
                 } else if (position == 6) {     //LOGOUT
-                    if (WifiDirectService.isRunning()) {
-                        stopService(new Intent(getBaseContext(), WifiDirectService.class));
-                    }
-                    else if(UserUpdateService.isRunning()){
-                        stopService(new Intent(getBaseContext(), UserUpdateService.class));
-                    }
-                    else if(GpsTrackingService.isRunning()){
-                        stopService(new Intent(getBaseContext(), GpsTrackingService.class));
-                    }
-                    intent = new Intent(getBaseContext(), LoginActivity.class);
+                    ServicesUtil.closesAllRunningServices(getBaseContext());
                     UserLoginData.clearUserLoggedIn(getBaseContext());
                     UbiApp.getInstance().setUser(null);
+                    intent = new Intent(getBaseContext(), LoginActivity.class);
                 } else if (position == 7 && !(getPosition() == 7)) {
                     intent = new Intent(getBaseContext(), TrackTrajectoryDemo.class);
                 } else {

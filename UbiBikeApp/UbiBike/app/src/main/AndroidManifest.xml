@@ -69,7 +69,7 @@
         <!-- Services -->
         <service android:name=".services.gps.track.GpsTrackingService" />
         <service
-            android:name=".services.UserUpdateService"
+            android:name=".services.UserSynchronizeService"
             android:exported="false" />
         <service android:name="pt.inesc.termite.wifidirect.service.SimWifiP2pService" />
 

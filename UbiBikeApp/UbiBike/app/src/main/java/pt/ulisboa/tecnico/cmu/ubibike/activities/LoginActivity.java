@@ -3,7 +3,6 @@ package pt.ulisboa.tecnico.cmu.ubibike.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -21,21 +20,22 @@ import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.StationServiceREST;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UserServiceREST;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UtilREST;
-import pt.ulisboa.tecnico.cmu.ubibike.services.UserUpdateService;
+import pt.ulisboa.tecnico.cmu.ubibike.services.UserSynchronizeService;
 import pt.ulisboa.tecnico.cmu.ubibike.services.WifiDirectService;
-import pt.ulisboa.tecnico.cmu.ubibike.services.gps.geofence.GeofencingManagerService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LoginActivity extends Activity
-{
+public class LoginActivity extends Activity {
+
+    protected EditText usernameEditText;
+    protected EditText passwordEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //APP Entry Point (Activity)!!!!
         super.onCreate(savedInstanceState);
-        startService(new Intent(getBaseContext(), UserUpdateService.class));
+        startService(new Intent(getBaseContext(), UserSynchronizeService.class));
 
         if(UserLoginData.getUserLoggedInStatus(this)){
             User user = UserLoginData.getUser(this);
@@ -53,6 +53,7 @@ public class LoginActivity extends Activity
         }
         setContentView(R.layout.activity_login);
 
+
         TextView btn=(TextView) findViewById(R.id.create_account_button);
         btn.setOnClickListener(new View.OnClickListener() {
 
@@ -61,6 +62,10 @@ public class LoginActivity extends Activity
                 createAccount(v);
             }
         });
+
+        usernameEditText = (EditText)findViewById(R.id.login_username);
+        passwordEditText = (EditText)findViewById(R.id.login_password);
+
     }
 
     private void startWifiDirect(User user) {
@@ -70,6 +75,8 @@ public class LoginActivity extends Activity
         WifiDirectData.setIsEnabled(getApplicationContext(), true);
     }
 
+
+
     public void createAccount(View view) {
         Intent intent = new Intent(getBaseContext(), CreateAccountActivity.class);
         startActivity(intent);
@@ -77,17 +84,15 @@ public class LoginActivity extends Activity
 
     public void submitLogin(View view) {
         boolean valid = true;
-        TextView usernameTextView = (EditText)findViewById(R.id.login_username);
-        TextView passwordTextView = (EditText)findViewById(R.id.login_password);
-        String username = usernameTextView.getText().toString();
-        String password = passwordTextView.getText().toString();
+        String username = usernameEditText.getText().toString();
+        String password = passwordEditText.getText().toString();
 
         if(username.isEmpty()){
-            usernameTextView.setError(getString(R.string.field_required_hint));
+            usernameEditText.setError(getString(R.string.field_required_hint));
             valid = false;
         }
         else if(password.isEmpty()){
-            passwordTextView.setError(getString(R.string.field_required_hint));
+            passwordEditText.setError(getString(R.string.field_required_hint));
             valid = false;
         }
         if(!valid)

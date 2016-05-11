@@ -41,14 +41,11 @@ public class GpsTracking  implements GoogleApiClient.ConnectionCallbacks,
 
     public GpsTracking(Context context,IGPSCallback serviceCallback){
         Calendar c = Calendar.getInstance();
-        c.set(Calendar.MILLISECOND,0);
         this.serviceCallback = serviceCallback;
         isConnected = false;
         currentContext = context;
         locationRequest = new LocationRequest();
-        Date date = c.getTime();
-        Log.d("NEWDATE",""+date.getTime());
-        trajectory = new Trajectory(date.getTime());
+        trajectory = new Trajectory(c.getTime().getTime());
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setFastestInterval(UPDATES_INTERVAL);
         locationRequest.setInterval(UPDATES_INTERVAL);

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import pt.ulisboa.tecnico.cmu.InitializeDatabase;
 
 @RestController
-public class DebugWipeoutController {
+public class DebugResetController {
 	
 	@Autowired
 	private InitializeDatabase init;

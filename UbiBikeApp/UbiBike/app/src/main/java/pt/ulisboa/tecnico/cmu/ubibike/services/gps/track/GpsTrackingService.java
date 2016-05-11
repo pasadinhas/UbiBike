@@ -14,7 +14,7 @@ import pt.ulisboa.tecnico.cmu.ubibike.UbiApp;
 import pt.ulisboa.tecnico.cmu.ubibike.data.UserLoginData;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Trajectory;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
-import pt.ulisboa.tecnico.cmu.ubibike.services.UserUpdateService;
+import pt.ulisboa.tecnico.cmu.ubibike.services.UserSynchronizeService;
 
 
 public class GpsTrackingService extends Service implements IGPSCallback {
@@ -93,7 +93,7 @@ public class GpsTrackingService extends Service implements IGPSCallback {
         if(user != null){
             user.addLocalTrajectory(t);
             UserLoginData.setUser(getBaseContext(), user);
-            sendBroadcast(new Intent().setAction(UserUpdateService.SYNCHRONIZE_USER_INTENT));
+            sendBroadcast(new Intent().setAction(UserSynchronizeService.SYNCHRONIZE_USER_INTENT));
         }
     }
 

@@ -1,7 +1,6 @@
 package pt.ulisboa.tecnico.cmu.ubibike.activities;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -13,16 +12,11 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 
-import org.w3c.dom.Text;
-
-import java.util.Date;
-
 import pt.ulisboa.tecnico.cmu.ubibike.R;
 import pt.ulisboa.tecnico.cmu.ubibike.UbiApp;
-import pt.ulisboa.tecnico.cmu.ubibike.data.UserLoginData;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Trajectory;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
-import pt.ulisboa.tecnico.cmu.ubibike.location.MapTrajectoryDrawing;
+import pt.ulisboa.tecnico.cmu.ubibike.map.MapTrajectoryDrawing;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UserServiceREST;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UtilREST;
 import retrofit2.Call;
@@ -50,9 +44,9 @@ public class UserPresentationActivity extends BaseDrawerActivity implements OnMa
         setContentView(R.layout.activity_user_presentation);
         trajectoriesSpinner = (Spinner)findViewById(R.id.spinner_trajectories);
         trajectoriesTextView = (TextView)findViewById(R.id.textView_trajectories);
-        map = findViewById(R.id.home_map);
         usernameTextView = (TextView)findViewById(R.id.username_textView);
         pointsTextView = (TextView)findViewById(R.id.points_textView);
+        map = findViewById(R.id.home_map);
 
         user = (User)getIntent().getSerializableExtra("User");
         if (user == null){
@@ -62,19 +56,19 @@ public class UserPresentationActivity extends BaseDrawerActivity implements OnMa
                 return;
             }
         }
+        usernameTextView.setText(user.getUsername());
+        MapFragment mapFragment = (MapFragment)getFragmentManager().findFragmentById(R.id.home_map);
+        mapFragment.getMapAsync(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        String points = getString(R.string.points_text_view).concat(user.getPoints() + "");
-        usernameTextView.setText(user.getUsername());
+        String points = getString(R.string.points_text_view).concat(""+user.getPoints());
         pointsTextView.setText(points);
         if(!user.getAllTrajectories().isEmpty()) {
-            MapFragment mapFragment = (MapFragment)getFragmentManager().findFragmentById(R.id.home_map);
-            mapFragment.getMapAsync(this);
-            trajectoriesSpinner.setAdapter(new ArrayAdapter<>(this, R.layout.custom_row, R.id.information,
-                    user.getAllTrajectories()));
+            trajectoriesSpinner.setAdapter(new ArrayAdapter<>(this, R.layout.custom_row,
+                    R.id.information, user.getAllTrajectories()));
             trajectoriesSpinner.setVisibility(View.VISIBLE);
             trajectoriesTextView.setVisibility(View.VISIBLE);
             map.setVisibility(View.VISIBLE);
@@ -106,14 +100,13 @@ public class UserPresentationActivity extends BaseDrawerActivity implements OnMa
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                //C'est la vie
+                //Nothing selected -> do nothing
             }
         });
     }
 
-    /* Get a user trajectory from remote server to the application. */
+    /* Bring an user trajectory from remote server to the application. */
     private void getTrajectoryFromServer(long trajectoryDate,final GoogleMap map){
-        Log.d("GET DATE",""+trajectoryDate);
         UserServiceREST userService = UtilREST.getRetrofit().create(UserServiceREST.class);
         Call<Trajectory> call = userService.getUserTrajectory(user.getUsername(),trajectoryDate);
         call.enqueue(new Callback<Trajectory>() {
@@ -134,8 +127,7 @@ public class UserPresentationActivity extends BaseDrawerActivity implements OnMa
             @Override
             public void onFailure(Call<Trajectory> call, Throwable t) {
                 findViewById(R.id.home_map).setVisibility(View.GONE);
-                Toast.makeText(getBaseContext(), R.string.impossible_connect_server_toast,
-                        Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(), R.string.impossible_connect_server_toast, Toast.LENGTH_LONG).show();
             }
         });
     }

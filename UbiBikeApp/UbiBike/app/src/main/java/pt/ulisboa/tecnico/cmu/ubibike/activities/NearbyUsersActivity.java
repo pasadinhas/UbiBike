@@ -60,8 +60,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class NearbyUsersActivity extends BaseDrawerActivity implements
-        Runnable {
+public class NearbyUsersActivity extends BaseDrawerActivity implements Runnable {
+
     public static final String TAG = "UbiBike";
 
     private User user = null;
