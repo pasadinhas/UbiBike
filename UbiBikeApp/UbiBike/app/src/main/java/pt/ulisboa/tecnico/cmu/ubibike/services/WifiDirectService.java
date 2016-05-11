@@ -43,6 +43,7 @@ import pt.ulisboa.tecnico.cmu.ubibike.R;
 import pt.ulisboa.tecnico.cmu.ubibike.activities.ChatActivity;
 import pt.ulisboa.tecnico.cmu.ubibike.data.BikeStatusData;
 import pt.ulisboa.tecnico.cmu.ubibike.data.DatabaseManager;
+import pt.ulisboa.tecnico.cmu.ubibike.data.GeofenceData;
 import pt.ulisboa.tecnico.cmu.ubibike.data.UserLoginData;
 import pt.ulisboa.tecnico.cmu.ubibike.data.WifiDirectData;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
@@ -234,17 +235,54 @@ public class WifiDirectService extends Service implements
 
         if (UserLoginData.getUser(this).hasBike()) {
             boolean bikeIsNear = false;
+            boolean leftStation = GeofenceData.getInstance().isInStation();
+
             for (SimWifiP2pDevice device : peers.getDeviceList()) {
                 if (device.deviceName.startsWith("Bike")) {
                     Log.d(TAG, "onPeersAvailable: seen bike: " + device.deviceName);
 
-                    if (device.deviceName.equals(UserLoginData.getUser(this).getReservedBike().getIdentifier())){
+                    if (device.deviceName.substring(4).equals(UserLoginData.getUser(this).getReservedBike().getIdentifier())){
                         bikeIsNear = true;
                         break;
                     }
                 }
+                if (device.deviceName.startsWith("Station")) {
+                    Log.d(TAG, "onPeersAvailable: seen station: " + device.deviceName + " and is on a station: " + leftStation);
+
+                    leftStation = manageSationFencing(device.deviceName);
+                }
+
+            }
+            Log.d(TAG, "onPeersAvailable: bike was near: " + BikeStatusData.getIsNear(this) + " left station: " + leftStation
+                    + " bike IS near: " + bikeIsNear);
+            if (BikeStatusData.getIsNear(this) && leftStation && !bikeIsNear) {
+                Log.d(TAG, "onPeersAvailable: booked for removal");
+                processDropOff();
             }
             BikeStatusData.setIsNear(this, bikeIsNear);
+        }
+    }
+
+    private void processDropOff() {
+        User user = UserLoginData.getUser(this);
+        user.dropBike();
+        UserLoginData.setUser(this, user);
+        //TODO put bike in station
+    }
+
+    private boolean manageSationFencing(String deviceName) {
+        String stationName = deviceName.substring(6);
+        if (GeofenceData.getInstance().isInStation()) {
+            if (GeofenceData.getInstance().getCurrentStation().equals(stationName)) {
+                return false;
+            } else {
+                GeofenceData.getInstance().enterStation(stationName);
+                return true;
+            }
+        }
+        else {
+            GeofenceData.getInstance().enterStation(stationName);
+            return false;
         }
     }
 

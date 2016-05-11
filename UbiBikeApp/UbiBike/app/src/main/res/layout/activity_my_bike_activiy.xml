@@ -28,11 +28,11 @@
         android:layout_below="@+id/textViewBikeName"
         android:layout_centerHorizontal="true" />
 
-    <Button
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Return Bike"
-        android:id="@+id/buttonReturnBike"
+        android:text="Near Bike"
+        android:id="@+id/textViewNearBike"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"

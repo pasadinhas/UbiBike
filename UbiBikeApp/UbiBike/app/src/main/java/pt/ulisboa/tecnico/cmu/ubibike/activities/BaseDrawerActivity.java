@@ -82,7 +82,7 @@ public abstract class BaseDrawerActivity extends Activity {
                     UserLoginData.clearUserLoggedIn(getBaseContext());
                 } else if (position == 6 && !(getPosition() == 6)) {
                     intent = new Intent(getBaseContext(), TrackTrajectoryDemo.class);
-                } else if (position == 6 && !(getPosition() == 6)) {
+                } else if (position == 7 && !(getPosition() == 7)) {
                     intent = new Intent(getBaseContext(), MyBikeActiviy.class);
                 } else {
                     return;

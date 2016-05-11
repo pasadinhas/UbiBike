@@ -14,6 +14,8 @@ public class GeofenceData {
 
     private List<Geofence> mGeofenceList = new ArrayList<>();
 
+    private String currentStation = null;
+
     protected GeofenceData () {}
 
     public static GeofenceData getInstance () {
@@ -22,6 +24,22 @@ public class GeofenceData {
         }
 
         return instance;
+    }
+
+    public boolean isInStation() {
+        return currentStation != null;
+    }
+
+    public void enterStation(String name) {
+        currentStation = name;
+    }
+
+    public void leaveStation() {
+        currentStation = null;
+    }
+
+    public String getCurrentStation() {
+        return currentStation;
     }
 
     public void setGeofenceList(List<Geofence> list) {

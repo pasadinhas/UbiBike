@@ -90,7 +90,7 @@ public class BookBikesActivity extends BaseDrawerActivity implements OnMapReadyC
             @Override
             public void onResponse(Call<Bike> call, Response<Bike> response) {
                 if (response.code() == UtilREST.HTTP_OK) {
-                    Toast.makeText(getBaseContext(), R.string.booking_success_toast, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(), R.string.booking_success_toast + " " + markers.get(selectedMarker).getIdentifier(), Toast.LENGTH_LONG).show();
                     user.setReservedBike(response.body());
                     UserLoginData.setUser(getBaseContext(),user);
                     station.removeBike(markers.get(selectedMarker));

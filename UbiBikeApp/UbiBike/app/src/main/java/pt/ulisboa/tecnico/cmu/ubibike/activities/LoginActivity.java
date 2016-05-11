@@ -49,12 +49,6 @@ public class LoginActivity extends Activity
                 stopService(new Intent(getBaseContext(), WifiDirectService.class));
             }
 
-            if (StationsData.getStationsSaved(getBaseContext())) {
-                Log.d("UbiBike", "onResponse: invoking start GeofenceManagerService");
-                Intent serviceIntent = new Intent(getBaseContext(), GeofencingManagerService.class);
-                startService(serviceIntent);
-            }
-
             startWifiDirect(user);
 
             finish();
@@ -138,9 +132,6 @@ public class LoginActivity extends Activity
                     Toast.makeText(getBaseContext(), R.string.impossible_connect_server_toast, Toast.LENGTH_LONG).show();
                 }
             });
-            Log.d("UbiBike", "onResponse: invoking start GeofenceManagerService");
-            Intent serviceIntent = new Intent(getBaseContext(), GeofencingManagerService.class);
-            startService(serviceIntent);
         }
 
 
