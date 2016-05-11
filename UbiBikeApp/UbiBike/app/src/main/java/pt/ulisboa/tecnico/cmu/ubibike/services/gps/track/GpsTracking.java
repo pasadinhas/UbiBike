@@ -16,6 +16,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Coordinates;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Trajectory;
@@ -45,7 +46,9 @@ public class GpsTracking  implements GoogleApiClient.ConnectionCallbacks,
         isConnected = false;
         currentContext = context;
         locationRequest = new LocationRequest();
-        trajectory = new Trajectory(c.getTime());
+        Date date = c.getTime();
+        Log.d("NEWDATE",date.getTime()+"");
+        trajectory = new Trajectory(date);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setFastestInterval(UPDATES_INTERVAL);
         locationRequest.setInterval(UPDATES_INTERVAL);

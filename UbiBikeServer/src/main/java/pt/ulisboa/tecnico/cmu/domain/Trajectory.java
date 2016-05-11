@@ -11,10 +11,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import pt.ulisboa.tecnico.cmu.controllers.util.JsonDateDeserializer;
+import pt.ulisboa.tecnico.cmu.controllers.util.JsonDateSerializer;
 import pt.ulisboa.tecnico.cmu.controllers.util.JsonViews;
 
 @Entity
@@ -26,7 +29,8 @@ public class Trajectory implements Comparable<Trajectory>{
 	private long trajId;
 	
 	@JsonView(JsonViews.LowDetailed.class)
-	@JsonFormat(pattern="dd-MM-yyyy HH:mm:ss")
+	@JsonDeserialize(using = JsonDateDeserializer.class)
+	@JsonSerialize(using = JsonDateSerializer.class)
 	@Column
 	private Date date;
 	

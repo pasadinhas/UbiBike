@@ -113,6 +113,7 @@ public class UserPresentationActivity extends BaseDrawerActivity implements OnMa
 
     /* Get a user trajectory from remote server to the application. */
     private void getTrajectoryFromServer(Date trajectoryDate,final GoogleMap map){
+        Log.d("GET DATE",""+trajectoryDate.getTime());
         UserServiceREST userService = UtilREST.getRetrofit().create(UserServiceREST.class);
         Call<Trajectory> call = userService.getUserTrajectory(user.getUsername(),trajectoryDate.getTime());
         call.enqueue(new Callback<Trajectory>() {
