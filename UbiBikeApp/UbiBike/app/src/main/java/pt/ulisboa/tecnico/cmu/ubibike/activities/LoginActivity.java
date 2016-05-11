@@ -52,6 +52,15 @@ public class LoginActivity extends Activity
             return;
         }
         setContentView(R.layout.activity_login);
+
+        TextView btn=(TextView) findViewById(R.id.create_account_button);
+        btn.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                createAccount(v);
+            }
+        });
     }
 
     private void startWifiDirect(User user) {
