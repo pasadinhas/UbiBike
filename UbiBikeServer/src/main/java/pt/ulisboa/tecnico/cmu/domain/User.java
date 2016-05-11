@@ -94,9 +94,9 @@ public class User {
 		return this.trajectories;
 	}
 	
-	public Trajectory getTrajectory(Date date) throws TrajectoryDoesntExistException{
+	public Trajectory getTrajectory(long date) throws TrajectoryDoesntExistException{
 		for(Trajectory t : this.trajectories){
-			if(t.getDate().compareTo(date) == 0){
+			if(t.getDate() == date){
 				return t;
 			}
 		}

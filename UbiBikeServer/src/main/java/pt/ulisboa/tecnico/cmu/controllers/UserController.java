@@ -177,7 +177,7 @@ public class UserController {
 			@PathVariable String username,
 			@PathVariable long date) throws UserDoesntExistException, TrajectoryDoesntExistException{
 		System.out.println("[GET DATE BEFORE]"+date);
-		Trajectory t = userServices.getUserTrajectory(username, new Date(date));
+		Trajectory t = userServices.getUserTrajectory(username, date);
 		return new ResponseEntity<Trajectory>(t,HttpStatus.OK);
 	}
 	

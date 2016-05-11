@@ -15,22 +15,22 @@ import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UtilREST;
 
 public class Trajectory implements Serializable, Comparable<Trajectory>{
 
-    private Date date;
+    private long date;
 
     private List<Coordinates> trajectory = new ArrayList<>();
 
 
-    public Trajectory(Date date){
+    public Trajectory(long date){
         setDate(date);
     }
 
     public Trajectory() { } //Needed for JSON
 
-    public Date getDate(){
+    public long getDate(){
         return date;
     }
 
-    public void setDate(Date date){
+    public void setDate(long date){
         this.date = date;
     }
 
@@ -89,23 +89,23 @@ public class Trajectory implements Serializable, Comparable<Trajectory>{
     @Override
     public boolean equals(Object o) {
         Trajectory t  = (Trajectory) o;
-        return (this.getDate().compareTo(t.getDate()) == 0);
+        return this.date == t.getDate();
     }
 
     @Override
     public int compareTo(@NonNull Trajectory another) {
-        int res = getDate().compareTo(another.getDate());
-        if(res < 0)
+        int res = 0;
+        if(date < another.getDate())
             res =  1;
-        else if(res > 0)
+        else if(date > another.getDate())
             res = -1;
         return res;
     }
 
     @Override
     public String toString(){
-        DateFormat fm = new SimpleDateFormat(UtilREST.DATE_FORMAT, Locale.ENGLISH);
-        return fm.format(date) + " " + calculateTotalKm() + "km";
+        //DateFormat fm = new SimpleDateFormat(UtilREST.DATE_FORMAT, Locale.ENGLISH);
+        return date + " " + calculateTotalKm() + "km";
     }
 }
 

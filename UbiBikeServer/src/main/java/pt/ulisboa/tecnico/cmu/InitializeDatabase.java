@@ -29,10 +29,9 @@ public class InitializeDatabase {
 	public void populateDatabase(){
 		System.out.println("###### Initializing BD ######");
 		Calendar c = Calendar.getInstance();
-		c.set(Calendar.MILLISECOND,0);
 		c.set(2015, 11, 6, 18, 11, 32);
 		Date d = c.getTime();
-		Trajectory t = new Trajectory(d);
+		Trajectory t = new Trajectory(d.getTime());
 		t.addCoordinates(new Coordinates(38.769836, -9.204510));
 		t.addCoordinates(new Coordinates(38.770108, -9.204942));
 		t.addCoordinates(new Coordinates(38.770362, -9.205211));
@@ -42,7 +41,7 @@ public class InitializeDatabase {
 		t.addCoordinates(new Coordinates(38.769642, -9.204707));
 		c.set(2015,12, 2, 14, 50);
 		Date d1 = c.getTime();
-		Trajectory t1 = new Trajectory(d1);
+		Trajectory t1 = new Trajectory(d1.getTime());
 		t1.addCoordinates(new Coordinates(38.754212, -9.144914));
 		t1.addCoordinates(new Coordinates(38.754471, -9.144721));
 		t1.addCoordinates(new Coordinates(38.755040, -9.142897));
