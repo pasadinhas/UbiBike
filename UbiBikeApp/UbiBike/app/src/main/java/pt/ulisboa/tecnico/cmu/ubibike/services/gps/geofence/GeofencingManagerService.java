@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmu.ubibike.services.gps;
+package pt.ulisboa.tecnico.cmu.ubibike.services.gps.geofence;
 
 import android.Manifest;
 import android.app.PendingIntent;
@@ -21,10 +21,10 @@ import com.google.android.gms.location.LocationServices;
 import java.util.ArrayList;
 import java.util.List;
 
-import pt.ulisboa.tecnico.cmu.ubibike.R;
 import pt.ulisboa.tecnico.cmu.ubibike.data.GeofenceData;
 import pt.ulisboa.tecnico.cmu.ubibike.data.StationsData;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Station;
+import pt.ulisboa.tecnico.cmu.ubibike.services.gps.geofence.GeofenceIntentService;
 
 /**
  * Created by cedac on 09/05/16.

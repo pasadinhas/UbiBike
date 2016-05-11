@@ -1,8 +1,9 @@
-package pt.ulisboa.tecnico.cmu.ubibike.services.gps;
+package pt.ulisboa.tecnico.cmu.ubibike.services.gps.track;
 
 import android.app.Activity;
 
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Trajectory;
+import pt.ulisboa.tecnico.cmu.ubibike.services.gps.track.IGPSCallback;
 
 /**
  * Created by André on 07-05-2016.

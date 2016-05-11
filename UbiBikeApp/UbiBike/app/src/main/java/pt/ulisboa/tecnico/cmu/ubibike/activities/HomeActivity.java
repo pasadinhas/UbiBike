@@ -23,13 +23,10 @@ public class HomeActivity extends UserPresentationActivity {
 
     @Override
     public void onMapReady(final GoogleMap googleMap) {
-        //Populate Trajectories Spinner
-        Spinner trajectories = (Spinner) findViewById(R.id.spinner_trajectories);
-        trajectories.setAdapter(new ArrayAdapter<>(this,R.layout.custom_row,R.id.information,
-                user.getAllTrajectories()));
-        trajectories.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        trajectoriesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("DRAW","DRAWING HOME MAP!");
                 Trajectory traj = (Trajectory) parent.getItemAtPosition(position);
                 MapTrajectoryDrawing mapDrawing = new MapTrajectoryDrawing(googleMap,traj,getBaseContext());
                 mapDrawing.clearMap();

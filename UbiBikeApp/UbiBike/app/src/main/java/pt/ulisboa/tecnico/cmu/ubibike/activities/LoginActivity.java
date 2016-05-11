@@ -3,21 +3,16 @@ package pt.ulisboa.tecnico.cmu.ubibike.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.SyncStateContract;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.location.Geofence;
-import com.google.android.gms.location.GeofencingRequest;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import pt.ulisboa.tecnico.cmu.ubibike.R;
-import pt.ulisboa.tecnico.cmu.ubibike.data.GeofenceData;
+import pt.ulisboa.tecnico.cmu.ubibike.UbiApp;
 import pt.ulisboa.tecnico.cmu.ubibike.data.StationsData;
 import pt.ulisboa.tecnico.cmu.ubibike.data.UserLoginData;
 import pt.ulisboa.tecnico.cmu.ubibike.data.WifiDirectData;
@@ -28,7 +23,7 @@ import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UserServiceREST;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UtilREST;
 import pt.ulisboa.tecnico.cmu.ubibike.services.UserUpdateService;
 import pt.ulisboa.tecnico.cmu.ubibike.services.WifiDirectService;
-import pt.ulisboa.tecnico.cmu.ubibike.services.gps.GeofencingManagerService;
+import pt.ulisboa.tecnico.cmu.ubibike.services.gps.geofence.GeofencingManagerService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -44,6 +39,7 @@ public class LoginActivity extends Activity
 
         if(UserLoginData.getUserLoggedInStatus(this)){
             User user = UserLoginData.getUser(this);
+            UbiApp.getInstance().setUser(user);
 
             if (WifiDirectService.isRunning()) {
                 stopService(new Intent(getBaseContext(), WifiDirectService.class));
@@ -96,6 +92,7 @@ public class LoginActivity extends Activity
                 if (response.code() == UtilREST.HTTP_OK) {
                     User user = response.body();
                     getAllStations();
+                    UbiApp.getInstance().setUser(user);
                     UserLoginData.setUserLoggedIn(getBaseContext(), user.getUsername(), user);
 
                     if (WifiDirectService.isRunning()) {

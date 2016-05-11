@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmu.ubibike.services.gps;
+package pt.ulisboa.tecnico.cmu.ubibike.services.gps.geofence;
 
 import android.app.IntentService;
 import android.content.Context;

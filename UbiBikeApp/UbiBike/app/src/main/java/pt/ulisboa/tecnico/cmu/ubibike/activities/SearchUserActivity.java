@@ -24,6 +24,9 @@ import retrofit2.Response;
 
 public class SearchUserActivity extends BaseDrawerActivity {
 
+    protected ListView usernamesListView;
+    protected EditText usernameEditText;
+
     @Override
     protected int getPosition() {
         return 2;
@@ -33,8 +36,10 @@ public class SearchUserActivity extends BaseDrawerActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_user);
-        ListView list = (ListView)findViewById(R.id.usernames_listView);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        usernamesListView = (ListView)findViewById(R.id.usernames_listView);
+        usernameEditText = (EditText)findViewById(R.id.username_editText);
+
+        usernamesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 User username = (User) parent.getItemAtPosition(position);
@@ -49,8 +54,8 @@ public class SearchUserActivity extends BaseDrawerActivity {
                             intent.putExtra("User", response.body());
                             startActivity(intent);
                         }
-                        Log.d("Asda", response.message());
                     }
+
                     @Override
                     public void onFailure(Call<User> call, Throwable t) {
                         Toast.makeText(getBaseContext(), R.string.impossible_connect_server_toast,
@@ -62,8 +67,7 @@ public class SearchUserActivity extends BaseDrawerActivity {
     }
 
     public void search(View view){
-        TextView usernameTextView = (EditText)findViewById(R.id.username_editText);
-        String usernamePrefix = usernameTextView.getText().toString();
+        String usernamePrefix = usernameEditText.getText().toString();
 
         UserServiceREST userService = UtilREST.getRetrofit().create(UserServiceREST.class);
         Call<List<User>> call = userService.getAllUsers(usernamePrefix);
@@ -74,8 +78,7 @@ public class SearchUserActivity extends BaseDrawerActivity {
                     List<User> userList = response.body();
                     userList = ((userList == null) ? new ArrayList<User>() : userList);
                     if(!userList.isEmpty()){
-                        ListView listView = (ListView)findViewById(R.id.usernames_listView);
-                        listView.setAdapter(new ArrayAdapter<>(getBaseContext(),
+                        usernamesListView.setAdapter(new ArrayAdapter<>(getBaseContext(),
                                 R.layout.support_simple_spinner_dropdown_item,userList));
                     }
                     Toast.makeText(getBaseContext(),userList.size()+" "+getString(R.string.users_found_toast),

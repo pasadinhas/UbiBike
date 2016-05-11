@@ -1,41 +1,27 @@
 package pt.ulisboa.tecnico.cmu.ubibike.activities;
 
-import android.Manifest;
 import android.app.Activity;
-import android.app.PendingIntent;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.LocationServices;
-
 import pt.ulisboa.tecnico.cmu.ubibike.R;
-import pt.ulisboa.tecnico.cmu.ubibike.data.DatabaseManager;
-import pt.ulisboa.tecnico.cmu.ubibike.data.GeofenceData;
+import pt.ulisboa.tecnico.cmu.ubibike.UbiApp;
 import pt.ulisboa.tecnico.cmu.ubibike.data.UserLoginData;
-import pt.ulisboa.tecnico.cmu.ubibike.data.WifiDirectData;
+import pt.ulisboa.tecnico.cmu.ubibike.services.UserUpdateService;
 import pt.ulisboa.tecnico.cmu.ubibike.services.WifiDirectService;
-import pt.ulisboa.tecnico.cmu.ubibike.services.gps.GeofenceIntentService;
+import pt.ulisboa.tecnico.cmu.ubibike.services.gps.track.GpsTrackingService;
 
 public abstract class BaseDrawerActivity extends Activity {
 
     protected DrawerLayout fullLayout;
 
     protected FrameLayout subLayout;
-
-    private GoogleApiClient mGoogleApiClient = null;
 
     protected abstract int getPosition();
 
@@ -74,16 +60,23 @@ public abstract class BaseDrawerActivity extends Activity {
                     intent = new Intent(getBaseContext(), StationsActivity.class);
                 } else if (position == 4) {
                     intent = new Intent(getBaseContext(), RealTimeTrackingActivity.class);
-                } else if (position == 5) {
+                } else if (position == 5 && !(getPosition() == 5)) {
+                    intent = new Intent(getBaseContext(), MyBikeActiviy.class);
+                } else if (position == 6) {     //LOGOUT
                     if (WifiDirectService.isRunning()) {
                         stopService(new Intent(getBaseContext(), WifiDirectService.class));
                     }
+                    else if(UserUpdateService.isRunning()){
+                        stopService(new Intent(getBaseContext(), UserUpdateService.class));
+                    }
+                    else if(GpsTrackingService.isRunning()){
+                        stopService(new Intent(getBaseContext(), GpsTrackingService.class));
+                    }
                     intent = new Intent(getBaseContext(), LoginActivity.class);
                     UserLoginData.clearUserLoggedIn(getBaseContext());
-                } else if (position == 6 && !(getPosition() == 6)) {
-                    intent = new Intent(getBaseContext(), TrackTrajectoryDemo.class);
+                    UbiApp.getInstance().setUser(null);
                 } else if (position == 7 && !(getPosition() == 7)) {
-                    intent = new Intent(getBaseContext(), MyBikeActiviy.class);
+                    intent = new Intent(getBaseContext(), TrackTrajectoryDemo.class);
                 } else {
                     return;
                 }

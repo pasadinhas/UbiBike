@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -15,9 +14,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 
 import pt.ulisboa.tecnico.cmu.ubibike.R;
 import pt.ulisboa.tecnico.cmu.ubibike.location.MapTrajectoryDrawing;
-import pt.ulisboa.tecnico.cmu.ubibike.services.gps.GpsTrackingService;
-import pt.ulisboa.tecnico.cmu.ubibike.services.gps.IGPSCallback;
-import pt.ulisboa.tecnico.cmu.ubibike.services.gps.IGPSTrackingService;
+import pt.ulisboa.tecnico.cmu.ubibike.services.gps.track.GpsTrackingService;
+import pt.ulisboa.tecnico.cmu.ubibike.services.gps.track.IGPSCallback;
+import pt.ulisboa.tecnico.cmu.ubibike.services.gps.track.IGPSTrackingService;
 
 public class RealTimeTrackingActivity extends BaseDrawerActivity implements IGPSCallback, OnMapReadyCallback {
 
@@ -63,7 +62,7 @@ public class RealTimeTrackingActivity extends BaseDrawerActivity implements IGPS
         notCyclingTextView = (TextView)findViewById(R.id.textView_NotCycling);
         mapFragment = findViewById(R.id.real_time_map);
         //Bind activity with GpsTracking Service if its running
-        if(GpsTrackingService.RUNNING){
+        if(GpsTrackingService.isRunning()){
             isRegistered = true;
             bindService(new Intent(this, GpsTrackingService.class), mConnection, 0);
             notCyclingTextView.setVisibility(View.GONE);

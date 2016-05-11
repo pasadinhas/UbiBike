@@ -19,6 +19,7 @@ import java.io.InputStreamReader;
 
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocket;
 import pt.ulisboa.tecnico.cmu.ubibike.R;
+import pt.ulisboa.tecnico.cmu.ubibike.UbiApp;
 import pt.ulisboa.tecnico.cmu.ubibike.data.DatabaseManager;
 import pt.ulisboa.tecnico.cmu.ubibike.data.UserLoginData;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
@@ -46,7 +47,7 @@ public class ChatActivity extends BaseDrawerActivity {
 
         otherIP = (String) getIntent().getSerializableExtra("OtherIP");
         otherUsername = (String) getIntent().getSerializableExtra("OtherUsername");
-        username = UserLoginData.getUser(getBaseContext()).getUsername();
+        username = UbiApp.getInstance().getUser().getUsername();
         Log.d(TAG, "onCreate: otherIP:" + otherIP);
     }
 
@@ -108,7 +109,7 @@ public class ChatActivity extends BaseDrawerActivity {
             return;
         }
 
-        User user = UserLoginData.getUser(this);
+        User user = UbiApp.getInstance().getUser();
 
         if (user == null) {return;} //should not happen
 

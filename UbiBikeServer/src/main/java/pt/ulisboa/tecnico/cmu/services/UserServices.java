@@ -78,6 +78,7 @@ public class UserServices {
 		user.setPoints(points);
 		for(Trajectory newTraj : trajectories){
 			try{
+				System.out.println("[NEWDATE]"+newTraj.getDate().getTime());
 				user.addTrajectory(newTraj);
 			}catch(TrajectoryAlreadyExistException ex){
 				continue;

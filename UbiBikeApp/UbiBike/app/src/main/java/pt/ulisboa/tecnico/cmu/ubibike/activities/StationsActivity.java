@@ -21,6 +21,8 @@ import retrofit2.Response;
 
 public class StationsActivity extends BaseDrawerActivity {
 
+    protected ListView stationsListView;
+
     private List<Station> stations = new ArrayList<>();
 
     @Override
@@ -32,13 +34,14 @@ public class StationsActivity extends BaseDrawerActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stations);
-        ((ListView)findViewById(R.id.stations_listView)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        stationsListView = (ListView)findViewById(R.id.stations_listView);
+        stationsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Station station = (Station) parent.getItemAtPosition(position);
-            Intent intent = new Intent(getBaseContext(), BookBikesActivity.class);
-            intent.putExtra("Station", station);
-            startActivity(intent);
+                Station station = (Station) parent.getItemAtPosition(position);
+                Intent intent = new Intent(getBaseContext(), BookBikesActivity.class);
+                intent.putExtra("Station", station);
+                startActivity(intent);
             }
         });
     }
@@ -51,22 +54,20 @@ public class StationsActivity extends BaseDrawerActivity {
 
     // Get station information from the remote server.
     private void getStations(){
-        StationServiceREST stationService = UtilREST.getRetrofit().create(StationServiceREST.class);
+        final StationServiceREST stationService = UtilREST.getRetrofit().create(StationServiceREST.class);
         Call<List<Station>> call = stationService.getStations(StationServiceREST.STATION_DETAIL_HIGH);
         call.enqueue(new Callback<List<Station>>() {
             @Override
             public void onResponse(Call<List<Station>> call, Response<List<Station>> response) {
                 if(response.code() == UtilREST.HTTP_OK){
                     stations = response.body();
-                    ListView view = (ListView)findViewById(R.id.stations_listView);
-                    view.setAdapter(new ArrayAdapter<>(getBaseContext(),
+                    stationsListView.setAdapter(new ArrayAdapter<>(getBaseContext(),
                             R.layout.support_simple_spinner_dropdown_item,stations));
                 }
             }
             @Override
             public void onFailure(Call<List<Station>> call, Throwable t) {
-                ListView view = (ListView) findViewById(R.id.stations_listView);
-                view.setAdapter(null);
+                stationsListView.setAdapter(null);
                 Toast.makeText(getBaseContext(),R.string.impossible_connect_server_toast,Toast.LENGTH_LONG).show();
             }
         });

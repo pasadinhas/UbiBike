@@ -67,7 +67,7 @@
         <activity android:name=".activities.TrackTrajectoryDemo" />
 
         <!-- Services -->
-        <service android:name=".services.gps.GpsTrackingService" />
+        <service android:name=".services.gps.track.GpsTrackingService" />
         <service
             android:name=".services.UserUpdateService"
             android:exported="false" />
@@ -83,17 +83,16 @@
             android:enabled="true"
             android:exported="false" />
 
-        <service android:name=".services.gps.GeofenceIntentService"
+        <service android:name=".services.gps.geofence.GeofenceIntentService"
                  android:exported="true"/>
 
-        <service android:name=".services.gps.GeofencingManagerService"/>
+        <service android:name=".services.gps.geofence.GeofencingManagerService"/>
 
         <activity android:name=".activities.MyBikeActiviy"></activity>
 
         <activity
             android:name=".activities.RealTimeTrackingActivity"
-            android:label="@string/title_activity_real_time_tracking"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:label="@string/title_activity_real_time_tracking">
         </activity>
 
     </application>

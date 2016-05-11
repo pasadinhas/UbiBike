@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import pt.ulisboa.tecnico.cmu.ubibike.R;
-import pt.ulisboa.tecnico.cmu.ubibike.services.gps.GpsTrackingService;
+import pt.ulisboa.tecnico.cmu.ubibike.services.gps.track.GpsTrackingService;
 
 public class TrackTrajectoryDemo extends BaseDrawerActivity {
 
@@ -21,9 +21,7 @@ public class TrackTrajectoryDemo extends BaseDrawerActivity {
     }
 
     public void startTracking(View v){
-        Intent gpsOptionsIntent = new Intent(
-                android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-        startActivity(gpsOptionsIntent);
+        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
         startService(new Intent(getBaseContext(), GpsTrackingService.class));
     }
 

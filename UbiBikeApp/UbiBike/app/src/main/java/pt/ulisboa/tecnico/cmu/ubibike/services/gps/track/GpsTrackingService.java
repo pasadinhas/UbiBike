@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmu.ubibike.services.gps;
+package pt.ulisboa.tecnico.cmu.ubibike.services.gps.track;
 
 import android.app.Activity;
 import android.app.Service;
@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import pt.ulisboa.tecnico.cmu.ubibike.UbiApp;
 import pt.ulisboa.tecnico.cmu.ubibike.data.UserLoginData;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Trajectory;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
@@ -18,7 +19,7 @@ import pt.ulisboa.tecnico.cmu.ubibike.services.UserUpdateService;
 
 public class GpsTrackingService extends Service implements IGPSCallback {
 
-    public static boolean RUNNING = false;
+    private static boolean RUNNING = false;
 
     private GpsTracking gpsTracking;
 
@@ -26,6 +27,9 @@ public class GpsTrackingService extends Service implements IGPSCallback {
 
     /* Save all interested activities and the respective callbacks */
     private Map<Activity,IGPSCallback> activityClients = new ConcurrentHashMap<>();
+
+
+    public static boolean isRunning() { return RUNNING; }
 
     /* Return Binder (interface) to be used by clients to commnicate with running service. */
     public class GpsTrackingBinder extends Binder implements IGPSTrackingService {
@@ -85,13 +89,11 @@ public class GpsTrackingService extends Service implements IGPSCallback {
 
     //Save new trajectory and try synchronize with remote server.
     private void saveTrajectory(Trajectory t){
-        User user = UserLoginData.getUser(getBaseContext());
+        User user = UbiApp.getInstance().getUser();
         if(user != null){
             user.addLocalTrajectory(t);
-            UserLoginData.setUser(getBaseContext(),user);
-            Intent intent = new Intent();
-            intent.setAction(UserUpdateService.SYNCHRONIZE_USER_INTENT);
-            sendBroadcast(intent);
+            UserLoginData.setUser(getBaseContext(), user);
+            sendBroadcast(new Intent().setAction(UserUpdateService.SYNCHRONIZE_USER_INTENT));
         }
     }
 

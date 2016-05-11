@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import pt.ulisboa.tecnico.cmu.ubibike.R;
+import pt.ulisboa.tecnico.cmu.ubibike.UbiApp;
 import pt.ulisboa.tecnico.cmu.ubibike.data.UserLoginData;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Bike;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Station;
@@ -47,7 +48,7 @@ public class BookBikesActivity extends BaseDrawerActivity implements OnMapReadyC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_bikes);
         station = (Station) getIntent().getSerializableExtra("Station");
-        user = UserLoginData.getUser(getBaseContext());
+        user = UbiApp.getInstance().getUser();
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);

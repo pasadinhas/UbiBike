@@ -47,6 +47,7 @@ import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocket;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketManager;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketServer;
 import pt.ulisboa.tecnico.cmu.ubibike.R;
+import pt.ulisboa.tecnico.cmu.ubibike.UbiApp;
 import pt.ulisboa.tecnico.cmu.ubibike.data.DatabaseManager;
 import pt.ulisboa.tecnico.cmu.ubibike.data.UserLoginData;
 import pt.ulisboa.tecnico.cmu.ubibike.data.WifiDirectData;
@@ -81,7 +82,7 @@ public class NearbyUsersActivity extends BaseDrawerActivity implements
 
         handler = new Handler();
 
-        user = UserLoginData.getUser(getApplicationContext());
+        user = UbiApp.getInstance().getUser();
 
         Switch wifiDirectSwitch = (Switch) findViewById(R.id.switch_wifi_direct);
 

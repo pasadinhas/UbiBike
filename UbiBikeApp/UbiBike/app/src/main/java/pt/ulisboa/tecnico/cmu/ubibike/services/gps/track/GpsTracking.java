@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmu.ubibike.services.gps;
+package pt.ulisboa.tecnico.cmu.ubibike.services.gps.track;
 
 import android.Manifest;
 import android.content.Context;
@@ -19,8 +19,6 @@ import java.util.Calendar;
 
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Coordinates;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Trajectory;
-import pt.ulisboa.tecnico.cmu.ubibike.services.gps.GpsTrackingService;
-import pt.ulisboa.tecnico.cmu.ubibike.services.gps.IGPSCallback;
 
 
 public class GpsTracking  implements GoogleApiClient.ConnectionCallbacks,

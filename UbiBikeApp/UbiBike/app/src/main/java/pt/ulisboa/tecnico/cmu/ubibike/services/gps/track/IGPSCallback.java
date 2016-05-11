@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmu.ubibike.services.gps;
+package pt.ulisboa.tecnico.cmu.ubibike.services.gps.track;
 
 /**
  * Created by André on 07-05-2016.

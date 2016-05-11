@@ -40,6 +40,7 @@ import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocket;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketManager;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketServer;
 import pt.ulisboa.tecnico.cmu.ubibike.R;
+import pt.ulisboa.tecnico.cmu.ubibike.UbiApp;
 import pt.ulisboa.tecnico.cmu.ubibike.activities.ChatActivity;
 import pt.ulisboa.tecnico.cmu.ubibike.data.BikeStatusData;
 import pt.ulisboa.tecnico.cmu.ubibike.data.DatabaseManager;
@@ -233,7 +234,7 @@ public class WifiDirectService extends Service implements
     @Override
     public void onPeersAvailable(SimWifiP2pDeviceList peers) {
 
-        if (UserLoginData.getUser(this).hasBike()) {
+        if (UbiApp.getInstance().getUser().hasBike()) {
             boolean bikeIsNear = false;
             boolean leftStation = GeofenceData.getInstance().isInStation();
 
@@ -241,7 +242,7 @@ public class WifiDirectService extends Service implements
                 if (device.deviceName.startsWith("Bike")) {
                     Log.d(TAG, "onPeersAvailable: seen bike: " + device.deviceName);
 
-                    if (device.deviceName.substring(4).equals(UserLoginData.getUser(this).getReservedBike().getIdentifier())){
+                    if (device.deviceName.substring(4).equals(UbiApp.getInstance().getUser().getReservedBike().getIdentifier())){
                         bikeIsNear = true;
                         break;
                     }
@@ -297,7 +298,7 @@ public class WifiDirectService extends Service implements
 
     private void registerPoints(final String username, final String pointsStr) {
         long points = Long.parseLong(pointsStr);
-        User user = UserLoginData.getUser(this);
+        User user = UbiApp.getInstance().getUser();
         user.addUserPoints(points);
 
         UserLoginData.setUser(this, user);

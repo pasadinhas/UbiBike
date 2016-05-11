@@ -1,6 +1,7 @@
 package pt.ulisboa.tecnico.cmu.ubibike.activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -12,9 +13,12 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 
+import org.w3c.dom.Text;
+
 import java.util.Date;
 
 import pt.ulisboa.tecnico.cmu.ubibike.R;
+import pt.ulisboa.tecnico.cmu.ubibike.UbiApp;
 import pt.ulisboa.tecnico.cmu.ubibike.data.UserLoginData;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Trajectory;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
@@ -27,6 +31,12 @@ import retrofit2.Response;
 
 public class UserPresentationActivity extends BaseDrawerActivity implements OnMapReadyCallback {
 
+    protected TextView pointsTextView;
+    protected TextView usernameTextView;
+    protected TextView trajectoriesTextView;
+    protected Spinner trajectoriesSpinner;
+    protected View map;
+
     protected User user;
 
     @Override
@@ -38,40 +48,47 @@ public class UserPresentationActivity extends BaseDrawerActivity implements OnMa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_presentation);
-    }
+        trajectoriesSpinner = (Spinner)findViewById(R.id.spinner_trajectories);
+        trajectoriesTextView = (TextView)findViewById(R.id.textView_trajectories);
+        map = findViewById(R.id.home_map);
+        usernameTextView = (TextView)findViewById(R.id.username_textView);
+        pointsTextView = (TextView)findViewById(R.id.points_textView);
 
-    @Override
-    protected void onResume() {
-        super.onResume();
         user = (User)getIntent().getSerializableExtra("User");
         if (user == null){
-            user = UserLoginData.getUser(getBaseContext());
+            user = UbiApp.getInstance().getUser();
             if(user == null) {
                 finish();
                 return;
             }
         }
-        ((TextView)findViewById(R.id.username_textView)).setText(user.getUsername());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         String points = getString(R.string.points_text_view).concat(user.getPoints() + "");
-        ((TextView)findViewById(R.id.points_textView)).setText(points);
+        usernameTextView.setText(user.getUsername());
+        pointsTextView.setText(points);
         if(!user.getAllTrajectories().isEmpty()) {
             MapFragment mapFragment = (MapFragment)getFragmentManager().findFragmentById(R.id.home_map);
             mapFragment.getMapAsync(this);
+            trajectoriesSpinner.setAdapter(new ArrayAdapter<>(this, R.layout.custom_row, R.id.information,
+                    user.getAllTrajectories()));
+            trajectoriesSpinner.setVisibility(View.VISIBLE);
+            trajectoriesTextView.setVisibility(View.VISIBLE);
+            map.setVisibility(View.VISIBLE);
         }
         else{
-            findViewById(R.id.spinner_trajectories).setVisibility(View.GONE);
-            findViewById(R.id.textView_trajectories).setVisibility(View.GONE);
-            findViewById(R.id.home_map).setVisibility(View.GONE);
+            trajectoriesSpinner.setVisibility(View.GONE);
+            trajectoriesTextView.setVisibility(View.GONE);
+            map.setVisibility(View.GONE);
         }
     }
 
     @Override
     public void onMapReady(final GoogleMap googleMap) {
-        //Populate Trajectories Spinner
-        Spinner trajectories = (Spinner) findViewById(R.id.spinner_trajectories);
-        trajectories.setAdapter(new ArrayAdapter<>(this,R.layout.custom_row,R.id.information,
-                user.getAllTrajectories()));
-        trajectories.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        trajectoriesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Trajectory traj = (Trajectory) parent.getItemAtPosition(position);
@@ -80,9 +97,11 @@ public class UserPresentationActivity extends BaseDrawerActivity implements OnMa
                 } else {
                     findViewById(R.id.home_map).setVisibility(View.VISIBLE);
                     MapTrajectoryDrawing mapDrawing = new MapTrajectoryDrawing(googleMap,traj,getBaseContext());
+                    mapDrawing.clearMap();
                     mapDrawing.drawInitialMarker();
                     mapDrawing.drawTrajectory();
                     mapDrawing.drawLastMarker();
+                    mapDrawing.moveToBegining();
                 }
             }
             @Override

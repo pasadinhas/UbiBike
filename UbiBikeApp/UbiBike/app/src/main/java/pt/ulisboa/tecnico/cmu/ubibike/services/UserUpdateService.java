@@ -1,6 +1,5 @@
 package pt.ulisboa.tecnico.cmu.ubibike.services;
 
-
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,8 +9,10 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import okhttp3.ResponseBody;
+import pt.ulisboa.tecnico.cmu.ubibike.UbiApp;
 import pt.ulisboa.tecnico.cmu.ubibike.data.UserLoginData;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UserServiceREST;
@@ -27,11 +28,16 @@ public class UserUpdateService extends Service {
 
     public static final String SYNCHRONIZE_USER_INTENT = "pt.ulisboa.tecnico.cmu.ubibike.services.SYNCUSER";
 
+    private static boolean RUNNING = false;
+
+    public static boolean isRunning() { return RUNNING; }
+
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+        Log.d("RECEIVER","INTENT RECEIVED");
         if(isConnected(getBaseContext())){
-            User user = UserLoginData.getUser(getBaseContext());
+            User user = UbiApp.getInstance().getUser();
             if(user != null && user.getIsDirty()){
                 updateUserRemotely(user);
             }
@@ -42,10 +48,17 @@ public class UserUpdateService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        RUNNING = true;
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
         intentFilter.addAction(SYNCHRONIZE_USER_INTENT);
         registerReceiver(receiver, intentFilter);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        RUNNING = false;
     }
 
     @Nullable
