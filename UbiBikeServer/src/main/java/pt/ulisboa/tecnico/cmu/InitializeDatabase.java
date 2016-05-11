@@ -29,7 +29,7 @@ public class InitializeDatabase {
 	public void populateDatabase(){
 		System.out.println("###### Initializing BD ######");
 		Calendar c = Calendar.getInstance();
-		c.set(Calendar.MILLISECOND, 0);
+		c.set(Calendar.MILLISECOND,0);
 		c.set(2015, 11, 6, 18, 11, 32);
 		Date d = c.getTime();
 		Trajectory t = new Trajectory(d);

@@ -29,9 +29,9 @@ public class Trajectory implements Comparable<Trajectory>{
 	private long trajId;
 	
 	@JsonView(JsonViews.LowDetailed.class)
-	@JsonDeserialize(using = JsonDateDeserializer.class)
-	@JsonSerialize(using = JsonDateSerializer.class)
 	@Column
+	@JsonSerialize(using = JsonDateSerializer.class)
+	@JsonDeserialize(using = JsonDateDeserializer.class)
 	private Date date;
 	
 	@JsonView(JsonViews.HighlyDetailed.class)
@@ -63,8 +63,8 @@ public class Trajectory implements Comparable<Trajectory>{
 	
 	@Override
 	public boolean equals(Object o){
-		Trajectory t = (Trajectory)o;
-		return (date.compareTo(t.getDate()) == 0);
+		Trajectory t  = (Trajectory) o;
+		return (this.getDate().compareTo(t.getDate()) == 0);
 	}
 
 	@Override
