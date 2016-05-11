@@ -48,6 +48,7 @@ import pt.ulisboa.tecnico.cmu.ubibike.data.GeofenceData;
 import pt.ulisboa.tecnico.cmu.ubibike.data.UserLoginData;
 import pt.ulisboa.tecnico.cmu.ubibike.data.WifiDirectData;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
+import pt.ulisboa.tecnico.cmu.ubibike.services.gps.track.GpsTrackingService;
 import pt.ulisboa.tecnico.cmu.ubibike.wifidirect.UbiBroadcastReceiver;
 
 import static android.content.Intent.getIntent;
@@ -235,6 +236,7 @@ public class WifiDirectService extends Service implements
     public void onPeersAvailable(SimWifiP2pDeviceList peers) {
 
         if (UbiApp.getInstance().getUser().hasBike()) {
+            boolean previousStateOfIsNear = BikeStatusData.getIsNear(this);
             boolean bikeIsNear = false;
             boolean leftStation = GeofenceData.getInstance().isInStation();
 
@@ -256,19 +258,34 @@ public class WifiDirectService extends Service implements
             }
             Log.d(TAG, "onPeersAvailable: bike was near: " + BikeStatusData.getIsNear(this) + " left station: " + leftStation
                     + " bike IS near: " + bikeIsNear);
-            if (BikeStatusData.getIsNear(this) && leftStation && !bikeIsNear) {
+            if (previousStateOfIsNear && leftStation && !bikeIsNear) {
                 Log.d(TAG, "onPeersAvailable: booked for removal");
                 processDropOff();
             }
+            if (previousStateOfIsNear != bikeIsNear) {
+                if (bikeIsNear) {
+                    startService(new Intent(getBaseContext(), GpsTrackingService.class));
+                    if ( ! BikeStatusData.isPicked(this)) {
+                        processPickUp();
+                    }
+                } else {
+                    stopService(new Intent(getBaseContext(), GpsTrackingService.class));
+                }
+            }
             BikeStatusData.setIsNear(this, bikeIsNear);
         }
+    }
+
+    private void processPickUp() {
+        BikeStatusData.setIsPicked(this, true);
+        //TODO remote call
     }
 
     private void processDropOff() {
         User user = UserLoginData.getUser(this);
         user.dropBike();
         UserLoginData.setUser(this, user);
-        //TODO put bike in station
+        //TODO remote call
     }
 
     private boolean manageSationFencing(String deviceName) {

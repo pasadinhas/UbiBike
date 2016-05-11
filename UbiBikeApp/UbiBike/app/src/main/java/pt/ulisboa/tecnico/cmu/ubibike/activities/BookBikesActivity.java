@@ -17,6 +17,7 @@ import java.util.Map;
 
 import pt.ulisboa.tecnico.cmu.ubibike.R;
 import pt.ulisboa.tecnico.cmu.ubibike.UbiApp;
+import pt.ulisboa.tecnico.cmu.ubibike.data.BikeStatusData;
 import pt.ulisboa.tecnico.cmu.ubibike.data.UserLoginData;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Bike;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Station;
@@ -93,7 +94,9 @@ public class BookBikesActivity extends BaseDrawerActivity implements OnMapReadyC
                 if (response.code() == UtilREST.HTTP_OK) {
                     Toast.makeText(getBaseContext(), getResources().getString(R.string.booking_success_toast) + " " + markers.get(selectedMarker).getIdentifier(), Toast.LENGTH_LONG).show();
                     user.setReservedBike(response.body());
-                    UserLoginData.setUser(getBaseContext(),user);
+                    UserLoginData.setUser(getBaseContext(), user);
+                    BikeStatusData.setIsNear(getBaseContext(), false);
+                    BikeStatusData.setIsPicked(getBaseContext(), false);
                     station.removeBike(markers.get(selectedMarker));
                     selectedMarker.remove();
                     markers.remove(selectedMarker);
