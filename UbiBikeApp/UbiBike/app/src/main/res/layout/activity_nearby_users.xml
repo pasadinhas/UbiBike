@@ -16,6 +16,13 @@
             android:text="Messages"
             android:id="@+id/switch_wifi_direct" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Searching Peers"
+            android:id="@+id/textViewSearching" />
+
     </LinearLayout>
 
     <ListView

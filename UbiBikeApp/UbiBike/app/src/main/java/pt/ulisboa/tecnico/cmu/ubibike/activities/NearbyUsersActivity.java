@@ -88,29 +88,6 @@ public class NearbyUsersActivity extends BaseDrawerActivity implements
 
         wifiDirectSwitch.setVisibility(View.INVISIBLE);
 
-        if (WifiDirectData.getIsEnabled(this)) {
-            wifiDirectSwitch.setChecked(true);
-        } else {
-            wifiDirectSwitch.setChecked(false);
-        }
-
-        wifiDirectSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    Intent serviceIntent = new Intent(getBaseContext(), WifiDirectService.class);
-                    serviceIntent.putExtra("USERNAME", user.getUsername());
-                    startService(serviceIntent);
-                    WifiDirectData.setIsEnabled(getApplicationContext(), true);
-                } else {
-                    stopService(new Intent(getBaseContext(), WifiDirectService.class));
-                    WifiDirectData.setIsEnabled(getApplicationContext(), false);
-                    DatabaseManager.getInstance(getBaseContext()).clearPeers();
-                    peerIPbyNames.clear();
-                }
-            }
-        });
-
         ListView listView = (ListView)findViewById(R.id.nearby_listView);
         listView.setAdapter(new ArrayAdapter<String>
                 (this, android.R.layout.simple_list_item_1, new ArrayList<String>()));
@@ -172,6 +149,14 @@ public class NearbyUsersActivity extends BaseDrawerActivity implements
             peerIPbyNames.clear();
             for (Pair<String, String> peerAndIp : peers) {
                 peerIPbyNames.put(peerAndIp.second, peerAndIp.first);
+            }
+
+            TextView textView = (TextView) findViewById(R.id.textViewSearching);
+
+            if (peerIPbyNames.isEmpty()) {
+                textView.setVisibility(View.VISIBLE);
+            } else {
+                textView.setVisibility(View.INVISIBLE);
             }
 
             listView.setAdapter(new ArrayAdapter<>(getBaseContext(),
