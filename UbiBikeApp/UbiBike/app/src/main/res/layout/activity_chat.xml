@@ -16,7 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Points"
+            android:hint="Points"
             android:id="@+id/chatPointsInput"
             android:inputType="number" />
 
@@ -36,6 +36,9 @@
         android:inputType="none"
         android:ems="10"
         android:id="@+id/chatTextShow"
+        android:maxLines = "999999999"
+        android:scrollbars = "vertical"
+        android:gravity="bottom"
         android:layout_weight="0.90" />
 
     <LinearLayout

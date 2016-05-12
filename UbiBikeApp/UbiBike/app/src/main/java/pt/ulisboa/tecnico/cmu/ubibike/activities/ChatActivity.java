@@ -7,11 +7,14 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -45,6 +48,22 @@ public class ChatActivity extends BaseDrawerActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
+        TextView chatShowView = (TextView) findViewById(R.id.chatTextShow);
+        chatShowView.setMovementMethod(new ScrollingMovementMethod());
+
+
+
+        final TextView pointsView = (TextView) findViewById(R.id.chatPointsInput);
+
+        pointsView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus)
+                    pointsView.setHint("");
+                else
+                    pointsView.setHint("Points");
+            }
+        });
+
         otherIP = (String) getIntent().getSerializableExtra("OtherIP");
         otherUsername = (String) getIntent().getSerializableExtra("OtherUsername");
         username = UbiApp.getInstance().getUser().getUsername();
@@ -65,25 +84,31 @@ public class ChatActivity extends BaseDrawerActivity {
     }
 
     public void sendMessage(View view) {
-        String input = ((TextView) findViewById(R.id.chatTextInput)).getText().toString();
+        TextView inputView = (TextView) findViewById(R.id.chatTextInput);
+        String input = inputView.getText().toString();
+        if (input == null || input.equals("")){
+            return;
+        }
+        inputView.setText("");
         String content = "[Protocol]MESSAGE " + username + " " + input;
         new SendMessageTask().executeOnExecutor(
                 AsyncTask.THREAD_POOL_EXECUTOR,
                 content, otherIP);
         DatabaseManager.getInstance(this).insertMessage(username, input);
         updateChat();
+
     }
 
     public void updateChat() {
         Cursor res =  DatabaseManager.getInstance(this).getMessagesSinceTime(username, otherUsername, lastUpdated);
         lastUpdated = System.currentTimeMillis();
         Log.d(TAG, "updateChat: " + res.getCount());
+        final TextView output = (TextView) findViewById(R.id.chatTextShow);
         if(res.moveToFirst()) {
             do {
                 String sender = res.getString(res.getColumnIndex(DatabaseManager.USERNAME));
                 String content = res.getString(res.getColumnIndex(DatabaseManager.CONTENT));
                 final String line = "\n\n" + (sender.equals(username) ? "Me" : sender) + ": " + content;
-                final TextView output = (TextView) findViewById(R.id.chatTextShow);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -93,6 +118,15 @@ public class ChatActivity extends BaseDrawerActivity {
 
             } while (res.moveToNext());
         }
+        /*
+        final int scrollAmount = output.getLayout().getLineTop(output.getLineCount()) - output.getHeight();
+        // if there is no need to scroll, scrollAmount will be <=0
+        if (scrollAmount > 0) {
+            output.scrollTo(0, scrollAmount);
+        }
+        else{
+            output.scrollTo(0, 0);
+        }*/
     }
 
     public void sendPoints(View view) {
@@ -103,6 +137,9 @@ public class ChatActivity extends BaseDrawerActivity {
         }
 
         Long input = Long.parseLong(textView.getText().toString());
+
+        textView.setText("");
+        textView.setHint("Points");
 
         if (input <= 0) {
             Toast.makeText(this, "Please a positive number of points to be sent", Toast.LENGTH_SHORT).show();

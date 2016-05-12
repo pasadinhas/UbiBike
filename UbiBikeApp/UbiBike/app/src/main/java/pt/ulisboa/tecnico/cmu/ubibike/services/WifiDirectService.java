@@ -27,6 +27,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -43,12 +44,16 @@ import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketServer;
 import pt.ulisboa.tecnico.cmu.ubibike.R;
 import pt.ulisboa.tecnico.cmu.ubibike.UbiApp;
 import pt.ulisboa.tecnico.cmu.ubibike.activities.ChatActivity;
+import pt.ulisboa.tecnico.cmu.ubibike.activities.MyBikeActiviy;
+import pt.ulisboa.tecnico.cmu.ubibike.activities.NearbyUsersActivity;
 import pt.ulisboa.tecnico.cmu.ubibike.data.BikeStatusData;
 import pt.ulisboa.tecnico.cmu.ubibike.data.DatabaseManager;
 import pt.ulisboa.tecnico.cmu.ubibike.data.GeofenceData;
+import pt.ulisboa.tecnico.cmu.ubibike.data.StationsData;
 import pt.ulisboa.tecnico.cmu.ubibike.data.UserLoginData;
 import pt.ulisboa.tecnico.cmu.ubibike.data.WifiDirectData;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Coordinates;
+import pt.ulisboa.tecnico.cmu.ubibike.domain.Station;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Trajectory;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UserServiceREST;
@@ -82,6 +87,8 @@ public class WifiDirectService extends Service implements
     private String deviceName = null;
     private Pair<String, String> ownID = new Pair<>(null, null);
 
+    private MyBikeActiviy bikeListener = null;
+
     private static WifiDirectService instance = null;
 
     public WifiDirectService() {
@@ -99,6 +106,8 @@ public class WifiDirectService extends Service implements
     public void setChatListener(ChatActivity listener) {
         chatListener = listener;
     }
+
+    public void setBikeListener(MyBikeActiviy listener) {bikeListener = listener;}
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -247,6 +256,7 @@ public class WifiDirectService extends Service implements
             boolean previousStateOfIsNear = BikeStatusData.getIsNear(this);
             boolean bikeIsNear = false;
             boolean leftStation = GeofenceData.getInstance().isInStation();
+            String stationName = GeofenceData.getInstance().getCurrentStation();
 
             for (SimWifiP2pDevice device : peers.getDeviceList()) {
                 if (device.deviceName.startsWith("Bike")) {
@@ -254,12 +264,10 @@ public class WifiDirectService extends Service implements
 
                     if (device.deviceName.substring(4).equals(UbiApp.getInstance().getUser().getReservedBike().getIdentifier())){
                         bikeIsNear = true;
-                        break;
                     }
                 }
                 if (device.deviceName.startsWith("Station")) {
                     Log.d(TAG, "onPeersAvailable: seen station: " + device.deviceName + " and is on a station: " + leftStation);
-
                     leftStation = manageSationFencing(device.deviceName);
                 }
 
@@ -268,7 +276,7 @@ public class WifiDirectService extends Service implements
                     + " bike IS near: " + bikeIsNear);
             if (previousStateOfIsNear && leftStation && !bikeIsNear) {
                 Log.d(TAG, "onPeersAvailable: booked for removal");
-                processDropOff();
+                processDropOff(stationName);
             }
             if (previousStateOfIsNear != bikeIsNear) {
                 if (bikeIsNear) {
@@ -282,19 +290,23 @@ public class WifiDirectService extends Service implements
             }
             BikeStatusData.setIsNear(this, bikeIsNear);
         }
+        if (bikeListener != null) {
+            bikeListener.update();
+        }
     }
 
     private void processPickUp() {
         BikeStatusData.setIsPicked(this, true);
         User user = UbiApp.getInstance().getUser();
         UserServiceREST service = UtilREST.getRetrofit().create(UserServiceREST.class);
-        Call<ResponseBody> call = service.pickBike(user.getUsername(),user.getReservedBike().getIdentifier());
+        Call<ResponseBody> call = service.pickBike(user.getUsername(), user.getReservedBike().getIdentifier());
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 Toast.makeText(getBaseContext(), "Bike picked",
                         Toast.LENGTH_LONG).show();
             }
+
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Toast.makeText(getBaseContext(), R.string.impossible_connect_server_toast,
@@ -303,18 +315,37 @@ public class WifiDirectService extends Service implements
         });
     }
 
-    private void processDropOff() {
+    private void processDropOff(String stationName) {
+        Log.d(TAG, "processDropOff: Station Name:" + stationName);
         User user = UbiApp.getInstance().getUser();
         String bikeId = user.getReservedBike().getIdentifier();
         user.dropBike();
         UserLoginData.setUser(this, user);
 
         Trajectory t = user.getAllTrajectories().get(0);
-        Coordinates c = t.getTrajectory().get(t.getTrajectory().size() - 3);
+        Coordinates c = null;
+        if (t.getTrajectory().size() > 3) {
+            c = t.getTrajectory().get(t.getTrajectory().size() - 3);
+        } else {
+            Station currentStation = null;
+
+            for (Station station : StationsData.getStations(this)) {
+                Log.d(TAG, "processDropOff: iterating station:" + station.getName());
+                if (station.getName().equals(stationName)) {
+                    currentStation = station;
+                }
+            }
+
+            Random r = new Random();
+            double randomValue = -0.0002 + (0.0003 + 0.0002) * r.nextDouble();
+            c = currentStation.getPosition();
+            c.setLatitude(c.getLatitude()+randomValue);
+            c.setLongitude(c.getLongitude()+randomValue);
+        }
 
         UserServiceREST service = UtilREST.getRetrofit().create(UserServiceREST.class);
-        Call<ResponseBody> call = service.dropBike(UtilREST.ACCEPT_HEADER,UtilREST.CONTENT_TYPE_HEADER,
-                bikeId,"TODO STATION NAME",c);
+        Call<ResponseBody> call = service.dropBike(UtilREST.ACCEPT_HEADER, UtilREST.CONTENT_TYPE_HEADER,
+                bikeId, stationName, c);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -331,7 +362,7 @@ public class WifiDirectService extends Service implements
     }
 
     private boolean manageSationFencing(String deviceName) {
-        String stationName = deviceName.substring(6);
+        String stationName = deviceName.substring(7);
         if (GeofenceData.getInstance().isInStation()) {
             if (GeofenceData.getInstance().getCurrentStation().equals(stationName)) {
                 return false;
