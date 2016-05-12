@@ -5,6 +5,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import pt.ulisboa.tecnico.cmu.configuration.InitializeDatabase;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.TrajectoryAlreadyExistException;
 
 @Component

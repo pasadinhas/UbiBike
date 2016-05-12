@@ -20,7 +20,7 @@ import pt.ulisboa.tecnico.cmu.domain.exceptions.TrajectoryAlreadyExistException;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.TrajectoryDoesntExistException;
 
 @Entity
-public class User {
+public class User implements Comparable<User>{
 	
 	@JsonView(JsonViews.LowDetailed.class)
 	@Id
@@ -109,6 +109,12 @@ public class User {
 			}
 		}
 		trajectories.add(t);
+	}
+
+	
+	@Override
+	public int compareTo(User o) {
+		return username.compareTo(o.getUsername());
 	}
 	
 }

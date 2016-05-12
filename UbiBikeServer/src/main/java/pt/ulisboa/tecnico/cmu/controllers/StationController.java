@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.cmu.controllers;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,9 @@ public class StationController {
 	@JsonView(JsonViews.LowDetailed.class)
 	@RequestMapping(value="/ubibike/station/low",method = RequestMethod.GET)
 	public ResponseEntity<List<Station>> getStationsWithAvailableBikesLowDetail(){
-		return new ResponseEntity<List<Station>>(stationsServices.getStationsWithAvailableBikes(),HttpStatus.OK);
+		List<Station> stations = (List<Station>) stationsServices.getStationsWithAvailableBikes();
+		Collections.sort(stations);
+		return new ResponseEntity<List<Station>>(stations,HttpStatus.OK);
 	}
 	
 	/**
@@ -38,6 +41,8 @@ public class StationController {
 	@JsonView(JsonViews.HighlyDetailed.class)
 	@RequestMapping(value="/ubibike/station/high",method = RequestMethod.GET)
 	public ResponseEntity<List<Station>> getStationsWithAvailableBikesHighDetail(){
-		return new ResponseEntity<List<Station>>(stationsServices.getStationsWithAvailableBikes(),HttpStatus.OK);
+		List<Station> stations = (List<Station>) stationsServices.getStationsWithAvailableBikes();
+		Collections.sort(stations);
+		return new ResponseEntity<List<Station>>(stations,HttpStatus.OK);
 	}
 }

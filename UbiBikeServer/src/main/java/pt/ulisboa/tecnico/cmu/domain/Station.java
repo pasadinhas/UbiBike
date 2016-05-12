@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import pt.ulisboa.tecnico.cmu.controllers.util.JsonViews;
 
 @Entity
-public class Station {
+public class Station implements Comparable<Station>{
 
 	@JsonView(JsonViews.LowDetailed.class)
 	@Id
@@ -90,6 +90,12 @@ public class Station {
 			}
 		}
 		return false;
+	}
+
+	
+	@Override
+	public int compareTo(Station o) {
+		return name.compareTo(o.getName());
 	}
 	
 }

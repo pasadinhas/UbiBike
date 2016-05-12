@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UbiBikeConfiguration>
+	<users>
+		<user username="Admin" password="root" points="1111" />
+		<user username="Andre" password="123" points="0" />
+		<user username="António" password="123" points="0" />
+		<user username="Alexandre" password="123" points="0" />
+		<user username="Álvaro" password="123" points="0" />
+		<user username="Bruno" password="123" points="0" />
+	</users>
+	<stations>
+		<station name="Carnide">
+			<coordinate latitude="38.770018" longitude="-9.204704" />
+			<bikes>
+				<bike id="1">
+					<coordinate latitude="38.769836" longitude="-9.204510" />
+				</bike>
+			</bikes>
+		</station>
+	</stations>
+</UbiBikeConfiguration>

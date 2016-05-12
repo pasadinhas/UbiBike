@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmu.persistence.repositories;
+package pt.ulisboa.tecnico.cmu.persistence;
 
 import org.springframework.data.repository.CrudRepository;
 

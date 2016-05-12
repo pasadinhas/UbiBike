@@ -36,8 +36,7 @@ public interface UserServiceREST {
     Call<List<User>> getAllUsers(@Path("usernamePrefix") String usernamePrefix);
 
     @GET("user/{username}/trajectory/{date}")
-    Call<Trajectory> getUserTrajectory(@Path("username") String username,
-                                 @Path("date") long date);
+    Call<Trajectory> getUserTrajectory(@Path("username") String username, @Path("date") long date);
 
     @POST("user/{username}/points/{points}")
     Call<ResponseBody> synchronizeUser(@Header(UtilREST.ACCEPT_HEADER) String acceptValue,

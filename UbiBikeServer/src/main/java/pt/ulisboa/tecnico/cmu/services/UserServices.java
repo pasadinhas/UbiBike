@@ -13,16 +13,18 @@ import pt.ulisboa.tecnico.cmu.domain.Coordinates;
 import pt.ulisboa.tecnico.cmu.domain.Station;
 import pt.ulisboa.tecnico.cmu.domain.Trajectory;
 import pt.ulisboa.tecnico.cmu.domain.User;
+import pt.ulisboa.tecnico.cmu.domain.exceptions.BikeAlreadyBookedException;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.BikeDoesntExistException;
+import pt.ulisboa.tecnico.cmu.domain.exceptions.CantBookMoreBikesException;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.InvalidLoginException;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.StationDoesntExistException;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.TrajectoryAlreadyExistException;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.TrajectoryDoesntExistException;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.UserAlreadyExistException;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.UserDoesntExistException;
-import pt.ulisboa.tecnico.cmu.persistence.repositories.BikeRepository;
-import pt.ulisboa.tecnico.cmu.persistence.repositories.StationRepository;
-import pt.ulisboa.tecnico.cmu.persistence.repositories.UserRepository;
+import pt.ulisboa.tecnico.cmu.persistence.BikeRepository;
+import pt.ulisboa.tecnico.cmu.persistence.StationRepository;
+import pt.ulisboa.tecnico.cmu.persistence.UserRepository;
 
 @Service
 public class UserServices {
@@ -122,15 +124,22 @@ public class UserServices {
 		}
 	}
 	
-	public Bike bookABike(String username,String bikeId) throws BikeDoesntExistException{
+	public Bike bookABike(String username,String bikeId) throws BikeDoesntExistException,
+			BikeAlreadyBookedException, CantBookMoreBikesException{
 		Bike bike = getBikeFromRepository(bikeId);
 		User user = userRepository.findOne(username);
-		user.setReservedBike(bike);
-		bike.setBooked(true);
-		bike.setUser(user);
-		bikeRepository.save(bike);
-		userRepository.save(user);
-		return bike;
+		if(user.getReservedBike() != null){
+			throw new CantBookMoreBikesException();
+		}
+		if(!bike.getBooked()){
+			user.setReservedBike(bike);
+			bike.setBooked(true);
+			bike.setUser(user);
+			bikeRepository.save(bike);
+			userRepository.save(user);
+			return bike;
+		}
+		throw new BikeAlreadyBookedException();
 	}
 	
 	/*========================= Repository Access Methods =========================== */

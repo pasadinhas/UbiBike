@@ -1,6 +1,7 @@
 package pt.ulisboa.tecnico.cmu.controllers;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +25,9 @@ import pt.ulisboa.tecnico.cmu.domain.Bike;
 import pt.ulisboa.tecnico.cmu.domain.Coordinates;
 import pt.ulisboa.tecnico.cmu.domain.Trajectory;
 import pt.ulisboa.tecnico.cmu.domain.User;
+import pt.ulisboa.tecnico.cmu.domain.exceptions.BikeAlreadyBookedException;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.BikeDoesntExistException;
+import pt.ulisboa.tecnico.cmu.domain.exceptions.CantBookMoreBikesException;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.InvalidLoginException;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.StationDoesntExistException;
 import pt.ulisboa.tecnico.cmu.domain.exceptions.TrajectoryAlreadyExistException;
@@ -80,13 +83,23 @@ public class UserController {
 		return new ResponseEntity<Error>(new Error(404,ex.getLocalizedMessage()),HttpStatus.NOT_FOUND);
 	}
 	
-	/* ============= RESTful services =============== */
+	@ExceptionHandler(BikeAlreadyBookedException.class)
+	private ResponseEntity<Error> handleBikeAlreadyBooked(BikeAlreadyBookedException ex, HttpServletRequest req){
+		return new ResponseEntity<Error>(new Error(409,ex.getLocalizedMessage()),HttpStatus.CONFLICT);
+	}
+	
+	@ExceptionHandler(CantBookMoreBikesException.class)
+	private ResponseEntity<Error> handleCantBookMoreBikes(CantBookMoreBikesException ex, HttpServletRequest req){
+		return new ResponseEntity<Error>(new Error(409,ex.getLocalizedMessage()),HttpStatus.CONFLICT);
+	}
+	
+	/* ================================= RESTful services ====================================== */
 	
 	/**
 	 * Login method for authenticate user.
-	 * @param username
-	 * @param password
-	 * @return
+	 * @param username - User's username
+	 * @param password - User's password
+	 * @return User object
 	 * @throws UserDoesntExistException
 	 * @throws InvalidLoginException
 	 */
@@ -101,8 +114,8 @@ public class UserController {
 	
 	/**
 	 * Create a user in the system.
-	 * @param username
-	 * @param password
+	 * @param username - User's username
+	 * @param password - User's password
 	 * @throws UserAlreadyExistException
 	 */
 	@RequestMapping(value = "/ubibike/user/{username}",method=RequestMethod.POST)
@@ -127,7 +140,7 @@ public class UserController {
 	/**
 	 * Get User information according (with partial information).
 	 * @param username
-	 * @return
+	 * @return User object with MEDIUM level of detail
 	 * @throws UserDoesntExistException
 	 */
 	@JsonView(JsonViews.MediumDetailed.class)
@@ -153,13 +166,14 @@ public class UserController {
 	
 	/**
 	 * Get all Users given an username prefix.
-	 * @param usernamePrefix
-	 * @return
+	 * @param usernamePrefix - Username's prefix we want to search.
+	 * @return User object with LOW level of detailed
 	 */
 	@JsonView(JsonViews.LowDetailed.class)
 	@RequestMapping(value = "/ubibike/users/{usernamePrefix}",method=RequestMethod.GET)
-	public ResponseEntity<Collection<User>> getAllUsernames(@PathVariable String usernamePrefix){
+	public ResponseEntity<Collection<User>> getAllUsers(@PathVariable String usernamePrefix){
 		Collection<User> users = userServices.getUsersByUsernamePrefix(usernamePrefix);
+		Collections.sort((List<User>) users);
 		return new ResponseEntity<Collection<User>>(users,HttpStatus.OK);
 	}
 	
@@ -172,9 +186,8 @@ public class UserController {
 	 * @throws TrajectoryDoesntExistException
 	 */
 	@RequestMapping(value = "/ubibike/user/{username}/trajectory/{date}", method = RequestMethod.GET)
-	public ResponseEntity<Trajectory> getUserTrajectory(
-			@PathVariable String username,
-			@PathVariable long date) throws UserDoesntExistException, TrajectoryDoesntExistException{
+	public ResponseEntity<Trajectory> getUserTrajectory(@PathVariable String username, @PathVariable long date) 
+			throws UserDoesntExistException, TrajectoryDoesntExistException{
 		Trajectory t = userServices.getUserTrajectory(username, date);
 		return new ResponseEntity<Trajectory>(t,HttpStatus.OK);
 	}
@@ -192,7 +205,7 @@ public class UserController {
 		userServices.synchronizeUser(username,points,trajectories);
 	}
 	
-	// ######################## Bike Stuff #################################
+	// ############################# Bike Mapper ####################################
 	
 	/**
 	 * Alert when a bike has been picked by a user.
@@ -200,7 +213,7 @@ public class UserController {
 	 * @throws BikeDoesntExistException
 	 */
 	@RequestMapping(value="/ubibike/user/{username}/pick/bike/{id}",method=RequestMethod.PUT)
-	public void userPickBike(@PathVariable String id,
+	public void pickBike(@PathVariable String id,
 			@PathVariable String username) throws BikeDoesntExistException{
 		userServices.bikePicked(username,id);
 	}
@@ -214,7 +227,7 @@ public class UserController {
 	 * @throws StationDoesntExistException 
 	 */
 	@RequestMapping(value="/ubibike/user/drop/bike/{id}/station/{station}",method=RequestMethod.PUT)
-	public void bikePickedOff(@PathVariable String id, @PathVariable String station,
+	public void bikeDropped(@PathVariable String id, @PathVariable String station,
 			@RequestBody Coordinates position) throws BikeDoesntExistException, StationDoesntExistException{
 		userServices.bikeDropped(id,station,position);
 	}
@@ -223,10 +236,12 @@ public class UserController {
 	 * Call when a user book a specific bike.
 	 * @param id - Bike identifier.
 	 * @throws BikeDoesntExistException
+	 * @throws BikeAlreadyBookedException 
+	 * @throws CantBookMoreBikesException 
 	 */
 	@RequestMapping(value="/ubibike/user/{username}/book/bike/{id}",method=RequestMethod.PUT)
-	public ResponseEntity<Bike> bookABike(@PathVariable String id,
-			@PathVariable String username) throws BikeDoesntExistException{
+	public ResponseEntity<Bike> bookABike(@PathVariable String id,@PathVariable String username) 
+			throws BikeDoesntExistException, BikeAlreadyBookedException, CantBookMoreBikesException{
 		Bike bike = userServices.bookABike(username,id);
 		return new ResponseEntity<Bike>(bike,HttpStatus.OK);
 	}
