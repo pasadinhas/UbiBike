@@ -12,11 +12,9 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 import pt.ulisboa.tecnico.cmu.domain.Bike;
 import pt.ulisboa.tecnico.cmu.domain.Coordinates;
 import pt.ulisboa.tecnico.cmu.domain.Station;

@@ -124,6 +124,7 @@ public class UserServices {
 		}
 	}
 	
+	@Transactional
 	public Bike bookABike(String username,String bikeId) throws BikeDoesntExistException,
 			BikeAlreadyBookedException, CantBookMoreBikesException{
 		Bike bike = getBikeFromRepository(bikeId);
