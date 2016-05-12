@@ -56,6 +56,7 @@ public class ReadConfigurationFile {
 						Coordinates coord = new Coordinates(latitude,longitude);
 						traj.addCoordinates(coord);
 					}
+					user.addTrajectory(traj);
 				}
 				userRepo.save(user);
 			}
