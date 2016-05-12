@@ -1,7 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <UbiBikeConfiguration>
 	<users>
-		<user username="Admin" password="root" points="1111" />
+		<user username="Admin" password="root" points="1111" >
+			<trajectory date="1451742632769">
+				<coordinate latitude="38.754212" longitude="-9.144914" />
+				<coordinate latitude="38.754471" longitude="-9.144721" />
+				<coordinate latitude="38.75504" longitude="-9.142897" />
+				<coordinate latitude="38.753701" longitude="-9.142203" />
+				<coordinate latitude="38.753701" longitude="-9.142203" />
+				<coordinate latitude="38.75345" longitude="-9.142938" />
+				<coordinate latitude="38.754212" longitude="-9.144914" />
+			</trajectory>
+			<trajectory date="1449421892769">
+				<coordinate latitude="38.769836" longitude="-9.20451" />
+				<coordinate latitude="38.770108" longitude="-9.204942" />
+				<coordinate latitude="38.770362" longitude="-9.205211" />
+				<coordinate latitude="38.770119" longitude="-9.205608" />
+				<coordinate latitude="38.769316" longitude="-9.205436" />
+				<coordinate latitude="38.769425" longitude="-9.205093" />
+				<coordinate latitude="38.769642" longitude="-9.204707" />
+			</trajectory>
+		</user>
 		<user username="Andre" password="123" points="0" />
 		<user username="António" password="123" points="0" />
 		<user username="Alexandre" password="123" points="0" />
@@ -9,13 +28,32 @@
 		<user username="Bruno" password="123" points="0" />
 	</users>
 	<stations>
-		<station name="Carnide">
-			<coordinate latitude="38.770018" longitude="-9.204704" />
-			<bikes>
-				<bike id="1">
-					<coordinate latitude="38.769836" longitude="-9.204510" />
-				</bike>
-			</bikes>
+		<station name="Carnide" latitude="38.770018" longitude="-9.204704">
+			<bike id="1" latitude="38.769836" longitude="-9.204510"/>
+			<bike id="2" latitude="38.769832" longitude="-9.204973"/>
+		</station>
+		<station name="Alvalade" latitude="38.754120" longitude="-9.144843">
+			<bike id="3" latitude="38.754212" longitude="-9.144914"/>
+			<bike id="5" latitude="38.754206" longitude="-9.145207"/>
+		</station>
+		<station name="Instituto Superior Técnico" latitude="38.737045" longitude="-9.139072">
+			<bike id="4" latitude="38.736976" longitude="-9.139048"/>
+		</station>
+		<station name="Terreiro do Paço" latitude="38.707242" longitude="-9.135710">
+			<bike id="6" latitude="38.707225" longitude="-9.135622"/>
+			<bike id="7" latitude="38.707376" longitude="-9.135735"/>
+			<bike id="8" latitude="38.707179" longitude="-9.135665"/>
+		</station>
+		<station name="Belém" latitude="38.692122" longitude="-9.214856">
+			<bike id="9" latitude="38.692097" longitude="-9.214703"/>
+			<bike id="10" latitude="38.692068" longitude="-9.214896"/>
+		</station>
+		<station name="Aeroporto" latitude="38.767843" longitude="-9.127762">
+			<bike id="11" latitude="38.767751" longitude="-9.127676"/>
+		</station>
+		<station name="Jardim Zoológico" latitude="38.744466" longitude="-9.167980">
+			<bike id="12" latitude="38.744396" longitude="-9.167933"/>
+			<bike id="13" latitude="38.744448" longitude="-9.168054"/>
 		</station>
 	</stations>
 </UbiBikeConfiguration>
