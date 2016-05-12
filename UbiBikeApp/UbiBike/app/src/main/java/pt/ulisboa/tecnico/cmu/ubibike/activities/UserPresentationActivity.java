@@ -82,6 +82,8 @@ public class UserPresentationActivity extends BaseDrawerActivity implements OnMa
 
     @Override
     public void onMapReady(final GoogleMap googleMap) {
+        trajectoriesSpinner.setAdapter(new ArrayAdapter<>(this, R.layout.custom_row,
+                R.id.information, user.getAllTrajectories()));
         trajectoriesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

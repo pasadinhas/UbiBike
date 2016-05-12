@@ -39,6 +39,7 @@ public class UserSynchronizeService extends Service {
         if(isConnected(getBaseContext())){
             User user = UbiApp.getInstance().getUser();
             if(user != null && user.getIsDirty()){
+                Log.d("UPDATING","GOIND UPDATE USER");
                 updateUserRemotely(user);
             }
         }
