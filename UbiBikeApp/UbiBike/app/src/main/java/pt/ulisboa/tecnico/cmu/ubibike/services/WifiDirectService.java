@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import okhttp3.ResponseBody;
 import pt.inesc.termite.wifidirect.SimWifiP2pBroadcast;
 import pt.inesc.termite.wifidirect.SimWifiP2pDevice;
 import pt.inesc.termite.wifidirect.SimWifiP2pDeviceList;
@@ -47,9 +48,16 @@ import pt.ulisboa.tecnico.cmu.ubibike.data.DatabaseManager;
 import pt.ulisboa.tecnico.cmu.ubibike.data.GeofenceData;
 import pt.ulisboa.tecnico.cmu.ubibike.data.UserLoginData;
 import pt.ulisboa.tecnico.cmu.ubibike.data.WifiDirectData;
+import pt.ulisboa.tecnico.cmu.ubibike.domain.Coordinates;
+import pt.ulisboa.tecnico.cmu.ubibike.domain.Trajectory;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
+import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UserServiceREST;
+import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UtilREST;
 import pt.ulisboa.tecnico.cmu.ubibike.services.gps.track.GpsTrackingService;
 import pt.ulisboa.tecnico.cmu.ubibike.wifidirect.UbiBroadcastReceiver;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.content.Intent.getIntent;
 
@@ -278,14 +286,48 @@ public class WifiDirectService extends Service implements
 
     private void processPickUp() {
         BikeStatusData.setIsPicked(this, true);
-        //TODO remote call
+        User user = UbiApp.getInstance().getUser();
+        UserServiceREST service = UtilREST.getRetrofit().create(UserServiceREST.class);
+        Call<ResponseBody> call = service.pickBike(user.getUsername(),user.getReservedBike().getIdentifier());
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Toast.makeText(getBaseContext(), "Bike picked",
+                        Toast.LENGTH_LONG).show();
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(getBaseContext(), R.string.impossible_connect_server_toast,
+                        Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private void processDropOff() {
-        User user = UserLoginData.getUser(this);
+        User user = UbiApp.getInstance().getUser();
+        String bikeId = user.getReservedBike().getIdentifier();
         user.dropBike();
         UserLoginData.setUser(this, user);
-        //TODO remote call
+
+        Trajectory t = user.getAllTrajectories().get(0);
+        Coordinates c = t.getTrajectory().get(t.getTrajectory().size() - 3);
+
+        UserServiceREST service = UtilREST.getRetrofit().create(UserServiceREST.class);
+        Call<ResponseBody> call = service.dropBike(UtilREST.ACCEPT_HEADER,UtilREST.CONTENT_TYPE_HEADER,
+                bikeId,"TODO STATION NAME",c);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Toast.makeText(getBaseContext(), "Bike dropped",
+                        Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(getBaseContext(), R.string.impossible_connect_server_toast,
+                        Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private boolean manageSationFencing(String deviceName) {
