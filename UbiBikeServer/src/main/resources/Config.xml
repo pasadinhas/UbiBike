@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <UbiBikeConfiguration>
 	<users>
-		<user username="Admin" password="root" points="1111" >
+		<user username="Admin" password="root" points="10000" >
 			<trajectory date="1451742632769">
 				<coordinate latitude="38.754212" longitude="-9.144914" />
 				<coordinate latitude="38.754471" longitude="-9.144721" />
@@ -21,11 +21,12 @@
 				<coordinate latitude="38.769642" longitude="-9.204707" />
 			</trajectory>
 		</user>
-		<user username="Andre" password="123" points="0" />
-		<user username="António" password="123" points="0" />
-		<user username="Alexandre" password="123" points="0" />
-		<user username="Álvaro" password="123" points="0" />
-		<user username="Bruno" password="123" points="0" />
+		<user username="Andre" password="123" points="231938238" />
+		<user username="António" password="123" points="9837636" />
+		<user username="Alexandre" password="123" points="34560" />
+		<user username="Álvaro" password="123" points="123244566" />
+		<user username="Bruno" password="123" points="7823123" />
+		<user username="Arnaldo" password="123" points="91231237812"/>
 	</users>
 	<stations>
 		<station name="Carnide" latitude="38.770018" longitude="-9.204704">

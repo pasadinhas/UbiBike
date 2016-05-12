@@ -7,6 +7,7 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -70,6 +71,7 @@ public class GpsTrackingService extends Service implements IGPSCallback {
     public int onStartCommand(Intent intent, int flags, int startId) {
         gpsTracking.connect();
         RUNNING = true;
+        Log.d("[GPS SERVICE]", "STARTED");
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -80,6 +82,7 @@ public class GpsTrackingService extends Service implements IGPSCallback {
         gpsTracking.stopLocationUpdates();
         gpsTracking.disconnect();
         saveTrajectory(gpsTracking.getTrajectory());
+        Log.d("[GPS SERVICE]", "STOPED AND DESTROYED");
     }
 
     @Nullable

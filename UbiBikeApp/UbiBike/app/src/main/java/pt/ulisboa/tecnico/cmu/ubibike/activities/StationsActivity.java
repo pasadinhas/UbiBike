@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.cmu.ubibike.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pt.ulisboa.tecnico.cmu.ubibike.R;
+import pt.ulisboa.tecnico.cmu.ubibike.activities.custom.StationArrayAdapter;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.Station;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.StationServiceREST;
 import pt.ulisboa.tecnico.cmu.ubibike.remote.rest.UtilREST;
@@ -20,6 +22,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class StationsActivity extends BaseDrawerActivity {
+
+    private Activity currentActivity;
 
     protected ListView stationsListView;
 
@@ -34,14 +38,17 @@ public class StationsActivity extends BaseDrawerActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stations);
+        currentActivity = this;
         stationsListView = (ListView)findViewById(R.id.stations_listView);
         stationsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Station station = (Station) parent.getItemAtPosition(position);
-                Intent intent = new Intent(getBaseContext(), BookBikesActivity.class);
-                intent.putExtra("Station", station);
-                startActivity(intent);
+                if(position != 0) { //NOT header
+                    Station station = (Station) parent.getItemAtPosition(position);
+                    Intent intent = new Intent(getBaseContext(), BookBikesActivity.class);
+                    intent.putExtra("Station", station);
+                    startActivity(intent);
+                }
             }
         });
     }
@@ -61,8 +68,11 @@ public class StationsActivity extends BaseDrawerActivity {
             public void onResponse(Call<List<Station>> call, Response<List<Station>> response) {
                 if(response.code() == UtilREST.HTTP_OK){
                     stations = response.body();
-                    stationsListView.setAdapter(new ArrayAdapter<>(getBaseContext(),
-                            R.layout.support_simple_spinner_dropdown_item,stations));
+                    if(stationsListView.getHeaderViewsCount() == 0) {
+                        stationsListView.addHeaderView(getLayoutInflater().inflate(R.layout.custom_header_station, null,false));
+                    }
+                    stationsListView.setAdapter(new StationArrayAdapter(currentActivity,
+                            R.layout.custom_row_station,stations));
                 }
             }
             @Override

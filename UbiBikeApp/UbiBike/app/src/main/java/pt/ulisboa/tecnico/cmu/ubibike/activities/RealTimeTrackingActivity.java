@@ -78,6 +78,7 @@ public class RealTimeTrackingActivity extends BaseDrawerActivity implements IGPS
         if(isRegistered) {
             serviceS.unregisterActivity(this);
             unbindService(mConnection);
+            mConnection = null;
         }
     }
 

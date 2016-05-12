@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="pt.ulisboa.tecnico.cmu.ubibike.activities.BookBikesActivity"
-    android:background="@color/background">
+    android:background="@color/background"
+    android:layout_margin="@dimen/fab_margin">
 
     <fragment
         android:id="@+id/map"
@@ -16,26 +17,28 @@
         android:layout_marginBottom="50dp" />
 
     <TextView
+        android:textColor="@color/title_text"
+        android:textSize="@dimen/title_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/bike_title"
         android:id="@+id/textView"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:textColor="@color/title"
-        android:textSize="@dimen/title" />
+        android:layout_centerHorizontal="true"/>
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:textColor="@color/button_text"
+        android:textSize="@dimen/button_text"
+        android:layout_width="231dp"
+        android:layout_height="35dp"
+        android:background="@drawable/button_shape"
+
         android:text="@string/book_button"
         android:id="@+id/button"
+        android:onClick="clickBookBike"
         android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/textView"
-        android:layout_alignEnd="@+id/textView"
-        android:layout_alignLeft="@+id/textView"
-        android:layout_alignStart="@+id/textView"
-        android:onClick="clickBookBike" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="7dp" />
 
 </RelativeLayout>

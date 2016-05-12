@@ -4,9 +4,11 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="black_overlay">#66000000</color>
-    <!-- Custom -->
-    <color name="login">#34bAA6</color>
-    <color name="background">#DEDEDE</color>
-    <color name="title">#ffffff</color>
+    <!-- My colors -->
+    <color name="hint_text">#E4F7F3</color>
+    <color name="background">#3C9E87</color>
+    <color name="title_text">#E4F7F3</color>
+    <color name="general_text">#E4F7F3</color>
+    <color name="button_text">#E4F7F3</color>
     <color name="drawer">#34bAA6</color>
 </resources>

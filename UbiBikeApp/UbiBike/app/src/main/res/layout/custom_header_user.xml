@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:textSize="@dimen/general_text_medium"
+        android:textColor="@color/general_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="User"
+        android:id="@+id/textView2"
+        android:textStyle="bold" />
+
+    <TextView
+        android:textSize="@dimen/general_text"
+        android:textColor="@color/general_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Points"
+        android:id="@+id/textView3"
+        android:textStyle="bold"
+        android:layout_marginRight="15dp"
+        android:layout_marginEnd="38dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+</RelativeLayout>

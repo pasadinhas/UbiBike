@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     tools:context="pt.ulisboa.tecnico.cmu.ubibike.activities.ChatActivity"
     android:orientation="vertical"
-    android:weightSum="1">
+    android:weightSum="1"
+    android:layout_margin="@dimen/fab_margin">
 
 
     <LinearLayout
@@ -13,6 +14,7 @@
         android:layout_height="wrap_content">
 
         <EditText
+            android:textColor="@color/general_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"

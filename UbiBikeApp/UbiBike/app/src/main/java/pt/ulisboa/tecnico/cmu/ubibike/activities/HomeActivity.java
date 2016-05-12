@@ -23,7 +23,7 @@ public class HomeActivity extends UserPresentationActivity {
     @Override
     public void onMapReady(final GoogleMap googleMap) {
         Log.d("MAP", "MAP READY!!");
-        trajectoriesSpinner.setAdapter(new ArrayAdapter<>(this, R.layout.custom_row,
+        trajectoriesSpinner.setAdapter(new ArrayAdapter<>(this, R.layout.custom_trajectory_row,
                 R.id.information, user.getAllTrajectories()));
         trajectoriesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

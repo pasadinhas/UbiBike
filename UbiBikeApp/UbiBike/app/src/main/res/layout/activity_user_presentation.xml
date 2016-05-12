@@ -1,24 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent"
     tools:context="pt.ulisboa.tecnico.cmu.ubibike.activities.UserPresentationActivity"
-    android:background="@color/background">
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:layout_margin="@dimen/fab_margin">
 
     <TextView
+        android:textColor="@color/general_text"
+        android:textSize="@dimen/general_text_medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Large Text"
         android:id="@+id/username_textView"
-        android:layout_marginTop="20dp"
-        android:layout_alignParentTop="true"
+        android:layout_alignTop="@+id/points_textView"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="false"
-        android:layout_marginLeft="40dp"
-        android:layout_marginStart="46dp" />
+        android:layout_alignParentStart="true" />
 
     <TextView
+        android:textColor="@color/general_text"
+        android:textSize="@dimen/general_text_medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
@@ -49,6 +51,8 @@
         android:layout_marginTop="10dp" />
 
     <TextView
+        android:textColor="@color/general_text"
+        android:textSize="@dimen/general_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"

@@ -93,7 +93,7 @@ public class GpsTracking  implements GoogleApiClient.ConnectionCallbacks,
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.d("COORDINATES","RECEIVED");
+        Log.d("[GPS SERVICE]","Coordinates: " + location.getLatitude()+","+location.getLongitude());
         trajectory.addCoordinate(new Coordinates(location.getLatitude(), location.getLongitude()));
         serviceCallback.setLocation(location.getLatitude(), location.getLongitude());
     }

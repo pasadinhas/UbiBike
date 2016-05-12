@@ -38,7 +38,7 @@ public abstract class BaseDrawerActivity extends Activity {
         String[] drawerItems = getResources().getStringArray(R.array.drawer_items);
         ListView listView = (ListView) findViewById(R.id.left_drawer);
         listView.setAdapter(new ArrayAdapter<>(this,
-                R.layout.support_simple_spinner_dropdown_item, drawerItems));
+                R.layout.custom_text_view, drawerItems));
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

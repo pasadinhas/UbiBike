@@ -35,11 +35,11 @@ public class UserSynchronizeService extends Service {
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-        Log.d("RECEIVER","INTENT RECEIVED");
+        Log.d("[USER SERVICE]","INTENT RECEIVED");
         if(isConnected(getBaseContext())){
             User user = UbiApp.getInstance().getUser();
             if(user != null && user.getIsDirty()){
-                Log.d("UPDATING","GOIND UPDATE USER");
+                Log.d("[USER SERVICE]","GOING UPDATE USER");
                 updateUserRemotely(user);
             }
         }
@@ -54,11 +54,14 @@ public class UserSynchronizeService extends Service {
         intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
         intentFilter.addAction(SYNCHRONIZE_USER_INTENT);
         registerReceiver(receiver, intentFilter);
+        Log.d("[USER SERVICE]", "STARTED");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.d("[USER SERVICE]","STOPED AND DESTROYED");
+        unregisterReceiver(receiver);
         RUNNING = false;
     }
 

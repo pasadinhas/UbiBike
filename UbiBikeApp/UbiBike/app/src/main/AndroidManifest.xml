@@ -66,11 +66,14 @@
         <activity android:name=".activities.UserPresentationActivity" />
         <activity android:name=".activities.TrackTrajectoryDemo" />
 
-        <!-- Services -->
-        <service android:name=".services.gps.track.GpsTrackingService" />
+        <!-- ===================== Services ======================  -->
+
+        <service android:name=".services.gps.track.GpsTrackingService"
+                 android:stopWithTask="true"/>
         <service
             android:name=".services.UserSynchronizeService"
-            android:exported="false" />
+            android:exported="false"
+            android:stopWithTask="true"/>
         <service android:name="pt.inesc.termite.wifidirect.service.SimWifiP2pService" />
 
         <activity

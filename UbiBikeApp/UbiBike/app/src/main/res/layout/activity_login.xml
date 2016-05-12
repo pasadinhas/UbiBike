@@ -1,46 +1,53 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:context="pt.ulisboa.tecnico.cmu.ubibike.activities.LoginActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/login"
-    tools:context="pt.ulisboa.tecnico.cmu.ubibike.activities.LoginActivity">
+    android:background="@color/background"
+    android:layout_margin="@dimen/fab_margin">
 
     <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/login_button"
-            android:id="@+id/login_button"
-            android:onClick="submitLogin"
+        android:textColor="@color/button_text"
+        android:textSize="@dimen/button_text"
+        android:layout_width="231dp"
+        android:layout_height="50dp"
+        android:background="@drawable/button_shape"
+
+        android:text="@string/login_button"
+        android:id="@+id/login_button"
+        android:onClick="submitLogin"
         android:layout_marginTop="32dp"
         android:layout_below="@+id/login_password"
-        android:layout_alignLeft="@+id/login_password"
-        android:layout_alignStart="@+id/login_password"
-        android:layout_alignRight="@+id/login_password"
-        android:layout_alignEnd="@+id/login_password" />
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:id="@+id/login_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/app_name"
-        android:textColor="@color/title"
-        android:textSize="@dimen/title"
+        android:textColor="@color/title_text"
+        android:textSize="@dimen/title_text"
         android:layout_gravity="center_horizontal|top"
         android:layout_above="@+id/login_username"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="57dp" />
 
     <TextView
+        android:textColor="@color/general_text"
+        android:textSize="@dimen/general_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/create_account_button"
         android:id="@+id/create_account_button"
         android:onClick="createAccount"
         android:layout_gravity="center"
+        android:layout_marginTop="29dp"
         android:layout_below="@+id/login_button"
         android:layout_centerHorizontal="true" />
 
     <EditText
+        android:textColorHint="@color/hint_text"
+        android:textColor="@color/general_text"
         android:id="@+id/login_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -48,23 +55,25 @@
         android:hint="@string/password_placeholder"
         android:layout_gravity="center"
         android:layout_centerVertical="true"
-        android:layout_alignLeft="@+id/login_username"
-        android:layout_alignStart="@+id/login_username"
-        android:layout_alignRight="@+id/login_title"
-        android:layout_alignEnd="@+id/login_title" />
+        android:layout_alignLeft="@+id/login_button"
+        android:layout_alignStart="@+id/login_button"
+        android:layout_alignRight="@+id/login_button"
+        android:layout_alignEnd="@+id/login_button" />
 
     <EditText
-            android:id="@+id/login_username"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:hint="@string/username_placeholder"
+        android:textColorHint="@color/hint_text"
+        android:textColor="@color/general_text"
+        android:id="@+id/login_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:hint="@string/username_placeholder"
         android:layout_gravity="center_horizontal|top"
         android:layout_above="@+id/login_password"
-        android:layout_alignLeft="@+id/login_title"
-        android:layout_alignStart="@+id/login_title"
         android:layout_marginBottom="32dp"
-        android:layout_alignRight="@+id/login_title"
-        android:layout_alignEnd="@+id/login_title" />
+        android:layout_alignLeft="@+id/login_password"
+        android:layout_alignStart="@+id/login_password"
+        android:layout_alignRight="@+id/login_password"
+        android:layout_alignEnd="@+id/login_password" />
 
 </RelativeLayout>

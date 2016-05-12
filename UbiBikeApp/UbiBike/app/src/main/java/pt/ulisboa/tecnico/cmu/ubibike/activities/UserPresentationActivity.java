@@ -67,7 +67,7 @@ public class UserPresentationActivity extends BaseDrawerActivity implements OnMa
         String points = getString(R.string.points_text_view).concat(""+user.getPoints());
         pointsTextView.setText(points);
         if(!user.getAllTrajectories().isEmpty()) {
-            trajectoriesSpinner.setAdapter(new ArrayAdapter<>(this, R.layout.custom_row,
+            trajectoriesSpinner.setAdapter(new ArrayAdapter<>(this, R.layout.custom_trajectory_row,
                     R.id.information, user.getAllTrajectories()));
             trajectoriesSpinner.setVisibility(View.VISIBLE);
             trajectoriesTextView.setVisibility(View.VISIBLE);
@@ -82,7 +82,7 @@ public class UserPresentationActivity extends BaseDrawerActivity implements OnMa
 
     @Override
     public void onMapReady(final GoogleMap googleMap) {
-        trajectoriesSpinner.setAdapter(new ArrayAdapter<>(this, R.layout.custom_row,
+        trajectoriesSpinner.setAdapter(new ArrayAdapter<>(this, R.layout.custom_trajectory_row,
                 R.id.information, user.getAllTrajectories()));
         trajectoriesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
