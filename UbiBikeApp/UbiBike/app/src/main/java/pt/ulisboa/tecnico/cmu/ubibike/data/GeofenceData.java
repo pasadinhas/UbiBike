@@ -62,4 +62,8 @@ public class GeofenceData {
     public void setPossibleDropOffWhenLeave(boolean status) {
         possibleDropOffWhenLeave = status;
     }
+
+    public boolean getPossibleDropOffWhenLeave() {
+        return possibleDropOffWhenLeave;
+    }
 }

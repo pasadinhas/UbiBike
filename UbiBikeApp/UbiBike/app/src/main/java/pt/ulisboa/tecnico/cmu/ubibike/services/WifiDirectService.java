@@ -255,7 +255,9 @@ public class WifiDirectService extends Service implements
         if (UbiApp.getInstance().getUser().hasBike()) {
             boolean previousStateOfIsNear = BikeStatusData.getIsNear(this);
             boolean bikeIsNear = false;
-            boolean leftStation = GeofenceData.getInstance().isInStation();
+            boolean possibleDropInTwoPhase = GeofenceData.getInstance().getPossibleDropOffWhenLeave();
+            boolean leftStation = false;
+            boolean seenStation = false;
             String stationName = GeofenceData.getInstance().getCurrentStation();
 
             for (SimWifiP2pDevice device : peers.getDeviceList()) {
@@ -269,15 +271,29 @@ public class WifiDirectService extends Service implements
                 if (device.deviceName.startsWith("Station")) {
                     Log.d(TAG, "onPeersAvailable: seen station: " + device.deviceName + " and is on a station: " + leftStation);
                     leftStation = manageSationFencing(device.deviceName);
+                    seenStation = true;
                 }
 
             }
+
+            if (GeofenceData.getInstance().isInStation() && !seenStation) {
+                GeofenceData.getInstance().leaveStation();
+                leftStation = true;
+            }
+
             Log.d(TAG, "onPeersAvailable: bike was near: " + BikeStatusData.getIsNear(this) + " left station: " + leftStation
                     + " bike IS near: " + bikeIsNear);
+
             if (previousStateOfIsNear && leftStation && !bikeIsNear) {
                 Log.d(TAG, "onPeersAvailable: booked for removal");
                 processDropOff(stationName);
             }
+
+            if (possibleDropInTwoPhase && leftStation && !bikeIsNear) {
+                Log.d(TAG, "onPeersAvailable: booked for removal");
+                processDropOff(stationName);
+            }
+
             if (previousStateOfIsNear != bikeIsNear) {
                 if (bikeIsNear) {
                     startService(new Intent(getBaseContext(), GpsTrackingService.class));
@@ -288,8 +304,17 @@ public class WifiDirectService extends Service implements
                     stopService(new Intent(getBaseContext(), GpsTrackingService.class));
                 }
             }
+
+            if (!bikeIsNear && !leftStation) {
+                GeofenceData.getInstance().setPossibleDropOffWhenLeave(true);
+            } else {
+                GeofenceData.getInstance().setPossibleDropOffWhenLeave(false);
+            }
+
+
             BikeStatusData.setIsNear(this, bikeIsNear);
         }
+
         if (bikeListener != null) {
             bikeListener.update();
         }
