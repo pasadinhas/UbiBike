@@ -16,6 +16,8 @@ public class GeofenceData {
 
     private String currentStation = null;
 
+    private boolean possibleDropOffWhenLeave = false;
+
     protected GeofenceData () {}
 
     public static GeofenceData getInstance () {
@@ -55,5 +57,9 @@ public class GeofenceData {
         builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
         builder.addGeofences(mGeofenceList);
         return builder.build();
+    }
+
+    public void setPossibleDropOffWhenLeave(boolean status) {
+        possibleDropOffWhenLeave = status;
     }
 }
