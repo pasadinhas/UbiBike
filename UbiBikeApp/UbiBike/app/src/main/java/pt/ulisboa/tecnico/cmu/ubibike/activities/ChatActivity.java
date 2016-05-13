@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.cmu.ubibike.activities;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import pt.ulisboa.tecnico.cmu.ubibike.UbiApp;
 import pt.ulisboa.tecnico.cmu.ubibike.data.DatabaseManager;
 import pt.ulisboa.tecnico.cmu.ubibike.data.UserLoginData;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.User;
+import pt.ulisboa.tecnico.cmu.ubibike.services.UserSynchronizeService;
 import pt.ulisboa.tecnico.cmu.ubibike.services.WifiDirectService;
 
 public class ChatActivity extends BaseDrawerActivity {
@@ -168,6 +170,7 @@ public class ChatActivity extends BaseDrawerActivity {
                 AsyncTask.THREAD_POOL_EXECUTOR,
                 content, otherIP);
 
+        sendBroadcast(new Intent().setAction(UserSynchronizeService.SYNCHRONIZE_USER_INTENT));
         Toast.makeText(this, "Sent " + input + " points to " + otherUsername, Toast.LENGTH_SHORT).show();
 
         return;

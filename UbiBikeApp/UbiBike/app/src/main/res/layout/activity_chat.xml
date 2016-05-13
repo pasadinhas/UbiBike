@@ -26,6 +26,7 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/button_text"
             android:text="Send Points"
             android:id="@+id/ChatButtonSendPoints"
             android:onClick="sendPoints"/>
@@ -36,7 +37,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:inputType="none"
-        android:ems="10"
+        android:textColor="@color/general_text"
+        android:ems="11"
         android:id="@+id/chatTextShow"
         android:maxLines = "999999999"
         android:scrollbars = "vertical"
@@ -51,12 +53,14 @@
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/general_text"
             android:id="@+id/chatTextInput"
             android:layout_weight="0.90" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/button_text"
             android:text="Send"
             android:id="@+id/ChatButtonSend"
             android:layout_gravity="right"

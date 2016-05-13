@@ -347,11 +347,13 @@ public class WifiDirectService extends Service implements
         user.dropBike();
         UserLoginData.setUser(this, user);
 
+        /*
         Trajectory t = user.getAllTrajectories().get(0);
         Coordinates c = null;
         if (t.getTrajectory().size() > 3) {
             c = t.getTrajectory().get(t.getTrajectory().size() - 3);
-        } else {
+        } else { */
+            Coordinates c = null;
             Station currentStation = null;
 
             for (Station station : StationsData.getStations(this)) {
@@ -366,7 +368,7 @@ public class WifiDirectService extends Service implements
             c = currentStation.getPosition();
             c.setLatitude(c.getLatitude()+randomValue);
             c.setLongitude(c.getLongitude()+randomValue);
-        }
+        //}
 
         UserServiceREST service = UtilREST.getRetrofit().create(UserServiceREST.class);
         Call<ResponseBody> call = service.dropBike(UtilREST.ACCEPT_HEADER, UtilREST.CONTENT_TYPE_HEADER,
@@ -417,6 +419,8 @@ public class WifiDirectService extends Service implements
         user.addUserPoints(points);
 
         UserLoginData.setUser(this, user);
+
+        sendBroadcast(new Intent().setAction(UserSynchronizeService.SYNCHRONIZE_USER_INTENT));
 
         Handler h = new Handler(WifiDirectService.this.getMainLooper());
 

@@ -68,10 +68,16 @@ public class LoginActivity extends Activity {
 
     }
 
-    private void startWifiDirect(User user) {
-        Intent serviceIntent = new Intent(getBaseContext(), WifiDirectService.class);
-        serviceIntent.putExtra("USERNAME", user.getUsername());
-        startService(serviceIntent);
+    private void startWifiDirect(final User user) {
+
+        new Thread() {
+            public void run() {
+                Intent serviceIntent = new Intent(getBaseContext(), WifiDirectService.class);
+                serviceIntent.putExtra("USERNAME", user.getUsername());
+                startService(serviceIntent);
+            }
+        }.start();
+
         WifiDirectData.setIsEnabled(getApplicationContext(), true);
     }
 

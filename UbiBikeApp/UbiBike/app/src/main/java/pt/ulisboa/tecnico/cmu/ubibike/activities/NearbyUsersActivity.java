@@ -160,7 +160,7 @@ public class NearbyUsersActivity extends BaseDrawerActivity implements Runnable 
             }
 
             listView.setAdapter(new ArrayAdapter<>(getBaseContext(),
-                    android.R.layout.simple_list_item_1,
+                    R.layout.custom_row_nearby_users,
                     new ArrayList<>(peerIPbyNames.keySet())));
 
             handler.postDelayed(NearbyUsersActivity.this, event.nextStartTime - System.currentTimeMillis());
